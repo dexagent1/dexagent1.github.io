@@ -1,0 +1,119 @@
+body {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+
+h1.title.publication-title {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  color: #8C1515;
+  font-size: 2.6rem;
+  line-height: 1.2;
+}
+
+/* widen the title block so the title sets in two lines at the template's own
+   2.6rem. At 1100px the last word falls alone onto a third line. */
+.hero .container.is-max-desktop {
+  max-width: 1150px;
+}
+
+.publication-authors {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+
+.publication-authors a {
+  color: #000000 !important;
+}
+
+.publication-authors a:hover {
+  text-decoration: underline;
+  color: #414141 !important;
+}
+
+.affiliation {
+  display: inline-block;
+  color: #2c2c2c;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  padding-top: 0.6em;
+  text-align: center;
+}
+
+.author-notes {
+  display: block;
+  color: #828282;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  padding-top: 0.35em;
+  text-align: center;
+}
+
+.button-container {
+  color: #53565A;
+  justify-items: center;
+  padding-top: 0.5em;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.button {
+  color: #53565A;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  border-radius: 0.5em;
+  min-width: 6em;
+  width: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  height: auto;
+  min-height: 2.2em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+  vertical-align: middle;
+  border: solid 0px transparent;
+  background-color: #f2f2f2;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background-color: #f2f2f2;
+  filter: brightness(97%);
+}
+
+/* below the widened container, scale the title down so it does not gain a
+   fourth line */
+@media screen and (max-width: 1200px) {
+  h1.title.publication-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* one more step so laptops around 1024px keep the title at two lines */
+@media screen and (max-width: 1080px) {
+  h1.title.publication-title {
+    font-size: 2.0rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  h1.title.publication-title {
+    font-size: 1.9rem;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .button {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 280px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+}
