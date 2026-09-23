@@ -12,6 +12,7 @@
 </head>
 <body>
 
+<!-- ======================= HERO ======================= -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -34,10 +35,15 @@
 
           <div class="is-size-6 author-notes">&dagger; Equal advising</div>
 
+          <div class="logo-row">
+            <img src="./static/logos/stanford.svg" alt="Stanford University" class="logo logo-stanford">
+            <img src="./static/logos/columbia.svg" alt="Columbia University" class="logo logo-columbia">
+          </div>
+
           <div class="button-container">
             <a href="#" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
             <a href="#" class="button"><i class="fa fa-file-alt"></i>&emsp14;Paper</a>
-            <a href="#" class="button"><i class="fa fa-code"></i>&emsp14;Code (Coming Soon!)</a>
+            <a href="https://github.com/dexagent1" target="_blank" rel="noopener" class="button"><i class="fa fa-code"></i>&emsp14;Code (Coming Soon!)</a>
           </div>
 
         </div>
@@ -45,6 +51,156 @@
     </div>
   </div>
 </section>
+
+<!-- ======================= TEASER ======================= -->
+<section class="section teaser-section">
+  <div class="container is-max-widescreen">
+    <figure class="pub-figure">
+      <img src="./static/images/teaser_flat.jpg" alt="DexAgent overview">
+      <figcaption>
+        <b>DexAgent</b> converts a single egocentric human video and a task prompt into robot
+        training data through four stages, selecting property-specific skills and verifiers from a
+        self-evolving tool library. We evaluate on eleven dexterous manipulation tasks spanning
+        rigid, articulated, deformable and long-horizon interactions.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================= ABSTRACT ======================= -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Abstract</h2>
+    <div class="content has-text-justified abstract-body">
+      <p>
+        Human videos offer a scalable source of demonstrations for dexterous robot manipulation.
+        However, existing human-to-simulation-to-robot (Human2Sim2Robot) pipelines rely on predefined
+        procedures that struggle to accommodate diverse object properties and interactions,
+        particularly those involving articulated and deformable objects. We introduce
+        <b>DexAgent</b>, an agentic Human2Sim2Robot framework that converts a single egocentric human
+        video and a task prompt into physically grounded robot trajectories for policy training. It
+        operates through four stages: semantic understanding of human videos, property-based
+        simulation reconstruction, robot trajectory optimization, and robot data generation. At each
+        stage, DexAgent adapts its approach to the task and object properties by selecting suitable
+        skills from its tool library or developing new ones when needed. Property-specific verifiers
+        assess stage outcomes for physical validity and task-specific requirements and provide
+        feedback for refinement, preventing error propagation through the workflow. In the final
+        stage, DexAgent varies object and robot states in simulation to generate diverse robot
+        trajectories from a single human video, then retextures the rendered observations to
+        facilitate sim-to-real transfer. Newly developed skills and verifiers are retained in its
+        tool library, making it self-evolving to accumulate reusable capabilities and reducing
+        processing time as it encounters more human videos. Across eleven real-world tasks, policies
+        trained with DexAgent-generated data achieve a <b>3.5&times; higher success rate</b> than
+        competing baselines.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= VIDEO ======================= -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Overview Video</h2>
+    <div class="video-wrap">
+      <video controls preload="metadata" playsinline poster="./static/images/teaser_flat.jpg">
+        <source src="./static/videos/dexagent_overview.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= METHOD ======================= -->
+<section class="section">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 section-title">Method</h2>
+    <figure class="pub-figure">
+      <img src="./static/images/method2.jpg" alt="DexAgent method">
+      <figcaption>
+        <b>Stage 1</b> decomposes the task into subgoals and identifies the manipulated objects and
+        their key properties. <b>Stage 2</b> reconstructs the objects in simulation using
+        property-specific skills from the tool library, writing new ones when none fits.
+        <b>Stage 3</b> generates robot-hand trajectories by combining optimization guided by human
+        motion priors with code-generated motion. <b>Stage 4</b> varies viewpoints and object states
+        to produce diverse simulation data, inpaints the original human video, and retextures the
+        augmented renders for policy training.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================= REAL-ROBOT RESULTS ======================= -->
+<section class="section section-alt">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 section-title">Real-Robot Results</h2>
+    <figure class="pub-figure">
+      <img src="./static/images/rollout2.jpg" alt="Real-robot rollouts">
+      <figcaption>
+        Each row shows the original human demonstration, its reconstructed simulation scene, and
+        representative frames from the resulting real-robot rollout. The examples span
+        deformable-object manipulation, multi-object interaction, precise insertion and articulated
+        object manipulation.
+      </figcaption>
+    </figure>
+
+    <figure class="pub-figure">
+      <img src="./static/images/success_rate_bar.png" alt="Per-task policy success rate">
+      <figcaption>
+        Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated data
+        reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
+      </figcaption>
+    </figure>
+
+    <figure class="pub-figure">
+      <img src="./static/images/eval_distribution.jpg" alt="Evaluation initial states">
+      <figcaption>
+        <b>Top left:</b> the physical setup, a Yam Box arm with Sharpa hands and an egocentric
+        camera. <b>Remaining panels:</b> the initial object placements used across the evaluation
+        trials, overlaid per task. Every policy is evaluated from randomized starting configurations
+        rather than a fixed reset.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================= TOOL LIBRARY ======================= -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">A Self-Evolving Tool Library</h2>
+    <figure class="pub-figure">
+      <img src="./static/images/lifelong.png" alt="Processing cost falls as the library grows">
+      <figcaption>
+        Processing cost falls as the library grows. Over 100 EgoDex samples the library reaches 85
+        skills and 168 verifiers and stops growing, while the per-sample cost drops by more than an
+        order of magnitude. A fixed pipeline stays flat.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================= TASK VIDEOS (placeholder) ======================= -->
+<section class="section section-alt">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 section-title">Task Videos</h2>
+    <p class="section-lead">Per-task rollout videos.</p>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Knot the Rope</p></div>
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Biology Experiment</p></div>
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Battery Insertion</p></div>
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Open the Bottle</p></div>
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Computer Installation</p></div>
+      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Scissor Cutting</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container has-text-centered">
+    <p class="is-size-7">
+      Website template borrowed from <a href="https://nerfies.github.io/" target="_blank" rel="noopener">Nerfies</a>.
+    </p>
+  </div>
+</footer>
 
 </body>
 </html>
