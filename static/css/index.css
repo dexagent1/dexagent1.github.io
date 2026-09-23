@@ -841,3 +841,17 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 @media (prefers-reduced-motion: reduce) {
   .reel-video, .reel-track, .reel-item { transition: none; }
 }
+
+/* playback-speed qualifier beside a reel heading */
+.speed-tag {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 0.72em;
+  font-weight: 600;
+  color: #8C1515;
+  background: rgba(140, 21, 21, 0.08);
+  border-radius: 999px;
+  padding: 0.16em 0.62em;
+  vertical-align: 0.12em;
+  letter-spacing: 0.01em;
+}
