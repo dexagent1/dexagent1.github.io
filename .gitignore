@@ -1,5 +1,7 @@
 *.mov
 .DS_Store
-# stray videos stay out, but the site's own videos are published
+# stray videos stay out of the repo, but everything the site publishes under
+# static/videos is committed, at any depth
 *.mp4
-!static/videos/*.mp4
+!/static/videos/*.mp4
+!/static/videos/**/*.mp4
