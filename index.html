@@ -275,129 +275,117 @@
 
     <h3 class="subsection-title">Policy</h3>
 
-    <div class="figure-pair">
-      <figure class="pub-figure">
-        <img src="./static/images/eval_distribution.jpg" alt="Physical setup and evaluation initial states">
-        <figcaption>
-          <b>Top left:</b> the physical setup, a YamBox arm with Sharpa hands and an egocentric
-          camera. <b>Remaining panels:</b> the initial object placements used across the evaluation
-          trials, overlaid per task. Every policy is evaluated from randomized starting
-          configurations rather than a fixed reset.
-        </figcaption>
-      </figure>
-
-      <figure class="pub-figure">
-        <div class="chart-wrap armed" id="successChart">
-          <div class="chart-legend">
-            <button type="button" class="lg" data-s="0"><i style="background:#2A78D6"></i>Dex-retargeting</button>
-            <button type="button" class="lg" data-s="1"><i style="background:#EB6834"></i>Do as I Do</button>
-            <button type="button" class="lg" data-s="2"><i style="background:#1BAF7A"></i>Spider</button>
-            <button type="button" class="lg" data-s="3"><i style="background:#EDA100"></i>TopoRetarget</button>
-            <button type="button" class="lg" data-s="4"><i style="background:#E87BA4"></i>Egoinfinity</button>
-            <button type="button" class="lg" data-s="5"><i style="background:#008300"></i>V2D</button>
-            <button type="button" class="lg is-ours" data-s="6"><i style="background:#4A3AA7"></i>Ours</button>
-          </div>
-          <svg class="bar-chart" viewBox="0 0 1000 408" role="img" aria-label="Per-task policy success rate across eleven tasks">
-            <line class="grid" x1="54" y1="324.0" x2="990" y2="324.0"/>
-            <text class="ytick" x="45" y="328.0">0</text>
-            <line class="grid" x1="54" y1="262.0" x2="990" y2="262.0"/>
-            <text class="ytick" x="45" y="266.0">20</text>
-            <line class="grid" x1="54" y1="200.0" x2="990" y2="200.0"/>
-            <text class="ytick" x="45" y="204.0">40</text>
-            <line class="grid" x1="54" y1="138.0" x2="990" y2="138.0"/>
-            <text class="ytick" x="45" y="142.0">60</text>
-            <line class="grid" x1="54" y1="76.0" x2="990" y2="76.0"/>
-            <text class="ytick" x="45" y="80.0">80</text>
-            <line class="grid" x1="54" y1="14.0" x2="990" y2="14.0"/>
-            <text class="ytick" x="45" y="18.0">100</text>
-            <rect class="avg-band" x="912.0" y="14" width="78.0" height="310.0" rx="3"/>
-            <text class="ylabel" transform="translate(15,169.0) rotate(-90)">Success Rate (%)</text>
-            <rect class="ghit" x="54.00" y="14" width="78.00" height="310.00" data-group="Cup"/>
-            <rect class="bar s1" x="70.71" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Cup" data-value="50" style="animation-delay:14ms" tabindex="0"/>
-            <rect class="bar s2" x="79.63" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Cup" data-value="70" style="animation-delay:28ms" tabindex="0"/>
-            <rect class="bar s3" x="88.54" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Cup" data-value="60" style="animation-delay:42ms" tabindex="0"/>
-            <rect class="bar s4" x="97.46" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Cup" data-value="60" style="animation-delay:56ms" tabindex="0"/>
-            <rect class="bar s5" x="106.37" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Cup" data-value="70" style="animation-delay:70ms" tabindex="0"/>
-            <rect class="bar s6" x="115.29" y="45.00" width="8.01" height="279.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Cup" data-value="90" style="animation-delay:84ms" tabindex="0"/>
-            <text class="vlabel" x="119.29" y="38.0" style="animation-delay:404ms">90</text>
-            <rect class="ghit" x="132.00" y="14" width="78.00" height="310.00" data-group="Giftbox"/>
-            <rect class="bar s1" x="148.71" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Giftbox" data-value="50" style="animation-delay:69ms" tabindex="0"/>
-            <rect class="bar s2" x="157.63" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Giftbox" data-value="40" style="animation-delay:83ms" tabindex="0"/>
-            <rect class="bar s3" x="166.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Giftbox" data-value="10" style="animation-delay:97ms" tabindex="0"/>
-            <rect class="bar s4" x="175.46" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Giftbox" data-value="20" style="animation-delay:111ms" tabindex="0"/>
-            <rect class="bar s5" x="184.37" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Giftbox" data-value="40" style="animation-delay:125ms" tabindex="0"/>
-            <rect class="bar s6" x="193.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Giftbox" data-value="70" style="animation-delay:139ms" tabindex="0"/>
-            <text class="vlabel" x="197.29" y="100.0" style="animation-delay:459ms">70</text>
-            <rect class="ghit" x="210.00" y="14" width="78.00" height="310.00" data-group="Drawer"/>
-            <rect class="bar s1" x="226.71" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Drawer" data-value="10" style="animation-delay:124ms" tabindex="0"/>
-            <rect class="bar s2" x="235.63" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Drawer" data-value="10" style="animation-delay:138ms" tabindex="0"/>
-            <rect class="bar s5" x="262.37" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Drawer" data-value="30" style="animation-delay:180ms" tabindex="0"/>
-            <rect class="bar s6" x="271.29" y="76.00" width="8.01" height="248.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Drawer" data-value="80" style="animation-delay:194ms" tabindex="0"/>
-            <text class="vlabel" x="275.29" y="69.0" style="animation-delay:514ms">80</text>
-            <rect class="ghit" x="288.00" y="14" width="78.00" height="310.00" data-group="Rope Knot"/>
-            <rect class="bar s6" x="349.29" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Rope Knot" data-value="50" style="animation-delay:249ms" tabindex="0"/>
-            <text class="vlabel" x="353.29" y="162.0" style="animation-delay:569ms">50</text>
-            <rect class="ghit" x="366.00" y="14" width="78.00" height="310.00" data-group="Scissors"/>
-            <rect class="bar s2" x="391.63" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Scissors" data-value="30" style="animation-delay:248ms" tabindex="0"/>
-            <rect class="bar s3" x="400.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Scissors" data-value="10" style="animation-delay:262ms" tabindex="0"/>
-            <rect class="bar s6" x="427.29" y="76.00" width="8.01" height="248.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Scissors" data-value="80" style="animation-delay:304ms" tabindex="0"/>
-            <text class="vlabel" x="431.29" y="69.0" style="animation-delay:624ms">80</text>
-            <rect class="ghit" x="444.00" y="14" width="78.00" height="310.00" data-group="Drawing"/>
-            <rect class="bar s2" x="469.63" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Drawing" data-value="20" style="animation-delay:303ms" tabindex="0"/>
-            <rect class="bar s3" x="478.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Drawing" data-value="10" style="animation-delay:317ms" tabindex="0"/>
-            <rect class="bar s5" x="496.37" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Drawing" data-value="10" style="animation-delay:345ms" tabindex="0"/>
-            <rect class="bar s6" x="505.29" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Drawing" data-value="40" style="animation-delay:359ms" tabindex="0"/>
-            <text class="vlabel" x="509.29" y="193.0" style="animation-delay:679ms">40</text>
-            <rect class="ghit" x="522.00" y="14" width="78.00" height="310.00" data-group="Computer"/>
-            <rect class="bar s1" x="538.71" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Computer" data-value="10" style="animation-delay:344ms" tabindex="0"/>
-            <rect class="bar s2" x="547.63" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Computer" data-value="20" style="animation-delay:358ms" tabindex="0"/>
-            <rect class="bar s5" x="574.37" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Computer" data-value="10" style="animation-delay:400ms" tabindex="0"/>
-            <rect class="bar s6" x="583.29" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Computer" data-value="50" style="animation-delay:414ms" tabindex="0"/>
-            <text class="vlabel" x="587.29" y="162.0" style="animation-delay:734ms">50</text>
-            <rect class="ghit" x="600.00" y="14" width="78.00" height="310.00" data-group="Bottle"/>
-            <rect class="bar s6" x="661.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Bottle" data-value="70" style="animation-delay:469ms" tabindex="0"/>
-            <text class="vlabel" x="665.29" y="100.0" style="animation-delay:789ms">70</text>
-            <rect class="ghit" x="678.00" y="14" width="78.00" height="310.00" data-group="Biology"/>
-            <rect class="bar s6" x="739.29" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Biology" data-value="40" style="animation-delay:524ms" tabindex="0"/>
-            <text class="vlabel" x="743.29" y="193.0" style="animation-delay:844ms">40</text>
-            <rect class="ghit" x="756.00" y="14" width="78.00" height="310.00" data-group="Battery"/>
-            <rect class="bar s2" x="781.63" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Battery" data-value="10" style="animation-delay:523ms" tabindex="0"/>
-            <rect class="bar s6" x="817.29" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Battery" data-value="60" style="animation-delay:579ms" tabindex="0"/>
-            <text class="vlabel" x="821.29" y="131.0" style="animation-delay:899ms">60</text>
-            <rect class="ghit" x="834.00" y="14" width="78.00" height="310.00" data-group="Multi-object"/>
-            <rect class="bar s5" x="886.37" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Multi-object" data-value="30" style="animation-delay:620ms" tabindex="0"/>
-            <rect class="bar s6" x="895.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Multi-object" data-value="70" style="animation-delay:634ms" tabindex="0"/>
-            <text class="vlabel" x="899.29" y="100.0" style="animation-delay:954ms">70</text>
-            <rect class="ghit" x="912.00" y="14" width="78.00" height="310.00" data-group="Average"/>
-            <rect class="bar s1" x="928.71" y="290.21" width="8.01" height="33.79" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Average" data-value="10.9" style="animation-delay:619ms" tabindex="0"/>
-            <rect class="bar s2" x="937.63" y="267.58" width="8.01" height="56.42" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Average" data-value="18.2" style="animation-delay:633ms" tabindex="0"/>
-            <rect class="bar s3" x="946.54" y="298.58" width="8.01" height="25.42" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Average" data-value="8.2" style="animation-delay:647ms" tabindex="0"/>
-            <rect class="bar s4" x="955.46" y="301.37" width="8.01" height="22.63" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Average" data-value="7.3" style="animation-delay:661ms" tabindex="0"/>
-            <rect class="bar s5" x="964.37" y="270.37" width="8.01" height="53.63" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Average" data-value="17.3" style="animation-delay:675ms" tabindex="0"/>
-            <rect class="bar s6" x="973.29" y="126.84" width="8.01" height="197.16" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Average" data-value="63.6" style="animation-delay:689ms" tabindex="0"/>
-            <text class="vlabel" x="977.29" y="119.8" style="animation-delay:1009ms">63.6</text>
-            <line class="axis" x1="54" y1="324" x2="990" y2="324"/>
-            <text class="xlabel" transform="translate(93.0,337) rotate(-33)">Cup</text>
-            <text class="xlabel" transform="translate(171.0,337) rotate(-33)">Giftbox</text>
-            <text class="xlabel" transform="translate(249.0,337) rotate(-33)">Drawer</text>
-            <text class="xlabel" transform="translate(327.0,337) rotate(-33)">Rope Knot</text>
-            <text class="xlabel" transform="translate(405.0,337) rotate(-33)">Scissors</text>
-            <text class="xlabel" transform="translate(483.0,337) rotate(-33)">Drawing</text>
-            <text class="xlabel" transform="translate(561.0,337) rotate(-33)">Computer</text>
-            <text class="xlabel" transform="translate(639.0,337) rotate(-33)">Bottle</text>
-            <text class="xlabel" transform="translate(717.0,337) rotate(-33)">Biology</text>
-            <text class="xlabel" transform="translate(795.0,337) rotate(-33)">Battery</text>
-            <text class="xlabel" transform="translate(873.0,337) rotate(-33)">Multi-object</text>
-            <text class="xlabel avg" transform="translate(951.0,337) rotate(-33)">Average</text>
-          </svg>
-          <div class="chart-tip" hidden></div>
+    <figure class="pub-figure is-full">
+      <div class="chart-wrap armed" id="successChart">
+        <div class="chart-legend">
+          <button type="button" class="lg" data-s="0"><i style="background:#2A78D6"></i>Dex-retargeting</button>
+          <button type="button" class="lg" data-s="1"><i style="background:#EB6834"></i>Do as I Do</button>
+          <button type="button" class="lg" data-s="2"><i style="background:#1BAF7A"></i>Spider</button>
+          <button type="button" class="lg" data-s="3"><i style="background:#EDA100"></i>TopoRetarget</button>
+          <button type="button" class="lg" data-s="4"><i style="background:#E87BA4"></i>Egoinfinity</button>
+          <button type="button" class="lg" data-s="5"><i style="background:#008300"></i>V2D</button>
+          <button type="button" class="lg is-ours" data-s="6"><i style="background:#4A3AA7"></i>Ours</button>
         </div>
-        <figcaption>
-          Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated
-          data reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
-        </figcaption>
-      </figure>
-    </div>
+        <svg class="bar-chart" viewBox="0 0 1000 408" role="img" aria-label="Per-task policy success rate across eleven tasks">
+          <line class="grid" x1="54" y1="324.0" x2="990" y2="324.0"/>
+          <text class="ytick" x="45" y="328.0">0</text>
+          <line class="grid" x1="54" y1="262.0" x2="990" y2="262.0"/>
+          <text class="ytick" x="45" y="266.0">20</text>
+          <line class="grid" x1="54" y1="200.0" x2="990" y2="200.0"/>
+          <text class="ytick" x="45" y="204.0">40</text>
+          <line class="grid" x1="54" y1="138.0" x2="990" y2="138.0"/>
+          <text class="ytick" x="45" y="142.0">60</text>
+          <line class="grid" x1="54" y1="76.0" x2="990" y2="76.0"/>
+          <text class="ytick" x="45" y="80.0">80</text>
+          <line class="grid" x1="54" y1="14.0" x2="990" y2="14.0"/>
+          <text class="ytick" x="45" y="18.0">100</text>
+          <rect class="avg-band" x="912.0" y="14" width="78.0" height="310.0" rx="3"/>
+          <text class="ylabel" transform="translate(15,169.0) rotate(-90)">Success Rate (%)</text>
+          <rect class="ghit" x="54.00" y="14" width="78.00" height="310.00" data-group="Cup"/>
+          <rect class="bar s1" x="70.71" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Cup" data-value="50" style="animation-delay:14ms" tabindex="0"/>
+          <rect class="bar s2" x="79.63" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Cup" data-value="70" style="animation-delay:28ms" tabindex="0"/>
+          <rect class="bar s3" x="88.54" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Cup" data-value="60" style="animation-delay:42ms" tabindex="0"/>
+          <rect class="bar s4" x="97.46" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Cup" data-value="60" style="animation-delay:56ms" tabindex="0"/>
+          <rect class="bar s5" x="106.37" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Cup" data-value="70" style="animation-delay:70ms" tabindex="0"/>
+          <rect class="bar s6" x="115.29" y="45.00" width="8.01" height="279.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Cup" data-value="90" style="animation-delay:84ms" tabindex="0"/>
+          <text class="vlabel" x="119.29" y="38.0" style="animation-delay:404ms">90</text>
+          <rect class="ghit" x="132.00" y="14" width="78.00" height="310.00" data-group="Giftbox"/>
+          <rect class="bar s1" x="148.71" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Giftbox" data-value="50" style="animation-delay:69ms" tabindex="0"/>
+          <rect class="bar s2" x="157.63" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Giftbox" data-value="40" style="animation-delay:83ms" tabindex="0"/>
+          <rect class="bar s3" x="166.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Giftbox" data-value="10" style="animation-delay:97ms" tabindex="0"/>
+          <rect class="bar s4" x="175.46" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Giftbox" data-value="20" style="animation-delay:111ms" tabindex="0"/>
+          <rect class="bar s5" x="184.37" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Giftbox" data-value="40" style="animation-delay:125ms" tabindex="0"/>
+          <rect class="bar s6" x="193.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Giftbox" data-value="70" style="animation-delay:139ms" tabindex="0"/>
+          <text class="vlabel" x="197.29" y="100.0" style="animation-delay:459ms">70</text>
+          <rect class="ghit" x="210.00" y="14" width="78.00" height="310.00" data-group="Drawer"/>
+          <rect class="bar s1" x="226.71" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Drawer" data-value="10" style="animation-delay:124ms" tabindex="0"/>
+          <rect class="bar s2" x="235.63" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Drawer" data-value="10" style="animation-delay:138ms" tabindex="0"/>
+          <rect class="bar s5" x="262.37" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Drawer" data-value="30" style="animation-delay:180ms" tabindex="0"/>
+          <rect class="bar s6" x="271.29" y="76.00" width="8.01" height="248.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Drawer" data-value="80" style="animation-delay:194ms" tabindex="0"/>
+          <text class="vlabel" x="275.29" y="69.0" style="animation-delay:514ms">80</text>
+          <rect class="ghit" x="288.00" y="14" width="78.00" height="310.00" data-group="Rope Knot"/>
+          <rect class="bar s6" x="349.29" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Rope Knot" data-value="50" style="animation-delay:249ms" tabindex="0"/>
+          <text class="vlabel" x="353.29" y="162.0" style="animation-delay:569ms">50</text>
+          <rect class="ghit" x="366.00" y="14" width="78.00" height="310.00" data-group="Scissors"/>
+          <rect class="bar s2" x="391.63" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Scissors" data-value="30" style="animation-delay:248ms" tabindex="0"/>
+          <rect class="bar s3" x="400.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Scissors" data-value="10" style="animation-delay:262ms" tabindex="0"/>
+          <rect class="bar s6" x="427.29" y="76.00" width="8.01" height="248.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Scissors" data-value="80" style="animation-delay:304ms" tabindex="0"/>
+          <text class="vlabel" x="431.29" y="69.0" style="animation-delay:624ms">80</text>
+          <rect class="ghit" x="444.00" y="14" width="78.00" height="310.00" data-group="Drawing"/>
+          <rect class="bar s2" x="469.63" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Drawing" data-value="20" style="animation-delay:303ms" tabindex="0"/>
+          <rect class="bar s3" x="478.54" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Drawing" data-value="10" style="animation-delay:317ms" tabindex="0"/>
+          <rect class="bar s5" x="496.37" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Drawing" data-value="10" style="animation-delay:345ms" tabindex="0"/>
+          <rect class="bar s6" x="505.29" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Drawing" data-value="40" style="animation-delay:359ms" tabindex="0"/>
+          <text class="vlabel" x="509.29" y="193.0" style="animation-delay:679ms">40</text>
+          <rect class="ghit" x="522.00" y="14" width="78.00" height="310.00" data-group="Computer"/>
+          <rect class="bar s1" x="538.71" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Computer" data-value="10" style="animation-delay:344ms" tabindex="0"/>
+          <rect class="bar s2" x="547.63" y="262.00" width="8.01" height="62.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Computer" data-value="20" style="animation-delay:358ms" tabindex="0"/>
+          <rect class="bar s5" x="574.37" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Computer" data-value="10" style="animation-delay:400ms" tabindex="0"/>
+          <rect class="bar s6" x="583.29" y="169.00" width="8.01" height="155.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Computer" data-value="50" style="animation-delay:414ms" tabindex="0"/>
+          <text class="vlabel" x="587.29" y="162.0" style="animation-delay:734ms">50</text>
+          <rect class="ghit" x="600.00" y="14" width="78.00" height="310.00" data-group="Bottle"/>
+          <rect class="bar s6" x="661.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Bottle" data-value="70" style="animation-delay:469ms" tabindex="0"/>
+          <text class="vlabel" x="665.29" y="100.0" style="animation-delay:789ms">70</text>
+          <rect class="ghit" x="678.00" y="14" width="78.00" height="310.00" data-group="Biology"/>
+          <rect class="bar s6" x="739.29" y="200.00" width="8.01" height="124.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Biology" data-value="40" style="animation-delay:524ms" tabindex="0"/>
+          <text class="vlabel" x="743.29" y="193.0" style="animation-delay:844ms">40</text>
+          <rect class="ghit" x="756.00" y="14" width="78.00" height="310.00" data-group="Battery"/>
+          <rect class="bar s2" x="781.63" y="293.00" width="8.01" height="31.00" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Battery" data-value="10" style="animation-delay:523ms" tabindex="0"/>
+          <rect class="bar s6" x="817.29" y="138.00" width="8.01" height="186.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Battery" data-value="60" style="animation-delay:579ms" tabindex="0"/>
+          <text class="vlabel" x="821.29" y="131.0" style="animation-delay:899ms">60</text>
+          <rect class="ghit" x="834.00" y="14" width="78.00" height="310.00" data-group="Multi-object"/>
+          <rect class="bar s5" x="886.37" y="231.00" width="8.01" height="93.00" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Multi-object" data-value="30" style="animation-delay:620ms" tabindex="0"/>
+          <rect class="bar s6" x="895.29" y="107.00" width="8.01" height="217.00" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Multi-object" data-value="70" style="animation-delay:634ms" tabindex="0"/>
+          <text class="vlabel" x="899.29" y="100.0" style="animation-delay:954ms">70</text>
+          <rect class="ghit" x="912.00" y="14" width="78.00" height="310.00" data-group="Average"/>
+          <rect class="bar s1" x="928.71" y="290.21" width="8.01" height="33.79" rx="1.2" fill="#EB6834" data-s="1" data-name="Do as I Do" data-group="Average" data-value="10.9" style="animation-delay:619ms" tabindex="0"/>
+          <rect class="bar s2" x="937.63" y="267.58" width="8.01" height="56.42" rx="1.2" fill="#1BAF7A" data-s="2" data-name="Spider" data-group="Average" data-value="18.2" style="animation-delay:633ms" tabindex="0"/>
+          <rect class="bar s3" x="946.54" y="298.58" width="8.01" height="25.42" rx="1.2" fill="#EDA100" data-s="3" data-name="TopoRetarget" data-group="Average" data-value="8.2" style="animation-delay:647ms" tabindex="0"/>
+          <rect class="bar s4" x="955.46" y="301.37" width="8.01" height="22.63" rx="1.2" fill="#E87BA4" data-s="4" data-name="Egoinfinity" data-group="Average" data-value="7.3" style="animation-delay:661ms" tabindex="0"/>
+          <rect class="bar s5" x="964.37" y="270.37" width="8.01" height="53.63" rx="1.2" fill="#008300" data-s="5" data-name="V2D" data-group="Average" data-value="17.3" style="animation-delay:675ms" tabindex="0"/>
+          <rect class="bar s6" x="973.29" y="126.84" width="8.01" height="197.16" rx="1.2" fill="#4A3AA7" data-s="6" data-name="Ours" data-group="Average" data-value="63.6" style="animation-delay:689ms" tabindex="0"/>
+          <text class="vlabel" x="977.29" y="119.8" style="animation-delay:1009ms">63.6</text>
+          <line class="axis" x1="54" y1="324" x2="990" y2="324"/>
+          <text class="xlabel" transform="translate(93.0,337) rotate(-33)">Cup</text>
+          <text class="xlabel" transform="translate(171.0,337) rotate(-33)">Giftbox</text>
+          <text class="xlabel" transform="translate(249.0,337) rotate(-33)">Drawer</text>
+          <text class="xlabel" transform="translate(327.0,337) rotate(-33)">Rope Knot</text>
+          <text class="xlabel" transform="translate(405.0,337) rotate(-33)">Scissors</text>
+          <text class="xlabel" transform="translate(483.0,337) rotate(-33)">Drawing</text>
+          <text class="xlabel" transform="translate(561.0,337) rotate(-33)">Computer</text>
+          <text class="xlabel" transform="translate(639.0,337) rotate(-33)">Bottle</text>
+          <text class="xlabel" transform="translate(717.0,337) rotate(-33)">Biology</text>
+          <text class="xlabel" transform="translate(795.0,337) rotate(-33)">Battery</text>
+          <text class="xlabel" transform="translate(873.0,337) rotate(-33)">Multi-object</text>
+          <text class="xlabel avg" transform="translate(951.0,337) rotate(-33)">Average</text>
+        </svg>
+        <div class="chart-tip" hidden></div>
+      </div>
+      <figcaption>
+        Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated
+        data reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
+      </figcaption>
+    </figure>
 
   </div>
 </section>
@@ -413,8 +401,10 @@
       </div>
       <figcaption>
         Processing cost falls as the library grows. Over 100 EgoDex samples the library reaches 85
-        skills and 168 verifiers and stops growing, while the per-sample cost drops by more than an
-        order of magnitude. A fixed pipeline stays flat.
+        skills and 168 verifiers. In terms of cost, V2D converting one sample takes 3.7 hours on
+        average and GPT 6: Astra takes 3.3 hours on average at a flat rate, whereas DexAgent takes
+        2.1 hours on average in a fresh run, a 36.4% reduction comparing to GPT 6: Astra and a
+        43.2% reduction comparing to V2D.
       </figcaption>
     </figure>
   </div>
