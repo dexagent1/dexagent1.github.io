@@ -17,6 +17,9 @@ h1.title.publication-title {
 
 .publication-authors {
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.45rem;
+  color: #242424;
+  padding-top: 0.15em;
 }
 
 .publication-authors a {
@@ -29,18 +32,20 @@ h1.title.publication-title {
 }
 
 .affiliation {
-  display: inline-block;
-  color: #2c2c2c;
+  display: block;
+  color: #242424;
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
-  padding-top: 0.6em;
+  font-size: 1.32rem;
+  padding-top: 0.55em;
   text-align: center;
 }
 
 .author-notes {
   display: block;
-  color: #828282;
+  color: #5c5c5c;
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
-  padding-top: 0.35em;
+  font-size: 1.1rem;
+  padding-top: 0.45em;
   text-align: center;
 }
 
@@ -139,8 +144,8 @@ h1.title.publication-title {
 /* Stanford is a horizontal lockup (3.05:1) and Columbia a stacked one (1.46:1),
    so equal heights would let Stanford run twice as wide. Balanced by eye on
    width instead. */
-.logo-row .logo-stanford { height: 42px; }
-.logo-row .logo-columbia { height: 56px; }
+.logo-row .logo-stanford { height: 58px; }
+.logo-row .logo-columbia { height: 68px; }
 
 /* ==================================================================
    content sections
@@ -273,8 +278,8 @@ h1.title.publication-title {
 
 @media screen and (max-width: 768px) {
   .logo-row { gap: 1.6rem; padding-top: 1.2em; }
-  .logo-row .logo-stanford { height: 34px; }
-  .logo-row .logo-columbia { height: 45px; }
+  .logo-row .logo-stanford { height: 40px; }
+  .logo-row .logo-columbia { height: 53px; }
   .pub-figure figcaption { text-align: left; }
   .video-grid { grid-template-columns: 1fr; }
 }
