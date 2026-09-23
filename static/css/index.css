@@ -859,20 +859,22 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 /* --- the human demonstration window sits beside the stage --- */
 .reel-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: clamp(0.6rem, 1.6vw, 1.5rem);
   max-width: 1020px;
   margin: 0 auto;
 }
 
+/* the human window shrinks with the viewport rather than wrapping under the
+   stage, so the two stay side by side on anything wider than a phone */
 .reel-human {
-  flex: 0 0 236px;
-  width: 236px;
+  flex: 0 0 clamp(104px, 23%, 236px);
+  width: clamp(104px, 23%, 236px);
 }
 
 .reel-human-label {
-  font-size: 0.78rem;
+  font-size: clamp(0.6rem, 1.1vw, 0.78rem);
   font-weight: 600;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -904,9 +906,10 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 
 .reel-stage { max-width: 760px; }
 
-@media screen and (max-width: 900px) {
-  .reel-row { flex-direction: column-reverse; align-items: center; gap: 1.1rem; }
-  .reel-human { flex: 0 0 auto; width: min(100%, 300px); }
+/* only a genuine phone gets the stacked fallback */
+@media screen and (max-width: 560px) {
+  .reel-row { flex-direction: column-reverse; align-items: center; gap: 1rem; }
+  .reel-human { flex: 0 0 auto; width: min(100%, 260px); }
   .reel-stage { width: 100%; }
 }
 
