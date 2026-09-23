@@ -136,10 +136,11 @@ h1.title.publication-title {
   object-fit: contain;
 }
 
-/* the Block S is a tall emblem and the Columbia lockup is a wide crown-over-text
-   mark, so equal heights read unequal. Sized by eye instead. */
-.logo-row .logo-stanford { height: 58px; }
-.logo-row .logo-columbia { height: 50px; }
+/* Stanford is a horizontal lockup (3.05:1) and Columbia a stacked one (1.46:1),
+   so equal heights would let Stanford run twice as wide. Balanced by eye on
+   width instead. */
+.logo-row .logo-stanford { height: 42px; }
+.logo-row .logo-columbia { height: 56px; }
 
 /* ==================================================================
    content sections
@@ -272,8 +273,8 @@ h1.title.publication-title {
 
 @media screen and (max-width: 768px) {
   .logo-row { gap: 1.6rem; padding-top: 1.2em; }
-  .logo-row .logo-stanford { height: 44px; }
-  .logo-row .logo-columbia { height: 38px; }
+  .logo-row .logo-stanford { height: 34px; }
+  .logo-row .logo-columbia { height: 45px; }
   .pub-figure figcaption { text-align: left; }
   .video-grid { grid-template-columns: 1fr; }
 }
