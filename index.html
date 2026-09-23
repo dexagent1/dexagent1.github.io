@@ -51,6 +51,7 @@
             <a href="#" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
             <a href="#" class="button"><i class="fa fa-file-alt"></i>&emsp14;Paper</a>
             <a href="https://github.com/dexagent1" target="_blank" rel="noopener" class="button"><i class="fa fa-code"></i>&emsp14;Code (Coming Soon!)</a>
+            <a href="#" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;TL;DR</a>
           </div>
 
         </div>
@@ -417,22 +418,39 @@
 
     <h3 class="subsection-title">Simulation <span class="speed-tag">6&times;</span></h3>
     <div class="reel" data-reel="sim">
-      <div class="reel-stage">
-        <div class="reel-frame">
-          <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/sim_bottle.jpg" data-src="./static/videos/sim/bottle.mp4" aria-label="Open the Bottle"></video>
-          <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/sim_cup.jpg" data-src="./static/videos/sim/cup.mp4" aria-label="Place Cup in Bowl"></video>
-          <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/sim_giftbox.jpg" data-src="./static/videos/sim/giftbox.mp4" aria-label="Giftbox Packing"></video>
-          <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/sim_drawer.jpg" data-src="./static/videos/sim/drawer.mp4" aria-label="Place Toy in Drawer"></video>
-          <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/sim_rope.jpg" data-src="./static/videos/sim/rope.mp4" aria-label="Knot the Rope"></video>
-          <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/sim_scissors.jpg" data-src="./static/videos/sim/scissors.mp4" aria-label="Scissor Cutting"></video>
-          <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/sim_drawing.jpg" data-src="./static/videos/sim/drawing.mp4" aria-label="Drawing and Wiping"></video>
-          <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/sim_computer.jpg" data-src="./static/videos/sim/computer.mp4" aria-label="Computer Installation"></video>
-          <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/sim_biology.jpg" data-src="./static/videos/sim/biology.mp4" aria-label="Biology Experiment"></video>
-          <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/sim_battery.jpg" data-src="./static/videos/sim/battery.mp4" aria-label="Battery Insertion"></video>
+      <div class="reel-row">
+        <div class="reel-human">
+          <p class="reel-human-label">Human Demonstration</p>
+          <div class="reel-human-frame">
+            <video class="reel-hvideo is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/human_bottle.jpg" data-src="./static/videos/human/bottle.mp4" aria-label="Human demonstration, Open the Bottle"></video>
+            <video class="reel-hvideo" data-i="1" muted loop playsinline preload="none" poster="./static/posters/human_cup.jpg" data-src="./static/videos/human/cup.mp4" aria-label="Human demonstration, Place Cup in Bowl"></video>
+            <video class="reel-hvideo" data-i="2" muted loop playsinline preload="none" poster="./static/posters/human_giftbox.jpg" data-src="./static/videos/human/giftbox.mp4" aria-label="Human demonstration, Giftbox Packing"></video>
+            <video class="reel-hvideo" data-i="3" muted loop playsinline preload="none" poster="./static/posters/human_drawer.jpg" data-src="./static/videos/human/drawer.mp4" aria-label="Human demonstration, Place Toy in Drawer"></video>
+            <video class="reel-hvideo" data-i="4" muted loop playsinline preload="none" poster="./static/posters/human_rope.jpg" data-src="./static/videos/human/rope.mp4" aria-label="Human demonstration, Knot the Rope"></video>
+            <video class="reel-hvideo" data-i="5" muted loop playsinline preload="none" poster="./static/posters/human_scissors.jpg" data-src="./static/videos/human/scissors.mp4" aria-label="Human demonstration, Scissor Cutting"></video>
+            <video class="reel-hvideo" data-i="6" muted loop playsinline preload="none" poster="./static/posters/human_drawing.jpg" data-src="./static/videos/human/drawing.mp4" aria-label="Human demonstration, Drawing and Wiping"></video>
+            <video class="reel-hvideo" data-i="7" muted loop playsinline preload="none" poster="./static/posters/human_computer.jpg" data-src="./static/videos/human/computer.mp4" aria-label="Human demonstration, Computer Installation"></video>
+            <video class="reel-hvideo" data-i="8" muted loop playsinline preload="none" poster="./static/posters/human_biology.jpg" data-src="./static/videos/human/biology.mp4" aria-label="Human demonstration, Biology Experiment"></video>
+            <video class="reel-hvideo" data-i="9" muted loop playsinline preload="none" poster="./static/posters/human_battery.jpg" data-src="./static/videos/human/battery.mp4" aria-label="Human demonstration, Battery Insertion"></video>
+          </div>
         </div>
-        <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
-        <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
-        <div class="reel-progress"><i></i></div>
+        <div class="reel-stage">
+          <div class="reel-frame">
+            <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/sim_bottle.jpg" data-src="./static/videos/sim/bottle.mp4" aria-label="Open the Bottle"></video>
+            <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/sim_cup.jpg" data-src="./static/videos/sim/cup.mp4" aria-label="Place Cup in Bowl"></video>
+            <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/sim_giftbox.jpg" data-src="./static/videos/sim/giftbox.mp4" aria-label="Giftbox Packing"></video>
+            <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/sim_drawer.jpg" data-src="./static/videos/sim/drawer.mp4" aria-label="Place Toy in Drawer"></video>
+            <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/sim_rope.jpg" data-src="./static/videos/sim/rope.mp4" aria-label="Knot the Rope"></video>
+            <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/sim_scissors.jpg" data-src="./static/videos/sim/scissors.mp4" aria-label="Scissor Cutting"></video>
+            <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/sim_drawing.jpg" data-src="./static/videos/sim/drawing.mp4" aria-label="Drawing and Wiping"></video>
+            <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/sim_computer.jpg" data-src="./static/videos/sim/computer.mp4" aria-label="Computer Installation"></video>
+            <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/sim_biology.jpg" data-src="./static/videos/sim/biology.mp4" aria-label="Biology Experiment"></video>
+            <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/sim_battery.jpg" data-src="./static/videos/sim/battery.mp4" aria-label="Battery Insertion"></video>
+          </div>
+          <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
+          <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
+          <div class="reel-progress"><i></i></div>
+        </div>
       </div>
       <p class="reel-title">Open the Bottle</p>
       <div class="reel-dial">
@@ -473,23 +491,41 @@
 
     <h3 class="subsection-title reel-second">Rollout <span class="speed-tag">6&times;</span></h3>
     <div class="reel" data-reel="rollout">
-      <div class="reel-stage">
-        <div class="reel-frame">
-          <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/roll_bottle.jpg" data-src="./static/videos/rollout/bottle.mp4" aria-label="Open the Bottle"></video>
-          <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/roll_cup.jpg" data-src="./static/videos/rollout/cup.mp4" aria-label="Place Cup in Bowl"></video>
-          <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/roll_giftbox.jpg" data-src="./static/videos/rollout/giftbox.mp4" aria-label="Giftbox Packing"></video>
-          <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-label="Place Toy in Drawer"></video>
-          <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-label="Knot the Rope"></video>
-          <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-label="Scissor Cutting"></video>
-          <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-label="Drawing and Wiping"></video>
-          <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-label="Computer Installation"></video>
-          <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-label="Biology Experiment"></video>
-          <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/roll_battery.jpg" data-src="./static/videos/rollout/battery.mp4" aria-label="Battery Insertion"></video>
-          <video class="reel-video" data-i="10" muted loop playsinline preload="none" poster="./static/posters/roll_multi.jpg" data-src="./static/videos/rollout/multi.mp4" aria-label="Multi-Cup Grasping"></video>
+      <div class="reel-row">
+        <div class="reel-human">
+          <p class="reel-human-label">Human Demonstration</p>
+          <div class="reel-human-frame">
+            <video class="reel-hvideo is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/human_bottle.jpg" data-src="./static/videos/human/bottle.mp4" aria-label="Human demonstration, Open the Bottle"></video>
+            <video class="reel-hvideo" data-i="1" muted loop playsinline preload="none" poster="./static/posters/human_cup.jpg" data-src="./static/videos/human/cup.mp4" aria-label="Human demonstration, Place Cup in Bowl"></video>
+            <video class="reel-hvideo" data-i="2" muted loop playsinline preload="none" poster="./static/posters/human_giftbox.jpg" data-src="./static/videos/human/giftbox.mp4" aria-label="Human demonstration, Giftbox Packing"></video>
+            <video class="reel-hvideo" data-i="3" muted loop playsinline preload="none" poster="./static/posters/human_drawer.jpg" data-src="./static/videos/human/drawer.mp4" aria-label="Human demonstration, Place Toy in Drawer"></video>
+            <video class="reel-hvideo" data-i="4" muted loop playsinline preload="none" poster="./static/posters/human_rope.jpg" data-src="./static/videos/human/rope.mp4" aria-label="Human demonstration, Knot the Rope"></video>
+            <video class="reel-hvideo" data-i="5" muted loop playsinline preload="none" poster="./static/posters/human_scissors.jpg" data-src="./static/videos/human/scissors.mp4" aria-label="Human demonstration, Scissor Cutting"></video>
+            <video class="reel-hvideo" data-i="6" muted loop playsinline preload="none" poster="./static/posters/human_drawing.jpg" data-src="./static/videos/human/drawing.mp4" aria-label="Human demonstration, Drawing and Wiping"></video>
+            <video class="reel-hvideo" data-i="7" muted loop playsinline preload="none" poster="./static/posters/human_computer.jpg" data-src="./static/videos/human/computer.mp4" aria-label="Human demonstration, Computer Installation"></video>
+            <video class="reel-hvideo" data-i="8" muted loop playsinline preload="none" poster="./static/posters/human_biology.jpg" data-src="./static/videos/human/biology.mp4" aria-label="Human demonstration, Biology Experiment"></video>
+            <video class="reel-hvideo" data-i="9" muted loop playsinline preload="none" poster="./static/posters/human_battery.jpg" data-src="./static/videos/human/battery.mp4" aria-label="Human demonstration, Battery Insertion"></video>
+            <video class="reel-hvideo" data-i="10" muted loop playsinline preload="none" poster="./static/posters/human_multi.jpg" data-src="./static/videos/human/multi.mp4" aria-label="Human demonstration, Multi-Cup Grasping"></video>
+          </div>
         </div>
-        <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
-        <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
-        <div class="reel-progress"><i></i></div>
+        <div class="reel-stage">
+          <div class="reel-frame">
+            <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/roll_bottle.jpg" data-src="./static/videos/rollout/bottle.mp4" aria-label="Open the Bottle"></video>
+            <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/roll_cup.jpg" data-src="./static/videos/rollout/cup.mp4" aria-label="Place Cup in Bowl"></video>
+            <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/roll_giftbox.jpg" data-src="./static/videos/rollout/giftbox.mp4" aria-label="Giftbox Packing"></video>
+            <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-label="Place Toy in Drawer"></video>
+            <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-label="Knot the Rope"></video>
+            <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-label="Scissor Cutting"></video>
+            <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-label="Drawing and Wiping"></video>
+            <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-label="Computer Installation"></video>
+            <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-label="Biology Experiment"></video>
+            <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/roll_battery.jpg" data-src="./static/videos/rollout/battery.mp4" aria-label="Battery Insertion"></video>
+            <video class="reel-video" data-i="10" muted loop playsinline preload="none" poster="./static/posters/roll_multi.jpg" data-src="./static/videos/rollout/multi.mp4" aria-label="Multi-Cup Grasping"></video>
+          </div>
+          <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
+          <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
+          <div class="reel-progress"><i></i></div>
+        </div>
       </div>
       <p class="reel-title">Open the Bottle</p>
       <div class="reel-dial">
@@ -620,6 +656,7 @@
 (function () {
   document.querySelectorAll('.reel').forEach(function (reel) {
     var vids  = Array.prototype.slice.call(reel.querySelectorAll('.reel-video'));
+    var hvids = Array.prototype.slice.call(reel.querySelectorAll('.reel-hvideo'));
     var slots = Array.prototype.slice.call(reel.querySelectorAll('.reel-item'));
     var track = reel.querySelector('.reel-track');
     var dial  = reel.querySelector('.reel-dial');
@@ -631,7 +668,17 @@
     var visible = false, animating = false;
 
     function real() { return ((v % n) + n) % n; }
-    function load(i) { var x = vids[i]; if (x && !x.src && x.dataset.src) x.src = x.dataset.src; }
+    function load(i) {
+      [vids[i], hvids[i]].forEach(function (x) {
+        if (x && !x.src && x.dataset.src) {
+          /* preload="none" in the markup keeps the page light; once a clip is
+             wanted it has to actually buffer, or play() stalls on the poster */
+          x.preload = 'auto';
+          x.src = x.dataset.src;
+          x.load();
+        }
+      });
+    }
 
     /* lay the names along the rim of a wheel */
     function curve() {
@@ -671,6 +718,13 @@
       var v2 = vids[nextReal];
       v2.classList.add('is-active');
       if (visible) { var pr = v2.play(); if (pr && pr.catch) pr.catch(function () {}); }
+
+      hvids.forEach(function (h, k) {
+        var on = k === nextReal;
+        h.classList.toggle('is-active', on);
+        if (on) { if (visible) { var hp = h.play(); if (hp && hp.catch) hp.catch(function () {}); } }
+        else h.pause();
+      });
       title.textContent = slots[v].textContent;
     }
 
@@ -713,8 +767,12 @@
         es.forEach(function (e) {
           visible = e.isIntersecting;
           var x = vids[real()];
-          if (visible) { load(real()); var pr = x.play(); if (pr && pr.catch) pr.catch(function () {}); }
-          else x.pause();
+          var hx = hvids[real()];
+          if (visible) {
+            load(real());
+            var pr = x.play(); if (pr && pr.catch) pr.catch(function () {});
+            if (hx) { var hp = hx.play(); if (hp && hp.catch) hp.catch(function () {}); }
+          } else { x.pause(); if (hx) hx.pause(); }
         });
       }, { threshold: 0.25 }).observe(reel);
     } else { visible = true; load(0); vids[0].play().catch(function () {}); }

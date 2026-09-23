@@ -686,8 +686,8 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 /* --- stage --- */
 .reel-stage {
   position: relative;
-  max-width: 760px;
-  margin: 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
   border-radius: 16px;
   background: #0e0e10;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10), 0 22px 48px rgba(0, 0, 0, 0.16);
@@ -854,4 +854,62 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   padding: 0.16em 0.62em;
   vertical-align: 0.12em;
   letter-spacing: 0.01em;
+}
+
+/* --- the human demonstration window sits beside the stage --- */
+.reel-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1.5rem;
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+.reel-human {
+  flex: 0 0 236px;
+  width: 236px;
+}
+
+.reel-human-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  margin: 0 0 0.45rem 0;
+  text-align: center;
+}
+
+.reel-human-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0e0e10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* no turn here: the small window cuts straight to the new task */
+.reel-hvideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+.reel-hvideo.is-active { opacity: 1; }
+
+.reel-stage { max-width: 760px; }
+
+@media screen and (max-width: 900px) {
+  .reel-row { flex-direction: column-reverse; align-items: center; gap: 1.1rem; }
+  .reel-human { flex: 0 0 auto; width: min(100%, 300px); }
+  .reel-stage { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-hvideo { transition: none; }
 }
