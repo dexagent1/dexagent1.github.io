@@ -284,16 +284,61 @@ h1.title.publication-title {
   .video-grid { grid-template-columns: 1fr; }
 }
 
+
 /* ==================================================================
-   paper tables, set with booktabs-style horizontal rules only
+   paper tables, presented as a side-by-side pair of cards
    ================================================================== */
-.pub-table {
-  margin: 0 auto 3.2rem auto;
-  max-width: 820px;
+.table-pair {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2.2rem;
+  align-items: start;
 }
 
-.pub-table:last-child {
-  margin-bottom: 0;
+.pub-table {
+  margin: 0;
+  min-width: 0;
+}
+
+.table-card {
+  background: #ffffff;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.table-card-head {
+  padding: 1.1rem 1.3rem 0.9rem 1.3rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.table-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8C1515;
+  background: rgba(140, 21, 21, 0.08);
+  border-radius: 999px;
+  padding: 0.18em 0.7em;
+  margin-bottom: 0.5em;
+}
+
+.table-card-head h3 {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #242424;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.table-card-head p {
+  font-size: 0.85rem;
+  color: #8a8a8a;
+  margin: 0.2em 0 0 0;
 }
 
 .table-scroll {
@@ -304,84 +349,127 @@ h1.title.publication-title {
 table.paper-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-variant-numeric: tabular-nums;
-  color: #242424;
+  color: #333;
   background: transparent;
 }
 
 table.paper-table th,
 table.paper-table td {
-  padding: 0.42em 0.7em;
-  text-align: right;
+  padding: 0.5em 0.55em;
+  text-align: center;
   white-space: nowrap;
   border: none;
 }
 
+/* leading column carries the method names */
 table.paper-table th.col-method,
 table.paper-table td.col-method {
   text-align: left;
   white-space: normal;
-  padding-left: 0;
+  padding-left: 1.3rem;
+  padding-right: 0.9rem;
+  color: #242424;
 }
 
 table.paper-table td.indent {
-  padding-left: 1.4em;
-  color: #4a4a4a;
+  padding-left: 2.3rem;
+  font-size: 0.83rem;
 }
 
-table.paper-table th.group {
-  text-align: center;
+/* a touch of air where two metric groups meet, instead of a rule */
+table.paper-table .gap-left { padding-left: 1.25em; }
+
+table.paper-table tbody td:last-child,
+table.paper-table thead th:last-child { padding-right: 1.3rem; }
+
+/* --- header --- */
+table.paper-table thead th {
+  background: #fbfafa;
   font-weight: 600;
-  padding-bottom: 0.2em;
-}
-
-/* the rule under a spanning group header, drawn only across its own columns */
-table.paper-table thead tr:first-child th.group {
-  border-bottom: 1px solid #b9b9b9;
-}
-
-/* the paper uses booktabs, so the metric groups are separated by the cmidrules
-   above them and by column spacing, never by a vertical rule */
-table.paper-table .group-left {
-  padding-left: 1.5em;
-}
-
-table.paper-table thead tr:last-child th {
-  border-bottom: 1px solid #333;
-  font-weight: 600;
+  color: #6f6f6f;
+  font-size: 0.72rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
   vertical-align: bottom;
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
 }
 
-table.paper-table thead tr:first-child th {
-  border-top: 1.5px solid #333;
-  padding-top: 0.5em;
+table.paper-table tr.group-row th.group {
+  color: #8C1515;
+  font-size: 0.7rem;
+  padding-bottom: 0.35em;
 }
 
-table.paper-table tbody tr:last-child td {
-  border-bottom: 1.5px solid #333;
-}
+table.paper-table tr.group-row th.group + th.group { border-left: 1px solid #efefef; }
 
-/* the Ours row is set off by a rule above it and bold figures, as in the paper */
-table.paper-table tr.ours td {
-  border-top: 1px solid #333;
+table.paper-table tr.metric-row th { border-bottom: 1px solid #e6e6e6; }
+table.paper-table tr.group-row th { border-bottom: 1px solid #f2f2f2; }
+
+/* the little direction arrow next to each metric */
+.dir {
+  margin-left: 0.28em;
+  font-size: 0.82em;
   font-weight: 700;
 }
+.dir.up   { color: #2e8b6f; }
+.dir.down { color: #b07d3a; }
 
-table.paper-table tbody tr:hover td {
-  background-color: rgba(140, 21, 21, 0.035);
+/* --- body --- */
+table.paper-table tbody tr + tr td { border-top: 1px solid #f4f4f4; }
+
+table.paper-table tbody tr:hover td { background-color: #fcfbfb; }
+
+table.paper-table tr.ablation td.col-method { color: #6f6f6f; }
+
+/* the best value in a column */
+table.paper-table td.best { font-weight: 700; color: #1f1f1f; }
+
+/* --- our row --- */
+table.paper-table tr.ours td {
+  background: rgba(140, 21, 21, 0.055);
+  border-top: 1px solid rgba(140, 21, 21, 0.18);
+  font-weight: 700;
+  color: #7a1212;
+  padding-top: 0.62em;
+  padding-bottom: 0.62em;
+}
+
+table.paper-table tr.ours td.col-method {
+  color: #8C1515;
+  box-shadow: inset 3px 0 0 #8C1515;
+}
+
+table.paper-table tr.ours:hover td { background: rgba(140, 21, 21, 0.075); }
+
+.variant {
+  display: inline-block;
+  font-size: 0.72em;
+  color: #7a7a7a;
+  background: #f4f4f4;
+  border-radius: 4px;
+  padding: 0.1em 0.42em;
+  margin-left: 0.25em;
+  font-variant-numeric: normal;
 }
 
 .pub-table figcaption {
-  margin-top: 1.0rem;
-  font-size: 0.93rem;
+  margin-top: 0.95rem;
+  font-size: 0.87rem;
   line-height: 1.6;
-  color: #5a5a5a;
-  text-align: justify;
+  color: #5f5f5f;
+  text-align: left;
+}
+
+@media screen and (max-width: 1080px) {
+  .table-pair { grid-template-columns: 1fr; gap: 2.6rem; }
 }
 
 @media screen and (max-width: 768px) {
-  table.paper-table { font-size: 0.85rem; }
-  table.paper-table th, table.paper-table td { padding: 0.36em 0.5em; }
-  .pub-table figcaption { text-align: left; }
+  table.paper-table { font-size: 0.8rem; }
+  table.paper-table th, table.paper-table td { padding: 0.42em 0.4em; }
+  table.paper-table th.col-method, table.paper-table td.col-method { padding-left: 0.9rem; }
+  table.paper-table td.indent { padding-left: 1.6rem; }
 }
