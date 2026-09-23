@@ -3,10 +3,14 @@ body {
 }
 
 h1.title.publication-title {
-  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  /* Source Serif 4 is the open companion to Stanford's brand serif; the faces
+     stanford.edu self-hosts (stanford, edict) are licensed, not redistributable */
+  font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
   color: #8C1515;
-  font-size: 2.6rem;
-  line-height: 1.2;
+  font-size: 2.85rem;
+  line-height: 1.18;
+  letter-spacing: -0.005em;
 }
 
 /* widen the title block so the title sets in two lines at the template's own
@@ -94,20 +98,20 @@ h1.title.publication-title {
    fourth line */
 @media screen and (max-width: 1200px) {
   h1.title.publication-title {
-    font-size: 2.25rem;
+    font-size: 2.45rem;
   }
 }
 
 /* one more step so laptops around 1024px keep the title at two lines */
 @media screen and (max-width: 1080px) {
   h1.title.publication-title {
-    font-size: 2.0rem;
+    font-size: 2.2rem;
   }
 }
 
 @media screen and (max-width: 768px) {
   h1.title.publication-title {
-    font-size: 1.9rem;
+    font-size: 2.0rem;
   }
   .button-container {
     flex-direction: column;
@@ -458,7 +462,7 @@ table.paper-table tr.ours:hover td { background: rgba(140, 21, 21, 0.075); }
   font-size: 1.28rem;
   font-weight: 600;
   color: #242424;
-  text-align: center;
+  text-align: left;
   margin: 0 0 1.25rem 0;
 }
 
@@ -521,10 +525,11 @@ table.replay-table thead th.total { color: #5f5f5f; }
 
 table.replay-table tr.ours .mark.yes { color: #8C1515; }
 
-/* two figures sharing a row */
+/* two figures sharing a row; the bar chart carries the headline number so it
+   takes the wider slot */
 .figure-pair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.78fr 1.22fr;
   gap: 2.2rem;
   align-items: start;
 }
