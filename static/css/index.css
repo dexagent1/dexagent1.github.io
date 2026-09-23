@@ -679,13 +679,6 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 /* ==================================================================
    task reels: a dial of task names turning one video stage
    ================================================================== */
-.reel-lead {
-  text-align: center;
-  color: #6b6b6b;
-  font-size: 0.95rem;
-  margin: -0.6rem 0 1.6rem 0;
-}
-
 .subsection-title.reel-second { margin-top: 4.2rem; }
 
 .reel { outline: none; margin-bottom: 1rem; }
