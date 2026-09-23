@@ -861,8 +861,9 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.6rem, 1.6vw, 1.5rem);
-  max-width: 1020px;
+  gap: clamp(1rem, 3.4vw, 3.25rem);
+  /* widened so the extra gap comes out of the margins, not out of the stage */
+  max-width: 1100px;
   margin: 0 auto;
 }
 
