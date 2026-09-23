@@ -68,6 +68,7 @@
 <!-- ======================= TEASER ======================= -->
 <section class="section teaser-section">
   <div class="container is-max-widescreen">
+    <h2 class="title is-3 section-title">Overview</h2>
     <figure class="pub-figure">
       <img src="./static/images/teaser_flat.jpg" alt="DexAgent overview">
       <figcaption>
@@ -111,10 +112,10 @@
 </section>
 
 
-<!-- ======================= METHOD ======================= -->
+<!-- ======================= METHODOLOGY ======================= -->
 <section class="section">
   <div class="container is-max-widescreen">
-    <h2 class="title is-3 section-title">Method</h2>
+    <h2 class="title is-3 section-title">Methodology</h2>
     <figure class="pub-figure">
       <img src="./static/images/method2.jpg" alt="DexAgent method">
       <figcaption>
@@ -130,8 +131,80 @@
   </div>
 </section>
 
-<!-- ======================= REAL-ROBOT RESULTS ======================= -->
+<!-- ======================= DATA QUALITY EXPERIMENTS ======================= -->
 <section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Data Quality Experiments</h2>
+
+    <figure class="pub-table">
+      <div class="table-scroll">
+        <table class="paper-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="col-method">Method</th>
+              <th colspan="3" class="group">Rigid</th>
+              <th colspan="3" class="group group-left">Articulated</th>
+            </tr>
+            <tr>
+              <th>F-5 &uarr;</th><th>F-10 &uarr;</th><th>CD &darr;</th>
+              <th class="group-left">F-5 &uarr;</th><th>F-10 &uarr;</th><th>CD &darr;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="col-method">HO</td><td>0.28</td><td>0.51</td><td>3.86</td><td class="group-left">0.29</td><td>0.47</td><td>1.30</td></tr>
+            <tr><td class="col-method">IHOI</td><td>0.42</td><td>0.70</td><td>2.70</td><td class="group-left">0.32</td><td>0.47</td><td>1.47</td></tr>
+            <tr><td class="col-method">HORSE</td><td>0.26</td><td>0.45</td><td>6.69</td><td class="group-left">0.19</td><td>0.34</td><td>1.91</td></tr>
+            <tr><td class="col-method">MCC-HO</td><td>0.52</td><td>0.78</td><td>1.36</td><td class="group-left">0.35</td><td>0.55</td><td>1.21</td></tr>
+            <tr><td class="col-method">G-HOP</td><td>0.69</td><td>0.91</td><td>0.63</td><td class="group-left">0.07</td><td>0.09</td><td>1.23</td></tr>
+            <tr><td class="col-method">FoundationPose</td><td>0.71</td><td>0.91</td><td>0.49</td><td class="group-left">0.40</td><td>0.60</td><td>1.26</td></tr>
+            <tr><td class="col-method">Any6D</td><td>0.71</td><td>0.91</td><td>0.50</td><td class="group-left">0.38</td><td>0.60</td><td>1.24</td></tr>
+            <tr><td class="col-method">Do as I Do</td><td>0.72</td><td>0.91</td><td>0.49</td><td class="group-left">0.40</td><td>0.61</td><td>1.25</td></tr>
+            <tr class="ours"><td class="col-method">Ours</td><td>0.83</td><td>0.96</td><td>0.29</td><td class="group-left">0.47</td><td>0.68</td><td>1.08</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        Reconstruction accuracy on HOI4D, scored separately for rigid and articulated objects.
+        Evaluation metrics are F-5 and F-10, which are F-scores at two distance thresholds, and CD,
+        which is Chamfer distance. Best entry in each column in bold.
+      </figcaption>
+    </figure>
+
+    <figure class="pub-table">
+      <div class="table-scroll">
+        <table class="paper-table">
+          <thead>
+            <tr>
+              <th class="col-method">Method</th>
+              <th>Success % &uarr;</th>
+              <th>E<sub>pos</sub> (m) &darr;</th>
+              <th>E<sub>rot</sub> (rad) &darr;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="col-method">Dex-retargeting</td><td>28.6</td><td>0.08</td><td>0.62</td></tr>
+            <tr><td class="col-method">SPIDER (mjwp)</td><td>71.4</td><td>0.04</td><td>0.57</td></tr>
+            <tr><td class="col-method">SPIDER (mjwp_act)</td><td>77.1</td><td>0.04</td><td>0.42</td></tr>
+            <tr><td class="col-method">Do-as-I-Do (Sharpa hand)</td><td>81.0</td><td><b>0.03</b></td><td>0.15</td></tr>
+            <tr><td class="col-method indent">without transition reward</td><td>79.0</td><td><b>0.03</b></td><td>0.14</td></tr>
+            <tr><td class="col-method indent">annealed sampling only</td><td>72.0</td><td>0.08</td><td>0.32</td></tr>
+            <tr class="ours"><td class="col-method">Ours</td><td>85.7</td><td>0.03</td><td>0.12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        Human-to-robot retargeting quality on OakInk. Success is the share of clips whose converted
+        trajectory passes the physics check. E<sub>pos</sub> and E<sub>rot</sub> are the residual
+        position and rotation gap from the demonstration, lower is better. The two indented rows
+        ablate the strongest baseline.
+      </figcaption>
+    </figure>
+
+  </div>
+</section>
+
+<!-- ======================= REAL-ROBOT RESULTS ======================= -->
+<section class="section">
   <div class="container is-max-widescreen">
     <h2 class="title is-3 section-title">Real-Robot Results</h2>
     <figure class="pub-figure">
@@ -165,7 +238,7 @@
 </section>
 
 <!-- ======================= TOOL LIBRARY ======================= -->
-<section class="section">
+<section class="section section-alt">
   <div class="container is-max-desktop">
     <h2 class="title is-3 section-title">A Self-Evolving Tool Library</h2>
     <figure class="pub-figure">
@@ -180,7 +253,7 @@
 </section>
 
 <!-- ======================= TASK VIDEOS (placeholder) ======================= -->
-<section class="section section-alt">
+<section class="section">
   <div class="container is-max-widescreen">
     <h2 class="title is-3 section-title">Task Videos</h2>
     <p class="section-lead">Per-task rollout videos.</p>
