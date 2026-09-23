@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap">
   <link rel="stylesheet" href="./static/css/index.css">
   <noscript><style>
     .chart-wrap.armed svg.bar-chart .bar    { transform: scaleY(1) !important; }
@@ -20,48 +20,72 @@
 <body>
 
 <!-- ======================= HERO ======================= -->
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
+<section class="cinema" id="top">
 
-          <h1 class="title is-1 publication-title">DexAgent: An Agentic Human2Sim2Robot Framework for Dexterous Manipulation with Self-Evolving Tool Library</h1>
+  <div class="cine-bg">
+      <video class="cine-clip is-active" data-i="0" muted playsinline preload="auto" poster="./static/posters/roll_bottle.jpg" src="./static/videos/rollout/bottle.mp4" data-src="./static/videos/rollout/bottle.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="1" muted playsinline preload="none" poster="./static/posters/roll_cup.jpg" data-src="./static/videos/rollout/cup.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="2" muted playsinline preload="none" poster="./static/posters/roll_giftbox.jpg" data-src="./static/videos/rollout/giftbox.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="3" muted playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="4" muted playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="5" muted playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="6" muted playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="7" muted playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="8" muted playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="9" muted playsinline preload="none" poster="./static/posters/roll_battery.jpg" data-src="./static/videos/rollout/battery.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="10" muted playsinline preload="none" poster="./static/posters/roll_multi.jpg" data-src="./static/videos/rollout/multi.mp4" aria-hidden="true"></video>
+  </div>
+  <div class="cine-scrim"></div>
+  <div class="cine-grain"></div>
 
-          <div class="publication-authors">
-            <span class="author-block">Youhui Wang<sup>1</sup>,</span>
-            <span class="author-block">Yunzhu Li<sup>2</sup>,</span>
-            <span class="author-block">Li Fei-Fei<sup>1&dagger;</sup>,</span>
-            <span class="author-block">Jiajun Wu<sup>1&dagger;</sup>,</span>
-            <span class="author-block">Huang Huang<sup>1&dagger;</sup></span>
-          </div>
+  <div class="cine-inner">
+    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span></h1>
+    <p class="cine-sub">An Agentic Human2Sim2Robot Framework for Dexterous<br class="cine-br">
+      Manipulation with Self-Evolving Tool Library</p>
 
-          <div class="affiliation">
-            <sup>1</sup>Stanford University &nbsp;&nbsp; <sup>2</sup>Columbia University
-          </div>
+    <div class="cine-authors">
+      <span>Youhui Wang<sup>1</sup></span><span>Yunzhu Li<sup>2</sup></span><span>Li Fei-Fei<sup>1&dagger;</sup></span><span>Jiajun Wu<sup>1&dagger;</sup></span><span>Huang Huang<sup>1&dagger;</sup></span>
+    </div>
 
-          <div class="author-notes">&dagger; Equal advising</div>
+    <p class="cine-affil"><sup>1</sup>Stanford University &nbsp;&nbsp;&nbsp; <sup>2</sup>Columbia University</p>
+    <p class="cine-note">&dagger; Equal advising</p>
 
-          <div class="logo-row">
-            <img src="./static/logos/stanford-lockup.png" alt="Stanford University" class="logo logo-stanford">
-            <img src="./static/logos/columbia-crown.png" alt="Columbia University" class="logo logo-columbia">
-          </div>
+    <div class="cine-logos">
+      <img src="./static/logos/stanford-lockup.png" alt="Stanford University" class="cine-logo cine-logo-stanford">
+      <img src="./static/logos/columbia-crown.png" alt="Columbia University" class="cine-logo cine-logo-columbia">
+    </div>
 
-          <div class="button-container">
-            <a href="#" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
-            <a href="#" class="button"><i class="fa fa-file-alt"></i>&emsp14;Paper</a>
-            <a href="https://github.com/dexagent1" target="_blank" rel="noopener" class="button"><i class="fa fa-code"></i>&emsp14;Code (Coming Soon!)</a>
-            <a href="#" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;TL;DR</a>
-          </div>
-
-        </div>
-      </div>
+    <div class="cine-buttons">
+      <a href="#" class="cine-btn"><i class="ai ai-arxiv"></i><span>arXiv</span></a>
+      <a href="#" class="cine-btn"><i class="fa fa-file-alt"></i><span>Paper</span></a>
+      <a href="https://github.com/dexagent1" target="_blank" rel="noopener" class="cine-btn"><i class="fa fa-code"></i><span>Code <em>(Coming Soon!)</em></span></a>
+      <a href="#" class="cine-btn"><i class="fa-brands fa-x-twitter"></i><span>TL;DR</span></a>
     </div>
   </div>
+
+  <div class="cine-ticks">
+        <i data-i="0"></i>
+        <i data-i="1"></i>
+        <i data-i="2"></i>
+        <i data-i="3"></i>
+        <i data-i="4"></i>
+        <i data-i="5"></i>
+        <i data-i="6"></i>
+        <i data-i="7"></i>
+        <i data-i="8"></i>
+        <i data-i="9"></i>
+        <i data-i="10"></i>
+  </div>
+
+  <a class="cine-scroll" href="#overview" aria-label="Scroll down">
+    <span class="cine-scroll-word">S C R O L L</span>
+    <span class="cine-scroll-rail"><i></i></span>
+  </a>
+
 </section>
 
 <!-- ======================= VIDEO ======================= -->
-<section class="section section-alt">
+<section class="section section-alt" id="overview">
   <div class="container is-max-desktop">
     <h2 class="title is-3 section-title">Overview Video</h2>
     <div class="video-wrap">
@@ -783,6 +807,111 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
     setTimeout(relayout, 150);
   });
+})();
+</script>
+
+<script>
+/* ---- hero: play the rollout clips back to back, then start over ---- */
+(function () {
+  var stage = document.querySelector('.cine-bg');
+  if (!stage) return;
+  var clips = Array.prototype.slice.call(stage.querySelectorAll('.cine-clip'));
+  var ticks = Array.prototype.slice.call(document.querySelectorAll('.cine-ticks i'));
+  var n = clips.length, cur = 0;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function arm(i) {
+    var c = clips[(i + n) % n];
+    if (c && !c.src && c.dataset.src) { c.preload = 'auto'; c.src = c.dataset.src; c.load(); }
+  }
+
+  function show(i) {
+    i = (i + n) % n;
+    clips[cur].classList.remove('is-active');
+    if (cur !== i) { try { clips[cur].pause(); clips[cur].currentTime = 0; } catch (e) {} }
+    cur = i;
+    arm(cur); arm(cur + 1);
+    var c = clips[cur];
+    c.classList.add('is-active');
+    try { c.currentTime = 0; } catch (e) {}
+    var p = c.play();
+    if (p && p.catch) p.catch(function () {});
+    ticks.forEach(function (t, k) { t.classList.toggle('is-on', k === cur); });
+  }
+
+  clips.forEach(function (c, i) {
+    c.addEventListener('ended', function () { if (i === cur) show(cur + 1); });
+    /* a clip that cannot play should not stall the reel */
+    c.addEventListener('error', function () { if (i === cur) show(cur + 1); });
+  });
+
+  if (reduced) {
+    clips[0].classList.add('is-active');
+    ticks[0].classList.add('is-on');
+    arm(0);
+    return;
+  }
+
+  arm(0); arm(1);
+  ticks[0].classList.add('is-on');
+  var p0 = clips[0].play();
+  if (p0 && p0.catch) p0.catch(function () {});
+
+  /* watchdog: if a clip stops advancing for any reason, move on */
+  var lastT = -1, stuck = 0;
+  setInterval(function () {
+    var c = clips[cur];
+    if (document.hidden) return;
+    if (c.paused || c.currentTime === lastT) { if (++stuck >= 3) { stuck = 0; show(cur + 1); } }
+    else stuck = 0;
+    lastT = c.currentTime;
+  }, 1500);
+
+  /* stop burning battery while the hero is off screen */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { var p = clips[cur].play(); if (p && p.catch) p.catch(function () {}); }
+        else clips[cur].pause();
+      });
+    }, { threshold: 0.05 }).observe(stage);
+  }
+})();
+</script>
+
+<script>
+/* ---- the wordmark types its second half out, once ---- */
+(function () {
+  var host = document.querySelector('.cine-agent');
+  if (!host) return;
+  var typed = host.querySelector('.cine-typed');
+  var word  = host.dataset.word || '';
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduced) { typed.textContent = word; host.classList.add('is-done'); return; }
+
+  /* sit at "Dex_" with the caret blinking before the word starts */
+  host.classList.add('is-waiting');
+
+  var started = false;
+  function run() {
+    if (started) return;
+    started = true;
+    host.classList.remove('is-waiting');
+    host.classList.add('is-typing');
+    var i = 0;
+    (function step() {
+      typed.textContent = word.slice(0, i);
+      if (i++ <= word.length) setTimeout(step, 115 + Math.random() * 75);
+      else setTimeout(function () {
+        host.classList.remove('is-typing');
+        host.classList.add('is-done');   /* caret blinks a few times, then goes */
+      }, 520);
+    })();
+  }
+  /* wait for the webfont so the ghost has already reserved the right width */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(run, 420); });
+  else setTimeout(run, 700);
 })();
 </script>
 </body>
