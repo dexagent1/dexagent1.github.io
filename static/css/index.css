@@ -3,14 +3,15 @@ body {
 }
 
 h1.title.publication-title {
-  /* Source Serif 4 is the open companion to Stanford's brand serif; the faces
-     stanford.edu self-hosts (stanford, edict) are licensed, not redistributable */
-  font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  /* Harvard sets its pages in Canela + GT America, both commercially licensed
+     and self-hosted, so they cannot be used here. Playfair Display is the
+     closest open high-contrast display serif. */
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
   font-weight: 600;
   color: #8C1515;
-  font-size: 2.85rem;
-  line-height: 1.18;
-  letter-spacing: -0.005em;
+  font-size: 2.5rem;
+  line-height: 1.22;
+  letter-spacing: -0.004em;
 }
 
 /* widen the title block so the title sets in two lines at the template's own
@@ -98,20 +99,20 @@ h1.title.publication-title {
    fourth line */
 @media screen and (max-width: 1200px) {
   h1.title.publication-title {
-    font-size: 2.45rem;
+    font-size: 2.2rem;
   }
 }
 
 /* one more step so laptops around 1024px keep the title at two lines */
 @media screen and (max-width: 1080px) {
   h1.title.publication-title {
-    font-size: 2.2rem;
+    font-size: 1.95rem;
   }
 }
 
 @media screen and (max-width: 768px) {
   h1.title.publication-title {
-    font-size: 2.0rem;
+    font-size: 1.7rem;
   }
   .button-container {
     flex-direction: column;
@@ -529,7 +530,7 @@ table.replay-table tr.ours .mark.yes { color: #8C1515; }
    takes the wider slot */
 .figure-pair {
   display: grid;
-  grid-template-columns: 0.78fr 1.22fr;
+  grid-template-columns: 0.58fr 1.42fr;
   gap: 2.2rem;
   align-items: start;
 }
@@ -547,4 +548,104 @@ table.replay-table tr.ours .mark.yes { color: #8C1515; }
 
 @media screen and (max-width: 900px) {
   .figure-pair { grid-template-columns: 1fr; gap: 2.6rem; }
+}
+
+/* ==================================================================
+   animated success-rate chart
+   ================================================================== */
+.chart-wrap {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  padding: 0.9rem 1rem 0.6rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.0rem;
+  margin-bottom: 0.7rem;
+}
+
+.chart-legend .lg {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.79rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+.chart-legend .lg.is-ours { color: #2c2c2c; font-weight: 700; }
+
+.chart-legend .lg i {
+  width: 11px;
+  height: 11px;
+  border-radius: 2.5px;
+  margin-right: 0.38em;
+  display: inline-block;
+}
+
+svg.bar-chart { display: block; width: 100%; height: auto; overflow: visible; }
+
+svg.bar-chart .grid     { stroke: #eeeeee; stroke-width: 1; }
+svg.bar-chart .axis     { stroke: #bdbdbd; stroke-width: 1; }
+svg.bar-chart .avg-band { fill: #f7f6f6; }
+
+svg.bar-chart .ytick {
+  font-size: 12px; fill: #8a8a8a; text-anchor: end;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+svg.bar-chart .ylabel {
+  font-size: 13px; fill: #6b6b6b; text-anchor: middle;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+svg.bar-chart .xlabel {
+  font-size: 12.5px; fill: #555; text-anchor: end;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+svg.bar-chart .xlabel.avg { font-weight: 700; fill: #2c2c2c; }
+
+svg.bar-chart .vlabel {
+  font-size: 12.5px; font-weight: 700; fill: #3a2f7d; text-anchor: middle;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+
+/* Resting state is the FINISHED chart. The collapsed state is only applied
+   while JS is alive and the chart has not been revealed, so a failure anywhere
+   in the animation path leaves a fully drawn chart rather than an empty one. */
+svg.bar-chart .bar {
+  transform: scaleY(1);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: filter 0.15s ease;
+}
+
+.chart-wrap.armed:not(.in-view) svg.bar-chart .bar    { transform: scaleY(0); }
+.chart-wrap.armed:not(.in-view) svg.bar-chart .vlabel { opacity: 0; }
+
+.chart-wrap.armed.in-view svg.bar-chart .bar {
+  animation: barRise 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.chart-wrap.armed.in-view svg.bar-chart .vlabel {
+  animation: labelFade 0.45s ease-out both;
+}
+
+@keyframes barRise   { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes labelFade { from { opacity: 0; transform: translateY(5px); }
+                       to   { opacity: 1; transform: translateY(0); } }
+
+svg.bar-chart .bar:hover { filter: brightness(1.12); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-wrap.armed:not(.in-view) svg.bar-chart .bar    { transform: scaleY(1); }
+  .chart-wrap.armed:not(.in-view) svg.bar-chart .vlabel { opacity: 1; }
+  .chart-wrap.armed.in-view svg.bar-chart .bar,
+  .chart-wrap.armed.in-view svg.bar-chart .vlabel { animation: none; }
+}
+
+@media screen and (max-width: 900px) {
+  .chart-legend { gap: 0.3rem 0.7rem; }
+  .chart-legend .lg { font-size: 0.72rem; }
 }

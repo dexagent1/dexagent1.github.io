@@ -10,8 +10,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="./static/css/index.css">
+  <noscript><style>
+    .chart-wrap.armed svg.bar-chart .bar    { transform: scaleY(1) !important; }
+    .chart-wrap.armed svg.bar-chart .vlabel { opacity: 1 !important; }
+  </style></noscript>
 </head>
 <body>
 
@@ -283,7 +287,142 @@
       </figure>
 
       <figure class="pub-figure">
-        <img src="./static/images/success_rate_bar.png" alt="Per-task policy success rate">
+        <div class="chart-wrap armed" id="successChart">
+          <div class="chart-legend">
+            <span class="lg"><i style="background:#2A78D6"></i>Dex-retargeting</span>
+            <span class="lg"><i style="background:#EB6834"></i>Do as I Do</span>
+            <span class="lg"><i style="background:#1BAF7A"></i>Spider</span>
+            <span class="lg"><i style="background:#EDA100"></i>TopoRetarget</span>
+            <span class="lg"><i style="background:#E87BA4"></i>Egoinfinity</span>
+            <span class="lg"><i style="background:#008300"></i>V2D</span>
+            <span class="lg is-ours"><i style="background:#4A3AA7"></i>Ours</span>
+          </div>
+          <svg class="bar-chart" viewBox="0 0 1000 408" role="img" aria-label="Per-task policy success rate across eleven tasks">
+            <line class="grid" x1="54" y1="324.0" x2="992" y2="324.0"/>
+            <text class="ytick" x="45" y="328.0">0</text>
+            <line class="grid" x1="54" y1="262.0" x2="992" y2="262.0"/>
+            <text class="ytick" x="45" y="266.0">20</text>
+            <line class="grid" x1="54" y1="200.0" x2="992" y2="200.0"/>
+            <text class="ytick" x="45" y="204.0">40</text>
+            <line class="grid" x1="54" y1="138.0" x2="992" y2="138.0"/>
+            <text class="ytick" x="45" y="142.0">60</text>
+            <line class="grid" x1="54" y1="76.0" x2="992" y2="76.0"/>
+            <text class="ytick" x="45" y="80.0">80</text>
+            <line class="grid" x1="54" y1="14.0" x2="992" y2="14.0"/>
+            <text class="ytick" x="45" y="18.0">100</text>
+            <rect class="avg-band" x="913.8" y="14" width="78.2" height="310.0"/>
+            <text class="ylabel" transform="translate(15,169.0) rotate(-90)">Success Rate (%)</text>
+            <rect class="bar" x="61.82" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:0ms"><title>Dex-retargeting — Cup: 0%</title></rect>
+            <rect class="bar" x="70.75" y="169.00" width="8.03" height="155.00" fill="#EB6834" style="animation-delay:14ms"><title>Do as I Do — Cup: 50%</title></rect>
+            <rect class="bar" x="79.68" y="107.00" width="8.03" height="217.00" fill="#1BAF7A" style="animation-delay:28ms"><title>Spider — Cup: 70%</title></rect>
+            <rect class="bar" x="88.62" y="138.00" width="8.03" height="186.00" fill="#EDA100" style="animation-delay:42ms"><title>TopoRetarget — Cup: 60%</title></rect>
+            <rect class="bar" x="97.55" y="138.00" width="8.03" height="186.00" fill="#E87BA4" style="animation-delay:56ms"><title>Egoinfinity — Cup: 60%</title></rect>
+            <rect class="bar" x="106.48" y="107.00" width="8.03" height="217.00" fill="#008300" style="animation-delay:70ms"><title>V2D — Cup: 70%</title></rect>
+            <rect class="bar ours" x="115.42" y="45.00" width="8.03" height="279.00" fill="#4A3AA7" style="animation-delay:84ms"><title>Ours — Cup: 90%</title></rect>
+            <text class="vlabel" x="119.43" y="38.0" style="animation-delay:404ms">90</text>
+            <rect class="bar" x="139.98" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:55ms"><title>Dex-retargeting — Giftbox: 0%</title></rect>
+            <rect class="bar" x="148.92" y="169.00" width="8.03" height="155.00" fill="#EB6834" style="animation-delay:69ms"><title>Do as I Do — Giftbox: 50%</title></rect>
+            <rect class="bar" x="157.85" y="200.00" width="8.03" height="124.00" fill="#1BAF7A" style="animation-delay:83ms"><title>Spider — Giftbox: 40%</title></rect>
+            <rect class="bar" x="166.78" y="293.00" width="8.03" height="31.00" fill="#EDA100" style="animation-delay:97ms"><title>TopoRetarget — Giftbox: 10%</title></rect>
+            <rect class="bar" x="175.72" y="262.00" width="8.03" height="62.00" fill="#E87BA4" style="animation-delay:111ms"><title>Egoinfinity — Giftbox: 20%</title></rect>
+            <rect class="bar" x="184.65" y="200.00" width="8.03" height="124.00" fill="#008300" style="animation-delay:125ms"><title>V2D — Giftbox: 40%</title></rect>
+            <rect class="bar ours" x="193.58" y="107.00" width="8.03" height="217.00" fill="#4A3AA7" style="animation-delay:139ms"><title>Ours — Giftbox: 70%</title></rect>
+            <text class="vlabel" x="197.60" y="100.0" style="animation-delay:459ms">70</text>
+            <rect class="bar" x="218.15" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:110ms"><title>Dex-retargeting — Drawer: 0%</title></rect>
+            <rect class="bar" x="227.08" y="293.00" width="8.03" height="31.00" fill="#EB6834" style="animation-delay:124ms"><title>Do as I Do — Drawer: 10%</title></rect>
+            <rect class="bar" x="236.02" y="293.00" width="8.03" height="31.00" fill="#1BAF7A" style="animation-delay:138ms"><title>Spider — Drawer: 10%</title></rect>
+            <rect class="bar" x="244.95" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:152ms"><title>TopoRetarget — Drawer: 0%</title></rect>
+            <rect class="bar" x="253.88" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:166ms"><title>Egoinfinity — Drawer: 0%</title></rect>
+            <rect class="bar" x="262.82" y="231.00" width="8.03" height="93.00" fill="#008300" style="animation-delay:180ms"><title>V2D — Drawer: 30%</title></rect>
+            <rect class="bar ours" x="271.75" y="76.00" width="8.03" height="248.00" fill="#4A3AA7" style="animation-delay:194ms"><title>Ours — Drawer: 80%</title></rect>
+            <text class="vlabel" x="275.77" y="69.0" style="animation-delay:514ms">80</text>
+            <rect class="bar" x="296.32" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:165ms"><title>Dex-retargeting — Rope Knot: 0%</title></rect>
+            <rect class="bar" x="305.25" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:179ms"><title>Do as I Do — Rope Knot: 0%</title></rect>
+            <rect class="bar" x="314.18" y="323.40" width="8.03" height="0.60" fill="#1BAF7A" style="animation-delay:193ms"><title>Spider — Rope Knot: 0%</title></rect>
+            <rect class="bar" x="323.12" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:207ms"><title>TopoRetarget — Rope Knot: 0%</title></rect>
+            <rect class="bar" x="332.05" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:221ms"><title>Egoinfinity — Rope Knot: 0%</title></rect>
+            <rect class="bar" x="340.98" y="323.40" width="8.03" height="0.60" fill="#008300" style="animation-delay:235ms"><title>V2D — Rope Knot: 0%</title></rect>
+            <rect class="bar ours" x="349.92" y="169.00" width="8.03" height="155.00" fill="#4A3AA7" style="animation-delay:249ms"><title>Ours — Rope Knot: 50%</title></rect>
+            <text class="vlabel" x="353.93" y="162.0" style="animation-delay:569ms">50</text>
+            <rect class="bar" x="374.48" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:220ms"><title>Dex-retargeting — Scissors: 0%</title></rect>
+            <rect class="bar" x="383.42" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:234ms"><title>Do as I Do — Scissors: 0%</title></rect>
+            <rect class="bar" x="392.35" y="231.00" width="8.03" height="93.00" fill="#1BAF7A" style="animation-delay:248ms"><title>Spider — Scissors: 30%</title></rect>
+            <rect class="bar" x="401.28" y="293.00" width="8.03" height="31.00" fill="#EDA100" style="animation-delay:262ms"><title>TopoRetarget — Scissors: 10%</title></rect>
+            <rect class="bar" x="410.22" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:276ms"><title>Egoinfinity — Scissors: 0%</title></rect>
+            <rect class="bar" x="419.15" y="323.40" width="8.03" height="0.60" fill="#008300" style="animation-delay:290ms"><title>V2D — Scissors: 0%</title></rect>
+            <rect class="bar ours" x="428.08" y="76.00" width="8.03" height="248.00" fill="#4A3AA7" style="animation-delay:304ms"><title>Ours — Scissors: 80%</title></rect>
+            <text class="vlabel" x="432.10" y="69.0" style="animation-delay:624ms">80</text>
+            <rect class="bar" x="452.65" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:275ms"><title>Dex-retargeting — Drawing: 0%</title></rect>
+            <rect class="bar" x="461.58" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:289ms"><title>Do as I Do — Drawing: 0%</title></rect>
+            <rect class="bar" x="470.52" y="262.00" width="8.03" height="62.00" fill="#1BAF7A" style="animation-delay:303ms"><title>Spider — Drawing: 20%</title></rect>
+            <rect class="bar" x="479.45" y="293.00" width="8.03" height="31.00" fill="#EDA100" style="animation-delay:317ms"><title>TopoRetarget — Drawing: 10%</title></rect>
+            <rect class="bar" x="488.38" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:331ms"><title>Egoinfinity — Drawing: 0%</title></rect>
+            <rect class="bar" x="497.32" y="293.00" width="8.03" height="31.00" fill="#008300" style="animation-delay:345ms"><title>V2D — Drawing: 10%</title></rect>
+            <rect class="bar ours" x="506.25" y="200.00" width="8.03" height="124.00" fill="#4A3AA7" style="animation-delay:359ms"><title>Ours — Drawing: 40%</title></rect>
+            <text class="vlabel" x="510.27" y="193.0" style="animation-delay:679ms">40</text>
+            <rect class="bar" x="530.82" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:330ms"><title>Dex-retargeting — Computer: 0%</title></rect>
+            <rect class="bar" x="539.75" y="293.00" width="8.03" height="31.00" fill="#EB6834" style="animation-delay:344ms"><title>Do as I Do — Computer: 10%</title></rect>
+            <rect class="bar" x="548.68" y="262.00" width="8.03" height="62.00" fill="#1BAF7A" style="animation-delay:358ms"><title>Spider — Computer: 20%</title></rect>
+            <rect class="bar" x="557.62" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:372ms"><title>TopoRetarget — Computer: 0%</title></rect>
+            <rect class="bar" x="566.55" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:386ms"><title>Egoinfinity — Computer: 0%</title></rect>
+            <rect class="bar" x="575.48" y="293.00" width="8.03" height="31.00" fill="#008300" style="animation-delay:400ms"><title>V2D — Computer: 10%</title></rect>
+            <rect class="bar ours" x="584.42" y="169.00" width="8.03" height="155.00" fill="#4A3AA7" style="animation-delay:414ms"><title>Ours — Computer: 50%</title></rect>
+            <text class="vlabel" x="588.43" y="162.0" style="animation-delay:734ms">50</text>
+            <rect class="bar" x="608.98" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:385ms"><title>Dex-retargeting — Bottle: 0%</title></rect>
+            <rect class="bar" x="617.92" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:399ms"><title>Do as I Do — Bottle: 0%</title></rect>
+            <rect class="bar" x="626.85" y="323.40" width="8.03" height="0.60" fill="#1BAF7A" style="animation-delay:413ms"><title>Spider — Bottle: 0%</title></rect>
+            <rect class="bar" x="635.78" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:427ms"><title>TopoRetarget — Bottle: 0%</title></rect>
+            <rect class="bar" x="644.72" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:441ms"><title>Egoinfinity — Bottle: 0%</title></rect>
+            <rect class="bar" x="653.65" y="323.40" width="8.03" height="0.60" fill="#008300" style="animation-delay:455ms"><title>V2D — Bottle: 0%</title></rect>
+            <rect class="bar ours" x="662.58" y="107.00" width="8.03" height="217.00" fill="#4A3AA7" style="animation-delay:469ms"><title>Ours — Bottle: 70%</title></rect>
+            <text class="vlabel" x="666.60" y="100.0" style="animation-delay:789ms">70</text>
+            <rect class="bar" x="687.15" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:440ms"><title>Dex-retargeting — Biology: 0%</title></rect>
+            <rect class="bar" x="696.08" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:454ms"><title>Do as I Do — Biology: 0%</title></rect>
+            <rect class="bar" x="705.02" y="323.40" width="8.03" height="0.60" fill="#1BAF7A" style="animation-delay:468ms"><title>Spider — Biology: 0%</title></rect>
+            <rect class="bar" x="713.95" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:482ms"><title>TopoRetarget — Biology: 0%</title></rect>
+            <rect class="bar" x="722.88" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:496ms"><title>Egoinfinity — Biology: 0%</title></rect>
+            <rect class="bar" x="731.82" y="323.40" width="8.03" height="0.60" fill="#008300" style="animation-delay:510ms"><title>V2D — Biology: 0%</title></rect>
+            <rect class="bar ours" x="740.75" y="200.00" width="8.03" height="124.00" fill="#4A3AA7" style="animation-delay:524ms"><title>Ours — Biology: 40%</title></rect>
+            <text class="vlabel" x="744.77" y="193.0" style="animation-delay:844ms">40</text>
+            <rect class="bar" x="765.32" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:495ms"><title>Dex-retargeting — Battery: 0%</title></rect>
+            <rect class="bar" x="774.25" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:509ms"><title>Do as I Do — Battery: 0%</title></rect>
+            <rect class="bar" x="783.18" y="293.00" width="8.03" height="31.00" fill="#1BAF7A" style="animation-delay:523ms"><title>Spider — Battery: 10%</title></rect>
+            <rect class="bar" x="792.12" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:537ms"><title>TopoRetarget — Battery: 0%</title></rect>
+            <rect class="bar" x="801.05" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:551ms"><title>Egoinfinity — Battery: 0%</title></rect>
+            <rect class="bar" x="809.98" y="323.40" width="8.03" height="0.60" fill="#008300" style="animation-delay:565ms"><title>V2D — Battery: 0%</title></rect>
+            <rect class="bar ours" x="818.92" y="138.00" width="8.03" height="186.00" fill="#4A3AA7" style="animation-delay:579ms"><title>Ours — Battery: 60%</title></rect>
+            <text class="vlabel" x="822.93" y="131.0" style="animation-delay:899ms">60</text>
+            <rect class="bar" x="843.48" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:550ms"><title>Dex-retargeting — Multi-object: 0%</title></rect>
+            <rect class="bar" x="852.42" y="323.40" width="8.03" height="0.60" fill="#EB6834" style="animation-delay:564ms"><title>Do as I Do — Multi-object: 0%</title></rect>
+            <rect class="bar" x="861.35" y="323.40" width="8.03" height="0.60" fill="#1BAF7A" style="animation-delay:578ms"><title>Spider — Multi-object: 0%</title></rect>
+            <rect class="bar" x="870.28" y="323.40" width="8.03" height="0.60" fill="#EDA100" style="animation-delay:592ms"><title>TopoRetarget — Multi-object: 0%</title></rect>
+            <rect class="bar" x="879.22" y="323.40" width="8.03" height="0.60" fill="#E87BA4" style="animation-delay:606ms"><title>Egoinfinity — Multi-object: 0%</title></rect>
+            <rect class="bar" x="888.15" y="231.00" width="8.03" height="93.00" fill="#008300" style="animation-delay:620ms"><title>V2D — Multi-object: 30%</title></rect>
+            <rect class="bar ours" x="897.08" y="107.00" width="8.03" height="217.00" fill="#4A3AA7" style="animation-delay:634ms"><title>Ours — Multi-object: 70%</title></rect>
+            <text class="vlabel" x="901.10" y="100.0" style="animation-delay:954ms">70</text>
+            <rect class="bar" x="921.65" y="323.40" width="8.03" height="0.60" fill="#2A78D6" style="animation-delay:605ms"><title>Dex-retargeting — Average: 0.0%</title></rect>
+            <rect class="bar" x="930.58" y="290.21" width="8.03" height="33.79" fill="#EB6834" style="animation-delay:619ms"><title>Do as I Do — Average: 10.9%</title></rect>
+            <rect class="bar" x="939.52" y="267.58" width="8.03" height="56.42" fill="#1BAF7A" style="animation-delay:633ms"><title>Spider — Average: 18.2%</title></rect>
+            <rect class="bar" x="948.45" y="298.58" width="8.03" height="25.42" fill="#EDA100" style="animation-delay:647ms"><title>TopoRetarget — Average: 8.2%</title></rect>
+            <rect class="bar" x="957.38" y="301.37" width="8.03" height="22.63" fill="#E87BA4" style="animation-delay:661ms"><title>Egoinfinity — Average: 7.3%</title></rect>
+            <rect class="bar" x="966.32" y="270.37" width="8.03" height="53.63" fill="#008300" style="animation-delay:675ms"><title>V2D — Average: 17.3%</title></rect>
+            <rect class="bar ours" x="975.25" y="126.84" width="8.03" height="197.16" fill="#4A3AA7" style="animation-delay:689ms"><title>Ours — Average: 63.6%</title></rect>
+            <text class="vlabel" x="979.27" y="119.8" style="animation-delay:1009ms">63.6</text>
+            <line class="axis" x1="54" y1="324" x2="992" y2="324"/>
+            <text class="xlabel" transform="translate(93.1,337) rotate(-33)">Cup</text>
+            <text class="xlabel" transform="translate(171.3,337) rotate(-33)">Giftbox</text>
+            <text class="xlabel" transform="translate(249.4,337) rotate(-33)">Drawer</text>
+            <text class="xlabel" transform="translate(327.6,337) rotate(-33)">Rope Knot</text>
+            <text class="xlabel" transform="translate(405.8,337) rotate(-33)">Scissors</text>
+            <text class="xlabel" transform="translate(483.9,337) rotate(-33)">Drawing</text>
+            <text class="xlabel" transform="translate(562.1,337) rotate(-33)">Computer</text>
+            <text class="xlabel" transform="translate(640.3,337) rotate(-33)">Bottle</text>
+            <text class="xlabel" transform="translate(718.4,337) rotate(-33)">Biology</text>
+            <text class="xlabel" transform="translate(796.6,337) rotate(-33)">Battery</text>
+            <text class="xlabel" transform="translate(874.8,337) rotate(-33)">Multi-object</text>
+            <text class="xlabel avg" transform="translate(952.9,337) rotate(-33)">Average</text>
+          </svg>
+        </div>
         <figcaption>
           Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated
           data reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
@@ -325,5 +464,20 @@
   </div>
 </section>
 
+
+<script>
+(function () {
+  var el = document.getElementById('successChart');
+  if (!el) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('IntersectionObserver' in window)) { el.classList.add('in-view'); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.25 });
+  io.observe(el);
+})();
+</script>
 </body>
 </html>
