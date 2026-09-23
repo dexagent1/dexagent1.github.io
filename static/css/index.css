@@ -238,7 +238,6 @@ h1.title.publication-title {
   .pub-figure figcaption { text-align: left; }
 }
 
-
 /* ==================================================================
    paper tables, presented as a side-by-side pair of cards
    ================================================================== */
@@ -486,7 +485,6 @@ table.replay-table thead th.total { color: #5f5f5f; }
 .mark.no  { color: #d3d3d3; }
 
 table.replay-table tr.ours .mark.yes { color: #8C1515; }
-
 
 /* ==================================================================
    animated, interactive success-rate chart
@@ -761,23 +759,6 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 .reel-stage:hover .reel-nav,
 .reel:focus-within .reel-nav { opacity: 1; }
 .reel-nav:hover { background: rgba(140, 21, 21, 0.85); }
-
-.reel-badge {
-  position: absolute;
-  top: 14px; right: 16px;
-  z-index: 4;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(20, 20, 22, 0.42);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 999px;
-  padding: 0.26em 0.7em;
-  font-variant-numeric: tabular-nums;
-}
-.reel-badge .reel-sep { opacity: 0.5; margin: 0 0.25em; }
-.reel-badge .reel-total { opacity: 0.7; }
 
 .reel-progress {
   position: absolute;
