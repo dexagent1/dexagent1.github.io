@@ -126,22 +126,20 @@ h1.title.publication-title {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 3.2rem;
-  padding-top: 1.6em;
-  padding-bottom: 1.0em;
+  gap: 2.4rem;
+  padding-top: 1.4em;
+  padding-bottom: 0.9em;
 }
 
 .logo-row .logo {
-  height: 46px;
   width: auto;
   object-fit: contain;
-  opacity: 0.88;
 }
 
-/* the two wordmarks are drawn at different cap heights, so match them by eye
-   rather than by bounding box */
-.logo-row .logo-stanford { height: 40px; }
-.logo-row .logo-columbia { height: 54px; }
+/* the Block S is a tall emblem and the Columbia lockup is a wide crown-over-text
+   mark, so equal heights read unequal. Sized by eye instead. */
+.logo-row .logo-stanford { height: 58px; }
+.logo-row .logo-columbia { height: 50px; }
 
 /* ==================================================================
    content sections
@@ -173,7 +171,6 @@ h1.title.publication-title {
 }
 
 .teaser-section {
-  padding-top: 0;
   padding-bottom: 2.5rem;
 }
 
@@ -274,9 +271,9 @@ h1.title.publication-title {
 }
 
 @media screen and (max-width: 768px) {
-  .logo-row { gap: 2rem; padding-top: 1.3em; }
-  .logo-row .logo-stanford { height: 30px; }
-  .logo-row .logo-columbia { height: 40px; }
+  .logo-row { gap: 1.6rem; padding-top: 1.2em; }
+  .logo-row .logo-stanford { height: 44px; }
+  .logo-row .logo-columbia { height: 38px; }
   .pub-figure figcaption { text-align: left; }
   .video-grid { grid-template-columns: 1fr; }
 }
