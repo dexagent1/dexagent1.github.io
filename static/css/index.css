@@ -19,7 +19,7 @@ h1.title.publication-title {
 
 .publication-authors {
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
-  font-size: 1.45rem;
+  font-size: 1.62rem;
   font-weight: 700;
   color: #242424;
   padding-top: 0.15em;
@@ -38,8 +38,8 @@ h1.title.publication-title {
   display: block;
   color: #242424;
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
-  font-size: 1.32rem;
-  padding-top: 0.55em;
+  font-size: 1.46rem;
+  padding-top: 0.6em;
   text-align: center;
 }
 
@@ -47,8 +47,8 @@ h1.title.publication-title {
   display: block;
   color: #5c5c5c;
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
-  font-size: 1.1rem;
-  padding-top: 0.45em;
+  font-size: 1.22rem;
+  padding-top: 0.5em;
   text-align: center;
 }
 
@@ -147,8 +147,8 @@ h1.title.publication-title {
 /* Stanford is a horizontal lockup (3.05:1) and Columbia a stacked one (1.46:1),
    so equal heights would let Stanford run twice as wide. Balanced by eye on
    width instead. */
-.logo-row .logo-stanford { height: 58px; }
-.logo-row .logo-columbia { height: 68px; }
+.logo-row .logo-stanford { height: 66px; }
+.logo-row .logo-columbia { height: 78px; }
 
 /* ==================================================================
    content sections
@@ -268,8 +268,8 @@ h1.title.publication-title {
 
 @media screen and (max-width: 768px) {
   .logo-row { gap: 1.6rem; padding-top: 1.2em; }
-  .logo-row .logo-stanford { height: 40px; }
-  .logo-row .logo-columbia { height: 53px; }
+  .logo-row .logo-stanford { height: 46px; }
+  .logo-row .logo-columbia { height: 60px; }
   .pub-figure figcaption { text-align: left; }
   .video-grid { grid-template-columns: 1fr; }
 }
@@ -547,8 +547,8 @@ table.replay-table tr.ours .mark.yes { color: #8C1515; }
 .chart-legend .lg {
   display: inline-flex;
   align-items: center;
-  font-size: 0.79rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: #4a4a4a;
   white-space: nowrap;
   background: none;
   border: 1px solid transparent;
@@ -564,8 +564,8 @@ table.replay-table tr.ours .mark.yes { color: #8C1515; }
 .chart-legend .lg.is-ours   { color: #2c2c2c; font-weight: 700; }
 
 .chart-legend .lg i {
-  width: 11px; height: 11px; border-radius: 2.5px;
-  margin-right: 0.38em; display: inline-block;
+  width: 13px; height: 13px; border-radius: 3px;
+  margin-right: 0.42em; display: inline-block;
 }
 
 svg.bar-chart { display: block; width: 100%; height: auto; }
@@ -581,11 +581,11 @@ svg.bar-chart .xlabel,
 svg.bar-chart .vlabel {
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
 }
-svg.bar-chart .ytick  { font-size: 12px; fill: #8a8a8a; text-anchor: end; }
-svg.bar-chart .ylabel { font-size: 13px; fill: #6b6b6b; text-anchor: middle; }
-svg.bar-chart .xlabel { font-size: 12.5px; fill: #555; text-anchor: end; }
+svg.bar-chart .ytick  { font-size: 15.5px; fill: #7d7d7d; text-anchor: end; }
+svg.bar-chart .ylabel { font-size: 17px; fill: #5f5f5f; text-anchor: middle; }
+svg.bar-chart .xlabel { font-size: 16.5px; fill: #4a4a4a; text-anchor: end; }
 svg.bar-chart .xlabel.avg { font-weight: 700; fill: #2c2c2c; }
-svg.bar-chart .vlabel { font-size: 12.5px; font-weight: 700; fill: #3a2f7d; text-anchor: middle; }
+svg.bar-chart .vlabel { font-size: 16.5px; font-weight: 700; fill: #3a2f7d; text-anchor: middle; }
 
 /* Resting state is the FINISHED chart. Collapsed only applies while JS is live
    and the chart has not been revealed, so no failure path leaves it empty. */
@@ -656,7 +656,7 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 
 @media screen and (max-width: 900px) {
   .chart-legend { gap: 0.25rem 0.5rem; }
-  .chart-legend .lg { font-size: 0.72rem; padding: 0.12em 0.4em; }
+  .chart-legend .lg { font-size: 0.82rem; padding: 0.12em 0.4em; }
 }
 
 /* ==================================================================
@@ -695,6 +695,14 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   max-width: none;
   margin-left: 0;
   margin-right: 0;
+}
+
+/* the chart reads better a bit wider than the container's own cap */
+@media screen and (min-width: 1300px) {
+  .pub-figure.is-full .chart-wrap {
+    width: calc(100% + 120px);
+    margin-left: -60px;
+  }
 }
 
 .pub-figure.is-full > figcaption {
