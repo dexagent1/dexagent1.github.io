@@ -259,19 +259,6 @@ h1.title.publication-title {
   letter-spacing: 0.02em;
 }
 
-.footer {
-  background-color: #ffffff;
-  padding: 2.5rem 1.5rem;
-}
-
-.footer p {
-  color: #9a9a9a;
-}
-
-.footer a {
-  color: #8C1515;
-}
-
 @media screen and (max-width: 900px) {
   .video-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -290,8 +277,8 @@ h1.title.publication-title {
    ================================================================== */
 .table-pair {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 2.2rem;
+  grid-template-columns: 1.06fr 1fr;
+  gap: 1.9rem;
   align-items: start;
 }
 
@@ -309,21 +296,8 @@ h1.title.publication-title {
 }
 
 .table-card-head {
-  padding: 1.1rem 1.3rem 0.9rem 1.3rem;
+  padding: 1.15rem 1.3rem 1.0rem 1.3rem;
   border-bottom: 1px solid #f0f0f0;
-}
-
-.table-tag {
-  display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: #8C1515;
-  background: rgba(140, 21, 21, 0.08);
-  border-radius: 999px;
-  padding: 0.18em 0.7em;
-  margin-bottom: 0.5em;
 }
 
 .table-card-head h3 {
@@ -388,19 +362,19 @@ table.paper-table thead th:last-child { padding-right: 1.3rem; }
 table.paper-table thead th {
   background: #fbfafa;
   font-weight: 600;
-  color: #6f6f6f;
-  font-size: 0.72rem;
-  letter-spacing: 0.055em;
+  color: #5f5f5f;
+  font-size: 0.86rem;
+  letter-spacing: 0.035em;
   text-transform: uppercase;
   vertical-align: bottom;
-  padding-top: 0.7em;
-  padding-bottom: 0.7em;
+  padding-top: 0.62em;
+  padding-bottom: 0.62em;
 }
 
 table.paper-table tr.group-row th.group {
   color: #8C1515;
-  font-size: 0.7rem;
-  padding-bottom: 0.35em;
+  font-size: 0.8rem;
+  padding-bottom: 0.3em;
 }
 
 table.paper-table tr.group-row th.group + th.group { border-left: 1px solid #efefef; }
@@ -410,8 +384,8 @@ table.paper-table tr.group-row th { border-bottom: 1px solid #f2f2f2; }
 
 /* the little direction arrow next to each metric */
 .dir {
-  margin-left: 0.28em;
-  font-size: 0.82em;
+  margin-left: 0.25em;
+  font-size: 0.88em;
   font-weight: 700;
 }
 .dir.up   { color: #2e8b6f; }
@@ -446,6 +420,7 @@ table.paper-table tr.ours:hover td { background: rgba(140, 21, 21, 0.075); }
 
 .variant {
   display: inline-block;
+  white-space: nowrap;
   font-size: 0.72em;
   color: #7a7a7a;
   background: #f4f4f4;
