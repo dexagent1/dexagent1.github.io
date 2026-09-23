@@ -229,37 +229,65 @@
   </div>
 </section>
 
-<!-- ======================= REAL-ROBOT RESULTS ======================= -->
+<!-- ======================= REAL-ROBOT EXPERIMENTS ======================= -->
 <section class="section">
   <div class="container is-max-widescreen">
-    <h2 class="title is-3 section-title">Real-Robot Results</h2>
-    <figure class="pub-figure">
-      <img src="./static/images/rollout2.jpg" alt="Real-robot rollouts">
+    <h2 class="title is-3 section-title">Real-Robot Experiments</h2>
+
+    <h3 class="subsection-title">Replay</h3>
+
+    <figure class="pub-table is-wide">
+      <div class="table-card">
+        <div class="table-scroll">
+          <table class="paper-table replay-table">
+            <thead>
+              <tr class="metric-row">
+                <th class="col-method">Method</th><th>Cup</th><th>Giftbox</th><th>Drawer</th><th>Rope Knot</th><th>Scissors</th><th>Drawing</th><th>Computer</th><th>Bottle</th><th>Biology</th><th>Battery</th><th>Multi-object</th><th class="total">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td class="col-method">Dex-retargeting</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">1/11</td></tr>
+                <tr><td class="col-method">Do as I Do</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">1/11</td></tr>
+                <tr><td class="col-method">Spider</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">6/11</td></tr>
+                <tr><td class="col-method">TopoRetarget</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">3/11</td></tr>
+                <tr><td class="col-method">Egoinfinity</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">1/11</td></tr>
+                <tr><td class="col-method">V2D</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td class="total">5/11</td></tr>
+                <tr><td class="col-method">GPT-6: Astra</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td><span class="mark no">&#10007;</span></td><td class="total">5/11</td></tr>
+                <tr class="ours"><td class="col-method">Ours</td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td><span class="mark yes">&#10003;</span></td><td class="total">11/11</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <figcaption>
-        Each row shows the original human demonstration, its reconstructed simulation scene, and
-        representative frames from the resulting real-robot rollout. The examples span
-        deformable-object manipulation, multi-object interaction, precise insertion and articulated
-        object manipulation.
+        Real-world replay success across eleven tasks. Each converted trajectory is executed open
+        loop, which scores the conversion rather than a learned policy. A task is marked successful
+        if at least one of ten replay trials succeeds. GPT-6 Astra joined the benchmark after the
+        first evaluation round.
       </figcaption>
     </figure>
 
-    <figure class="pub-figure">
-      <img src="./static/images/success_rate_bar.png" alt="Per-task policy success rate">
-      <figcaption>
-        Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated data
-        reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
-      </figcaption>
-    </figure>
+    <h3 class="subsection-title">Policy</h3>
 
-    <figure class="pub-figure">
-      <img src="./static/images/eval_distribution.jpg" alt="Evaluation initial states">
-      <figcaption>
-        <b>Top left:</b> the physical setup, a Yam Box arm with Sharpa hands and an egocentric
-        camera. <b>Remaining panels:</b> the initial object placements used across the evaluation
-        trials, overlaid per task. Every policy is evaluated from randomized starting configurations
-        rather than a fixed reset.
-      </figcaption>
-    </figure>
+    <div class="figure-pair">
+      <figure class="pub-figure">
+        <img src="./static/images/eval_distribution.jpg" alt="Physical setup and evaluation initial states">
+        <figcaption>
+          <b>Top left:</b> the physical setup, a YamBox arm with Sharpa hands and an egocentric
+          camera. <b>Remaining panels:</b> the initial object placements used across the evaluation
+          trials, overlaid per task. Every policy is evaluated from randomized starting
+          configurations rather than a fixed reset.
+        </figcaption>
+      </figure>
+
+      <figure class="pub-figure">
+        <img src="./static/images/success_rate_bar.png" alt="Per-task policy success rate">
+        <figcaption>
+          Per-task policy success rate across eleven tasks. Policies trained on DexAgent-generated
+          data reach <b>63.6%</b> on average, against 18.2% for the strongest baseline.
+        </figcaption>
+      </figure>
+    </div>
+
   </div>
 </section>
 

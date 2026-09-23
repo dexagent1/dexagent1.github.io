@@ -18,6 +18,7 @@ h1.title.publication-title {
 .publication-authors {
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
   font-size: 1.45rem;
+  font-weight: 700;
   color: #242424;
   padding-top: 0.15em;
 }
@@ -447,4 +448,98 @@ table.paper-table tr.ours:hover td { background: rgba(140, 21, 21, 0.075); }
   table.paper-table th, table.paper-table td { padding: 0.42em 0.4em; }
   table.paper-table th.col-method, table.paper-table td.col-method { padding-left: 0.9rem; }
   table.paper-table td.indent { padding-left: 1.6rem; }
+}
+
+/* ==================================================================
+   subsections, the wide replay table and paired figures
+   ================================================================== */
+.subsection-title {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.28rem;
+  font-weight: 600;
+  color: #242424;
+  text-align: center;
+  margin: 0 0 1.25rem 0;
+}
+
+.subsection-title + .pub-table,
+.subsection-title + .figure-pair {
+  margin-top: 0;
+}
+
+/* the replay table spans the full container rather than the card width */
+.pub-table.is-wide {
+  max-width: none;
+  margin-bottom: 3.2rem;
+}
+
+.pub-table.is-wide figcaption {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+table.replay-table { font-size: 0.82rem; }
+
+table.replay-table th,
+table.replay-table td {
+  padding-left: 0.18em;
+  padding-right: 0.18em;
+}
+
+/* the task names are the widest part of the header, so let them stack to two
+   lines instead of forcing the table wider than the page */
+table.replay-table thead th {
+  white-space: normal;
+  letter-spacing: 0.01em;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+table.replay-table th.col-method,
+table.replay-table td.col-method {
+  min-width: 118px;
+  padding-left: 1.0rem;
+  padding-right: 0.6rem;
+}
+
+table.replay-table .total {
+  border-left: 1px solid #efefef;
+  padding-left: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+table.replay-table thead th.total { color: #5f5f5f; }
+
+.mark {
+  font-size: 1.02rem;
+  line-height: 1;
+}
+.mark.yes { color: #2e8b6f; }
+.mark.no  { color: #d3d3d3; }
+
+table.replay-table tr.ours .mark.yes { color: #8C1515; }
+
+/* two figures sharing a row */
+.figure-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.2rem;
+  align-items: start;
+}
+
+.figure-pair .pub-figure {
+  margin: 0;
+  max-width: none;
+  min-width: 0;
+}
+
+.figure-pair .pub-figure figcaption {
+  text-align: left;
+  font-size: 0.87rem;
+}
+
+@media screen and (max-width: 900px) {
+  .figure-pair { grid-template-columns: 1fr; gap: 2.6rem; }
 }
