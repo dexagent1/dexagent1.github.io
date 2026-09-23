@@ -26,12 +26,12 @@
       <video class="cine-clip is-active" data-i="0" muted playsinline preload="auto" poster="./static/posters/roll_bottle.jpg" src="./static/videos/rollout/bottle.mp4" data-src="./static/videos/rollout/bottle.mp4" aria-hidden="true"></video>
       <video class="cine-clip" data-i="1" muted playsinline preload="none" poster="./static/posters/roll_cup.jpg" data-src="./static/videos/rollout/cup.mp4" aria-hidden="true"></video>
       <video class="cine-clip" data-i="2" muted playsinline preload="none" poster="./static/posters/roll_giftbox.jpg" data-src="./static/videos/rollout/giftbox.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="3" muted playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="4" muted playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="5" muted playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="6" muted playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="7" muted playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-hidden="true"></video>
-      <video class="cine-clip" data-i="8" muted playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="3" muted playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="4" muted playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="5" muted playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="6" muted playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="7" muted playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-hidden="true"></video>
+      <video class="cine-clip" data-i="8" muted playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-hidden="true"></video>
       <video class="cine-clip" data-i="9" muted playsinline preload="none" poster="./static/posters/roll_battery.jpg" data-src="./static/videos/rollout/battery.mp4" aria-hidden="true"></video>
       <video class="cine-clip" data-i="10" muted playsinline preload="none" poster="./static/posters/roll_multi.jpg" data-src="./static/videos/rollout/multi.mp4" aria-hidden="true"></video>
   </div>
@@ -857,11 +857,12 @@
   var p0 = clips[0].play();
   if (p0 && p0.catch) p0.catch(function () {});
 
-  /* watchdog: if a clip stops advancing for any reason, move on */
-  var lastT = -1, stuck = 0;
+  /* watchdog: move on if a clip genuinely stalls. It must ignore the pause we
+     apply when the hero scrolls out of view, or clips get skipped off screen. */
+  var onScreen = true, lastT = -1, stuck = 0;
   setInterval(function () {
     var c = clips[cur];
-    if (document.hidden) return;
+    if (document.hidden || !onScreen) { stuck = 0; lastT = c.currentTime; return; }
     if (c.paused || c.currentTime === lastT) { if (++stuck >= 3) { stuck = 0; show(cur + 1); } }
     else stuck = 0;
     lastT = c.currentTime;
@@ -871,7 +872,8 @@
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (es) {
       es.forEach(function (e) {
-        if (e.isIntersecting) { var p = clips[cur].play(); if (p && p.catch) p.catch(function () {}); }
+        onScreen = e.isIntersecting;
+        if (onScreen) { var p = clips[cur].play(); if (p && p.catch) p.catch(function () {}); }
         else clips[cur].pause();
       });
     }, { threshold: 0.05 }).observe(stage);
