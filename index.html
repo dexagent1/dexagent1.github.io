@@ -39,9 +39,7 @@
   <div class="cine-grain"></div>
 
   <div class="cine-inner">
-    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span></h1>
-    <p class="cine-sub">An Agentic Human2Sim2Robot Framework for Dexterous<br class="cine-br">
-      Manipulation with Self-Evolving Tool Library</p>
+    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span><span class="cine-rest">: An Agentic Human2Sim2Robot Framework for Dexterous Manipulation with Self-Evolving Tool Library</span></h1>
 
     <div class="cine-authors">
       <span>Youhui Wang<sup>1</sup></span><span>Yunzhu Li<sup>2</sup></span><span>Li Fei-Fei<sup>1&dagger;</sup></span><span>Jiajun Wu<sup>1&dagger;</sup></span><span>Huang Huang<sup>1&dagger;</sup></span>
@@ -890,7 +888,14 @@
   var word  = host.dataset.word || '';
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (reduced) { typed.textContent = word; host.classList.add('is-done'); return; }
+  if (reduced) {
+    typed.textContent = word;
+    host.classList.add('is-done');
+    host.classList.add('is-caret-gone');
+    var r0 = document.querySelector('.cine-rest');
+    if (r0) r0.classList.add('is-in');
+    return;
+  }
 
   /* sit at "Dex_" with the caret blinking before the word starts */
   host.classList.add('is-waiting');
@@ -905,10 +910,17 @@
     (function step() {
       typed.textContent = word.slice(0, i);
       if (i++ <= word.length) setTimeout(step, 115 + Math.random() * 75);
-      else setTimeout(function () {
-        host.classList.remove('is-typing');
-        host.classList.add('is-done');   /* caret blinks a few times, then goes */
-      }, 520);
+      else {
+        var rest = document.querySelector('.cine-rest');
+        if (rest) rest.classList.add('is-in');
+        setTimeout(function () {
+          host.classList.remove('is-typing');
+          host.classList.add('is-done');   /* caret blinks a few times... */
+          /* ...then is retired outright, rather than trusting the animation's
+             fill state, so it can never be left sitting beside the colon */
+          setTimeout(function () { host.classList.add('is-caret-gone'); }, 1250);
+        }, 520);
+      }
     })();
   }
   /* wait for the webfont so the ghost has already reserved the right width */
