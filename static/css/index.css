@@ -228,42 +228,7 @@ h1.title.publication-title {
   height: auto;
 }
 
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.6rem;
-}
-
-.video-card p {
-  margin-top: 0.6rem;
-  text-align: center;
-  font-size: 0.95rem;
-  color: #2c2c2c;
-}
-
-.video-card video {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  background: #000;
-}
-
-.video-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 16 / 10;
-  border: 1px dashed #cfcfcf;
-  border-radius: 6px;
-  background: #f4f4f4;
-  color: #a0a0a0;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-}
-
 @media screen and (max-width: 900px) {
-  .video-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media screen and (max-width: 768px) {
@@ -271,7 +236,6 @@ h1.title.publication-title {
   .logo-row .logo-stanford { height: 46px; }
   .logo-row .logo-columbia { height: 60px; }
   .pub-figure figcaption { text-align: left; }
-  .video-grid { grid-template-columns: 1fr; }
 }
 
 
@@ -713,3 +677,193 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 }
 
 .pub-figure.is-full .chart-wrap { padding: 1.1rem 1.3rem 0.7rem 1.3rem; }
+
+/* ==================================================================
+   task reels: a dial of task names turning one video stage
+   ================================================================== */
+.reel-lead {
+  text-align: center;
+  color: #6b6b6b;
+  font-size: 0.95rem;
+  margin: -0.6rem 0 1.6rem 0;
+}
+
+.subsection-title.reel-second { margin-top: 4.2rem; }
+
+.reel { outline: none; margin-bottom: 1rem; }
+
+/* --- stage --- */
+.reel-stage {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: #0e0e10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10), 0 22px 48px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+  perspective: 1400px;
+  touch-action: pan-y;
+}
+
+.reel-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  transform-style: preserve-3d;
+}
+
+.reel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #0e0e10;
+  opacity: 0;
+  transform: rotateY(14deg) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reel-video.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* the outgoing clip turns away in the direction of travel */
+.reel-video.exit-left  { opacity: 0; transform: rotateY(-16deg) scale(0.9) translateX(-6%); z-index: 1; }
+.reel-video.exit-right { opacity: 0; transform: rotateY( 16deg) scale(0.9) translateX( 6%); z-index: 1; }
+
+/* --- stage furniture --- */
+.reel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 42px; height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(20, 20, 22, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.22s ease, background 0.22s ease;
+  display: flex; align-items: center; justify-content: center;
+  padding-bottom: 3px;
+}
+.reel-nav.is-prev { left: 14px; }
+.reel-nav.is-next { right: 14px; }
+.reel-stage:hover .reel-nav,
+.reel:focus-within .reel-nav { opacity: 1; }
+.reel-nav:hover { background: rgba(140, 21, 21, 0.85); }
+
+.reel-badge {
+  position: absolute;
+  top: 14px; right: 16px;
+  z-index: 4;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(20, 20, 22, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 0.26em 0.7em;
+  font-variant-numeric: tabular-nums;
+}
+.reel-badge .reel-sep { opacity: 0.5; margin: 0 0.25em; }
+.reel-badge .reel-total { opacity: 0.7; }
+
+.reel-progress {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.14);
+  z-index: 4;
+}
+.reel-progress i {
+  display: block; height: 100%; width: 0;
+  background: #8C1515;
+}
+
+.reel-title {
+  text-align: center;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #242424;
+  margin: 1.1rem 0 0.1rem 0;
+  letter-spacing: -0.005em;
+}
+
+/* --- the dial --- */
+.reel-dial {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem 0 0.9rem 0;
+  /* the rim fades out at both ends rather than being cut off */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 13%, #000 87%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 13%, #000 87%, transparent);
+}
+
+/* the marker showing which slot is live */
+.reel-dial::before {
+  content: "";
+  position: absolute;
+  top: 0.35rem; left: 50%;
+  transform: translateX(-50%);
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #8C1515;
+  z-index: 3;
+}
+
+.reel-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: max-content;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: center top;
+}
+
+.reel-item {
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  background: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #8e8e8e;
+  white-space: nowrap;
+  padding: 0.42em 0.95em;
+  border-radius: 999px;
+  cursor: pointer;
+  transform-origin: center top;
+  transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease,
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+}
+
+.reel-item:hover { color: #4a4a4a; }
+
+.reel-item.is-active {
+  color: #8C1515;
+  font-weight: 700;
+  background: rgba(140, 21, 21, 0.07);
+  border-color: rgba(140, 21, 21, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .reel-stage { border-radius: 12px; }
+  .reel-nav { opacity: 1; width: 36px; height: 36px; font-size: 1.25rem; }
+  .reel-item { font-size: 0.86rem; padding: 0.36em 0.75em; }
+  .reel-title { font-size: 1rem; }
+  .reel-dial { padding-top: 1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-video, .reel-track, .reel-item { transition: none; }
+}

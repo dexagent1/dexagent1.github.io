@@ -410,19 +410,131 @@
   </div>
 </section>
 
-<!-- ======================= SIMULATION AND ROLLOUT VIDEOS (placeholder) ======================= -->
+<!-- ======================= SIMULATION AND ROLLOUT VIDEOS ======================= -->
 <section class="section">
   <div class="container is-max-widescreen">
     <h2 class="title is-3 section-title">Simulation and Rollout Videos</h2>
-    <p class="section-lead">Per-task rollout videos.</p>
-    <div class="video-grid">
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Knot the Rope</p></div>
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Biology Experiment</p></div>
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Battery Insertion</p></div>
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Open the Bottle</p></div>
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Computer Installation</p></div>
-      <div class="video-card"><div class="video-placeholder">Coming soon</div><p>Scissor Cutting</p></div>
+
+    <h3 class="subsection-title">Simulation</h3>
+    <p class="reel-lead">The reconstructed digital twin each policy is trained in. Turn the dial to change task.</p>
+    <div class="reel" data-reel="sim">
+      <div class="reel-stage">
+        <div class="reel-frame">
+          <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/sim_cup.jpg" data-src="./static/videos/sim/cup.mp4" aria-label="Place Cup in Bowl"></video>
+          <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/sim_giftbox.jpg" data-src="./static/videos/sim/giftbox.mp4" aria-label="Giftbox Packing"></video>
+          <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/sim_drawer.jpg" data-src="./static/videos/sim/drawer.mp4" aria-label="Place Toy in Drawer"></video>
+          <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/sim_rope.jpg" data-src="./static/videos/sim/rope.mp4" aria-label="Knot the Rope"></video>
+          <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/sim_scissors.jpg" data-src="./static/videos/sim/scissors.mp4" aria-label="Scissor Cutting"></video>
+          <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/sim_drawing.jpg" data-src="./static/videos/sim/drawing.mp4" aria-label="Drawing and Wiping"></video>
+          <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/sim_computer.jpg" data-src="./static/videos/sim/computer.mp4" aria-label="Computer Installation"></video>
+          <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/sim_bottle.jpg" data-src="./static/videos/sim/bottle.mp4" aria-label="Open the Bottle"></video>
+          <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/sim_biology.jpg" data-src="./static/videos/sim/biology.mp4" aria-label="Biology Experiment"></video>
+          <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/sim_battery.jpg" data-src="./static/videos/sim/battery.mp4" aria-label="Battery Insertion"></video>
+        </div>
+        <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
+        <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
+        <div class="reel-badge"><span class="reel-now">01</span><span class="reel-sep">/</span><span class="reel-total">10</span></div>
+        <div class="reel-progress"><i></i></div>
+      </div>
+      <p class="reel-title">Place Cup in Bowl</p>
+      <div class="reel-dial">
+        <div class="reel-track">
+          <button data-copy="0" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+        </div>
+      </div>
     </div>
+
+    <h3 class="subsection-title reel-second">Rollout</h3>
+    <p class="reel-lead">The trained policy running on the real robot, played at 4&times; speed.</p>
+    <div class="reel" data-reel="rollout">
+      <div class="reel-stage">
+        <div class="reel-frame">
+          <video class="reel-video is-active" data-i="0" muted loop playsinline preload="none" poster="./static/posters/roll_cup.jpg" data-src="./static/videos/rollout/cup.mp4" aria-label="Place Cup in Bowl"></video>
+          <video class="reel-video" data-i="1" muted loop playsinline preload="none" poster="./static/posters/roll_giftbox.jpg" data-src="./static/videos/rollout/giftbox.mp4" aria-label="Giftbox Packing"></video>
+          <video class="reel-video" data-i="2" muted loop playsinline preload="none" poster="./static/posters/roll_drawer.jpg" data-src="./static/videos/rollout/drawer.mp4" aria-label="Place Toy in Drawer"></video>
+          <video class="reel-video" data-i="3" muted loop playsinline preload="none" poster="./static/posters/roll_rope.jpg" data-src="./static/videos/rollout/rope.mp4" aria-label="Knot the Rope"></video>
+          <video class="reel-video" data-i="4" muted loop playsinline preload="none" poster="./static/posters/roll_scissors.jpg" data-src="./static/videos/rollout/scissors.mp4" aria-label="Scissor Cutting"></video>
+          <video class="reel-video" data-i="5" muted loop playsinline preload="none" poster="./static/posters/roll_drawing.jpg" data-src="./static/videos/rollout/drawing.mp4" aria-label="Drawing and Wiping"></video>
+          <video class="reel-video" data-i="6" muted loop playsinline preload="none" poster="./static/posters/roll_computer.jpg" data-src="./static/videos/rollout/computer.mp4" aria-label="Computer Installation"></video>
+          <video class="reel-video" data-i="7" muted loop playsinline preload="none" poster="./static/posters/roll_bottle.jpg" data-src="./static/videos/rollout/bottle.mp4" aria-label="Open the Bottle"></video>
+          <video class="reel-video" data-i="8" muted loop playsinline preload="none" poster="./static/posters/roll_biology.jpg" data-src="./static/videos/rollout/biology.mp4" aria-label="Biology Experiment"></video>
+          <video class="reel-video" data-i="9" muted loop playsinline preload="none" poster="./static/posters/roll_battery.jpg" data-src="./static/videos/rollout/battery.mp4" aria-label="Battery Insertion"></video>
+          <video class="reel-video" data-i="10" muted loop playsinline preload="none" poster="./static/posters/roll_multi.jpg" data-src="./static/videos/rollout/multi.mp4" aria-label="Multi-Cup Grasping"></video>
+        </div>
+        <button class="reel-nav is-prev" type="button" aria-label="Previous task">&#8249;</button>
+        <button class="reel-nav is-next" type="button" aria-label="Next task">&#8250;</button>
+        <div class="reel-badge"><span class="reel-now">01</span><span class="reel-sep">/</span><span class="reel-total">11</span></div>
+        <div class="reel-progress"><i></i></div>
+      </div>
+      <p class="reel-title">Place Cup in Bowl</p>
+      <div class="reel-dial">
+        <div class="reel-track">
+          <button data-copy="0" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+          <button data-copy="0" class="reel-item" type="button" data-i="10">Multi-Cup Grasping</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+          <button data-copy="1" class="reel-item" type="button" data-i="10">Multi-Cup Grasping</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="0">Place Cup in Bowl</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="1">Giftbox Packing</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="2">Place Toy in Drawer</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="3">Knot the Rope</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="4">Scissor Cutting</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="5">Drawing and Wiping</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="6">Computer Installation</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="7">Open the Bottle</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="8">Biology Experiment</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="9">Battery Insertion</button>
+          <button data-copy="2" class="reel-item" type="button" data-i="10">Multi-Cup Grasping</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -503,6 +615,121 @@
         btn.classList.add('is-pinned');
       }
     });
+  });
+})();
+</script>
+
+<script>
+/* ---- task reels: a wrapping dial of task names turning one video stage ---- */
+(function () {
+  document.querySelectorAll('.reel').forEach(function (reel) {
+    var vids  = Array.prototype.slice.call(reel.querySelectorAll('.reel-video'));
+    var slots = Array.prototype.slice.call(reel.querySelectorAll('.reel-item'));
+    var track = reel.querySelector('.reel-track');
+    var dial  = reel.querySelector('.reel-dial');
+    var title = reel.querySelector('.reel-title');
+    var now   = reel.querySelector('.reel-now');
+    var bar   = reel.querySelector('.reel-progress i');
+
+    var n = vids.length;        /* real tasks */
+    var v = n;                  /* position on the tripled strip; start in the middle copy */
+    var visible = false, animating = false;
+
+    function real() { return ((v % n) + n) % n; }
+    function load(i) { var x = vids[i]; if (x && !x.src && x.dataset.src) x.src = x.dataset.src; }
+
+    /* lay the names along the rim of a wheel */
+    function curve() {
+      slots.forEach(function (it, p) {
+        var d = p - v, ad = Math.min(Math.abs(d), 5);
+        it.style.transform = 'rotate(' + (d * 3.6) + 'deg) translateY(' + Math.pow(ad, 1.35) * 6 + 'px) scale(' + (1 - ad * 0.075) + ')';
+        it.style.opacity = String(Math.max(1 - ad * 0.19, 0.18));
+        it.style.zIndex = String(50 - ad);
+        it.classList.toggle('is-active', p === v);
+      });
+    }
+
+    function centre(animate) {
+      var it = slots[v];
+      if (!it) return;
+      if (!animate) track.style.transition = 'none';
+      track.style.transform = 'translateX(' + (dial.clientWidth / 2 - (it.offsetLeft + it.offsetWidth / 2)) + 'px)';
+      if (!animate) { void track.offsetWidth; track.style.transition = ''; }
+    }
+
+    /* after a move, silently hop back to the middle copy so the wheel never runs out */
+    function rewind() {
+      if (v >= n && v < 2 * n) return;
+      v = n + real();
+      curve(); centre(false);
+    }
+
+    function show(nextReal, dir) {
+      var prev = vids[(function () { for (var i = 0; i < n; i++) if (vids[i].classList.contains('is-active')) return i; return 0; })()];
+      if (prev === vids[nextReal]) return;
+      prev.classList.remove('is-active');
+      prev.classList.add(dir > 0 ? 'exit-left' : 'exit-right');
+      prev.pause();
+      setTimeout(function () { prev.classList.remove('exit-left', 'exit-right'); }, 560);
+
+      load(nextReal); load((nextReal + 1) % n); load((nextReal - 1 + n) % n);
+      var v2 = vids[nextReal];
+      v2.classList.add('is-active');
+      if (visible) { var pr = v2.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      title.textContent = slots[v].textContent;
+      now.textContent = ('0' + (nextReal + 1)).slice(-2);
+    }
+
+    function step(delta) {
+      if (!delta || animating) return;
+      animating = true;
+      v += delta;
+      var dir = delta > 0 ? 1 : -1;
+      show(real(), dir);
+      curve(); centre(true);
+      setTimeout(function () { rewind(); animating = false; }, 580);
+    }
+
+    slots.forEach(function (it, p) { it.addEventListener('click', function () { step(p - v); }); });
+    reel.querySelector('.reel-nav.is-prev').addEventListener('click', function () { step(-1); });
+    reel.querySelector('.reel-nav.is-next').addEventListener('click', function () { step(1); });
+
+    reel.setAttribute('tabindex', '0');
+    reel.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft')  { step(-1); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { step(1);  e.preventDefault(); }
+    });
+
+    var sx = null;
+    reel.querySelector('.reel-stage').addEventListener('pointerdown', function (e) { sx = e.clientX; });
+    window.addEventListener('pointerup', function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx; sx = null;
+      if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+    });
+
+    (function tick() {
+      var x = vids[real()];
+      if (bar && x && x.duration) bar.style.width = (x.currentTime / x.duration * 100) + '%';
+      requestAnimationFrame(tick);
+    })();
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          visible = e.isIntersecting;
+          var x = vids[real()];
+          if (visible) { load(real()); var pr = x.play(); if (pr && pr.catch) pr.catch(function () {}); }
+          else x.pause();
+        });
+      }, { threshold: 0.25 }).observe(reel);
+    } else { visible = true; load(0); vids[0].play().catch(function () {}); }
+
+    function relayout() { curve(); centre(false); }
+    window.addEventListener('resize', relayout);
+    load(0); relayout();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+    setTimeout(relayout, 150);
   });
 })();
 </script>
