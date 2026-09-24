@@ -1276,3 +1276,7 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   .cine-logo-columbia { height: 28px; }
   .cine-scroll-rail { height: 28px; }
 }
+
+/* the rollout reel has no side panel, so its stage simply centres */
+.reel.is-solo .reel-row { max-width: 820px; }
+.reel.is-solo .reel-stage { flex: 0 1 760px; margin: 0 auto; }
