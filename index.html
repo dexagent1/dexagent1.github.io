@@ -39,10 +39,11 @@
   <div class="cine-grain"></div>
 
   <div class="cine-inner">
-    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span><span class="cine-rest">: An Agentic Human2Sim2Robot Framework for Dexterous Manipulation with Self-Evolving Tool Library</span></h1>
+    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span></h1>
+    <p class="cine-sub">An Agentic Human2Sim2Robot Framework for Dexterous Manipulation with Self-Evolving Tool Library</p>
 
     <div class="cine-authors">
-      <span>Youhui Wang<sup>1</sup></span><span>Yunzhu Li<sup>2</sup></span><span>Li Fei-Fei<sup>1&dagger;</sup></span><span>Jiajun Wu<sup>1&dagger;</sup></span><span>Huang Huang<sup>1&dagger;</sup></span>
+      <span>Youhui Wang<sup>1</sup></span><span>Yunzhu Li<sup>2</sup></span><span>Li Fei-Fei<sup>1</sup></span><span>Jiajun Wu<sup>1&dagger;</sup></span><span>Huang Huang<sup>1&dagger;</sup></span>
     </div>
 
     <p class="cine-affil"><sup>1</sup>Stanford University &nbsp;&nbsp;&nbsp; <sup>2</sup>Columbia University</p>
@@ -892,7 +893,7 @@
     typed.textContent = word;
     host.classList.add('is-done');
     host.classList.add('is-caret-gone');
-    var r0 = document.querySelector('.cine-rest');
+    var r0 = document.querySelector('.cine-sub');
     if (r0) r0.classList.add('is-in');
     return;
   }
@@ -911,7 +912,7 @@
       typed.textContent = word.slice(0, i);
       if (i++ <= word.length) setTimeout(step, 115 + Math.random() * 75);
       else {
-        var rest = document.querySelector('.cine-rest');
+        var rest = document.querySelector('.cine-sub');
         if (rest) rest.classList.add('is-in');
         setTimeout(function () {
           host.classList.remove('is-typing');
