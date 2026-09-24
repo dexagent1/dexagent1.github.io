@@ -1232,10 +1232,11 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   max-width: 46ch;
   margin: 0.7rem auto 0 auto;
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6), 0 1px 40px rgba(0, 0, 0, 0.45);
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.75s ease;
 }
-.cine-sub.is-in { opacity: 1; }
+/* only a live script hides it, and only until the wordmark finishes typing */
+.cine-js .cine-sub:not(.is-in) { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .cine-sub { transition: none; }

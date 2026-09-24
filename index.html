@@ -39,7 +39,7 @@
   <div class="cine-grain"></div>
 
   <div class="cine-inner">
-    <h1 class="cine-title"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed"></span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span></h1>
+    <h1 class="cine-title" id="cineTitle"><span class="cine-dex">Dex</span><span class="cine-agent" data-word="Agent"><span class="cine-ghost" aria-hidden="true">Agent</span><span class="cine-live" aria-hidden="true"><span class="cine-typed">Agent</span><i class="cine-caret"></i></span><span class="cine-sr">Agent</span></span></h1>
     <p class="cine-sub">An Agentic Human2Sim2Robot Framework for Dexterous Manipulation with Self-Evolving Tool Library</p>
 
     <div class="cine-authors">
@@ -885,6 +885,9 @@
 (function () {
   var host = document.querySelector('.cine-agent');
   if (!host) return;
+  /* the markup ships finished; only now that JS is running do we hide the
+     parts we are about to animate */
+  document.documentElement.classList.add('cine-js');
   var typed = host.querySelector('.cine-typed');
   var word  = host.dataset.word || '';
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -900,6 +903,7 @@
 
   /* sit at "Dex_" with the caret blinking before the word starts */
   host.classList.add('is-waiting');
+  typed.textContent = '';
 
   var started = false;
   function run() {
