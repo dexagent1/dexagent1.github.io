@@ -813,18 +813,29 @@
     if (c && !c.src && c.dataset.src) { c.preload = 'auto'; c.src = c.dataset.src; c.load(); }
   }
 
+  var FADE = 600;   /* keep in step with .cine-clip's opacity transition */
+
   function show(i) {
     i = (i + n) % n;
-    clips[cur].classList.remove('is-active');
-    if (cur !== i) { try { clips[cur].pause(); clips[cur].currentTime = 0; } catch (e) {} }
+    var prev = clips[cur];
+    prev.classList.remove('is-active');
     cur = i;
     arm(cur); arm(cur + 1);
     var c = clips[cur];
     c.classList.add('is-active');
-    try { c.currentTime = 0; } catch (e) {}
+    if (c !== prev) { try { if (c.currentTime > 0.05) c.currentTime = 0; } catch (e) {} }
     var p = c.play();
     if (p && p.catch) p.catch(function () {});
     ticks.forEach(function (t, k) { t.classList.toggle('is-on', k === cur); });
+
+    /* The outgoing clip keeps its last frame until it has faded out.
+       Rewinding it here instead snaps it back to frame one in full
+       view, which is the flash between clips. */
+    if (c !== prev) {
+      setTimeout(function () {
+        try { prev.pause(); prev.currentTime = 0; } catch (e) {}
+      }, FADE + 150);
+    }
   }
 
   clips.forEach(function (c, i) {
