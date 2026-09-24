@@ -17,6 +17,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap">
   <link rel="stylesheet" href="./static/css/index.css">
+  <script>
+  /* Runs before the body paints. Without this the browser shows the finished
+     title first and the script then hides it, which reads as a flash.
+     If the wordmark script never gets to run, this undoes itself so the title
+     is never left half-built. */
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('cine-js');
+    setTimeout(function () {
+      if (!d.classList.contains('cine-typing-live')) d.classList.remove('cine-js');
+    }, 4000);
+  })();
+  </script>
   <noscript><style>
     .chart-wrap.armed svg.bar-chart .bar    { transform: scaleY(1) !important; }
     .chart-wrap.armed svg.bar-chart .vlabel { opacity: 1 !important; }
@@ -885,9 +898,9 @@
 (function () {
   var host = document.querySelector('.cine-agent');
   if (!host) return;
-  /* the markup ships finished; only now that JS is running do we hide the
-     parts we are about to animate */
-  document.documentElement.classList.add('cine-js');
+  /* the head script already hid what we animate; claim it so its failsafe
+     stands down */
+  document.documentElement.classList.add('cine-typing-live');
   var typed = host.querySelector('.cine-typed');
   var word  = host.dataset.word || '';
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -901,9 +914,10 @@
     return;
   }
 
-  /* sit at "Dex_" with the caret blinking before the word starts */
-  host.classList.add('is-waiting');
+  /* clear the shipped word now, not after the font wait, so it cannot be
+     seen complete before typing begins */
   typed.textContent = '';
+  host.classList.add('is-waiting');
 
   var started = false;
   function run() {

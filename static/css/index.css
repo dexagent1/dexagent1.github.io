@@ -1238,6 +1238,14 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
 /* only a live script hides it, and only until the wordmark finishes typing */
 .cine-js .cine-sub:not(.is-in) { opacity: 0; }
 
+/* The wordmark ships complete so it survives a JS failure. With a live script
+   the typed half is hidden until typing actually begins; the ghost still
+   reserves its width, so "Dex" simply sits alone. */
+.cine-js .cine-agent .cine-live { visibility: hidden; }
+.cine-js .cine-agent.is-waiting .cine-live,
+.cine-js .cine-agent.is-typing  .cine-live,
+.cine-js .cine-agent.is-done    .cine-live { visibility: visible; }
+
 @media (prefers-reduced-motion: reduce) {
   .cine-sub { transition: none; }
 }
