@@ -1037,7 +1037,7 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   image-rendering: -webkit-optimize-contrast;
 }
 .cine-logo-stanford { height: clamp(36px, 4.4vw, 54px); }
-.cine-logo-columbia { height: clamp(46px, 5.6vw, 70px); }
+.cine-logo-columbia { height: clamp(30px, 3.6vw, 45px); }
 
 /* --- buttons --- */
 .cine-buttons {
@@ -1261,7 +1261,7 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   .cine-note    { font-size: clamp(0.85rem, 1.2vw, 1.02rem); }
   .cine-logos   { margin-top: 1rem; gap: 2.2rem; }
   .cine-logo-stanford { height: clamp(30px, 3.6vw, 44px); }
-  .cine-logo-columbia { height: clamp(38px, 4.6vw, 56px); }
+  .cine-logo-columbia { height: clamp(25px, 3vw, 38px); }
   .cine-buttons { margin-top: 1.1rem; gap: 0.55rem; }
   .cine-btn     { padding: 0.55em 1.05em; }
   .cine-scroll  { bottom: 1.1rem; gap: 0.5rem; }
@@ -1272,6 +1272,6 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   .cine-title   { font-size: clamp(1.9rem, 4.6vw, 3.1rem); }
   .cine-sub     { font-size: clamp(0.95rem, 1.7vw, 1.26rem); }
   .cine-logo-stanford { height: 32px; }
-  .cine-logo-columbia { height: 42px; }
+  .cine-logo-columbia { height: 28px; }
   .cine-scroll-rail { height: 28px; }
 }
