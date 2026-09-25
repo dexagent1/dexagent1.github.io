@@ -436,6 +436,23 @@
 <section class="section section-alt">
   <div class="container is-max-widescreen">
     <h2 class="title is-3 section-title">A Self-Evolving Tool Library</h2>
+    <figure class="pub-figure library-figure">
+      <picture>
+        <source media="(max-width: 860px)" srcset="./static/images/library_breakdown_stacked.png">
+        <img src="./static/images/library_breakdown.png" alt="Breakdown of the DexAgent tool library: 103 skills and 188 verifiers, grouped by functionality">
+      </picture>
+      <figcaption>
+        Breakdown of the current DexAgent tool library. The library contains
+        <strong>103 skills</strong> and <strong>188 verifiers</strong> grouped by functionality.
+        <em>Skills</em> cover perception, reconstruction, grasp and pose generation, scene
+        execution, measurement, and trajectory generation, while <em>verifiers</em> check task
+        completion, grasp stability, reconstructed mechanisms, full-episode consistency,
+        task-specific scene conditions, and scene validity. These skills and verifiers are
+        expected to generalize to new and unseen samples, and the library is expected to continue
+        to grow as DexAgent processes more new samples.
+      </figcaption>
+    </figure>
+
     <figure class="pub-figure split-figure">
       <div class="split-figure-row">
         <img class="sf-plot" src="./static/images/lifelong_plot.png" alt="Processing cost falls as the library grows">

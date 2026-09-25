@@ -652,6 +652,36 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   .split-figure > figcaption { text-align: left; }
 }
 
+/* ==================================================================
+   the tool-library breakdown (paper Fig. 8), sits above the cost plot
+   ================================================================== */
+.library-figure { max-width: none; margin-bottom: 3.6rem; }
+
+.library-figure picture { display: block; }
+
+.library-figure img {
+  display: block;
+  width: 100%;
+  max-width: 1280px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+
+/* the caption is centred beneath, matching the cost plot below it */
+.library-figure > figcaption {
+  max-width: 900px;
+  margin: 1.2rem auto 0 auto;
+  text-align: center;
+}
+
+/* below this width the <picture> swaps in the stacked two-panel crop, which is
+   far taller than it is wide, so it must not be capped at the wide image's size */
+@media screen and (max-width: 860px) {
+  .library-figure img { max-width: 560px; }
+  .library-figure > figcaption { text-align: left; }
+}
+
 /* the success-rate chart now owns its whole row */
 .pub-figure.is-full {
   max-width: none;
