@@ -222,6 +222,10 @@ h1.title.publication-title {
   background: #000;
 }
 
+/* The teaser video sits directly under the cover page and is deliberately
+   wider than the walkthrough video below it (900px). */
+.video-wrap.is-wide { max-width: 1280px; }
+
 .video-wrap video {
   display: block;
   width: 100%;
