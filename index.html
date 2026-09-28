@@ -33,6 +33,8 @@
   <noscript><style>
     .chart-wrap.armed svg.bar-chart .bar    { transform: scaleY(1) !important; }
     .chart-wrap.armed svg.bar-chart .vlabel { opacity: 1 !important; }
+    /* the overlay needs JS to do anything; the native controls do not */
+    .video-play { display: none; }
   </style></noscript>
 </head>
 <body>
@@ -109,6 +111,9 @@
         <source src="./static/videos/dexagent_twitter.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <button class="video-play" type="button" aria-label="Play video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>
+      </button>
     </div>
   </div>
 </section>
@@ -123,6 +128,9 @@
         <source src="./static/videos/dexagent_overview.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <button class="video-play" type="button" aria-label="Play video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>
+      </button>
     </div>
   </div>
 </section>
@@ -975,6 +983,24 @@
   /* wait for the webfont so the ghost has already reserved the right width */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(run, 420); });
   else setTimeout(run, 700);
+})();
+</script>
+<script>
+/* Big centred play button on the content videos. Keeps the native controls. */
+(function () {
+  document.querySelectorAll('.video-wrap .video-play').forEach(function (btn) {
+    var wrap = btn.closest('.video-wrap');
+    var vid  = wrap && wrap.querySelector('video');
+    if (!vid) return;
+    btn.addEventListener('click', function () {
+      var pr = vid.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    });
+    vid.addEventListener('play',  function () { wrap.classList.add('is-playing'); });
+    vid.addEventListener('pause', function () { wrap.classList.remove('is-playing'); });
+    vid.addEventListener('ended', function () { wrap.classList.remove('is-playing'); });
+    if (!vid.paused) wrap.classList.add('is-playing');
+  });
 })();
 </script>
 </body>
