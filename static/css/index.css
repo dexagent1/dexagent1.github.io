@@ -1104,6 +1104,11 @@ svg.bar-chart .bar:focus-visible { stroke: #242424; stroke-width: 1.5; }
   transform: translateY(-1px);
 }
 
+/* Placeholder buttons (arXiv, Code, TL;DR) are <span>s, so they carry no href
+   and cannot be focused. pointer-events:none also blocks the :hover lift above,
+   so they never read as clickable. */
+.cine-btn.is-static { cursor: default; pointer-events: none; }
+
 /* --- which clip is on --- */
 .cine-ticks {
   position: absolute;
