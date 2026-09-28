@@ -214,7 +214,6 @@ h1.title.publication-title {
    video
    ================================================================== */
 .video-wrap {
-  position: relative;
   max-width: 900px;
   margin: 0 auto;
   border-radius: 8px;
@@ -226,56 +225,6 @@ h1.title.publication-title {
 /* The teaser video sits directly under the cover page and is deliberately
    wider than the walkthrough video below it (900px). */
 .video-wrap.is-wide { max-width: 1280px; }
-
-/* A large, obvious play target over the poster. Only the button itself takes
-   pointer events, so the native control bar underneath stays usable. It hides
-   while the video plays and comes back on pause or end. */
-.video-play {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 84px;
-  height: 84px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.88);
-  background: rgba(12, 12, 12, 0.66);
-  backdrop-filter: blur(6px) saturate(130%);
-  -webkit-backdrop-filter: blur(6px) saturate(130%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
-  transition: background 0.2s ease, transform 0.2s ease, opacity 0.25s ease;
-}
-
-.video-play svg {
-  width: 36px;
-  height: 36px;
-  fill: #fff;
-  margin-left: 4px;          /* optically centres the triangle in the circle */
-}
-
-.video-play:hover {
-  background: rgba(0, 0, 0, 0.74);
-  transform: translate(-50%, -50%) scale(1.06);
-}
-
-.video-play:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-
-.video-wrap.is-playing .video-play { opacity: 0; pointer-events: none; }
-
-@media screen and (max-width: 600px) {
-  .video-play { width: 64px; height: 64px; }
-  .video-play svg { width: 27px; height: 27px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .video-play { transition: none; }
-}
 
 .video-wrap video {
   display: block;
