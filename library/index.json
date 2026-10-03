@@ -1,7 +1,7 @@
 {
  "counts": {
-  "skills": 74,
-  "verifiers": 54
+  "skills": 76,
+  "verifiers": 56
  },
  "categories": {
   "skill": [
@@ -6795,6 +6795,122 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/identify_moving_joint.py"
   },
   {
+   "name": "make_contact_sheet",
+   "title": "Make contact sheet",
+   "type": "skill",
+   "category": "Perception & Grounding",
+   "summary": "Tile evenly spaced (or chosen) frames of a video or frame folder into one labelled grid image, optionally cropped, so a whole clip or a time window can be read at a glance.",
+   "description": "Reads a video or a folder of frame%05d images, picks `count` evenly spaced frames inside [start, end] (seconds, or exact `frames` indices), optionally crops every frame to a box given as fractions of the image, resizes each tile to `tile_width`, and tiles them in rows of `columns` with the frame index and timestamp printed in each tile's corner. Returns the sheet path and the frame indices and times used, so a frame seen on the sheet can be fetched at full resolution with extract_frames. Windows and crops are how a vision-language agent zooms into a moment or a region without decoding the whole clip.",
+   "inputs": [
+    {
+     "name": "video",
+     "type": "path",
+     "description": "A video file, or a folder of frames written by extract_frames (then fps comes from its meta.json or `fps`)."
+    },
+    {
+     "name": "out_path",
+     "type": "path",
+     "description": "Where the sheet image is written (.jpg or .png)."
+    },
+    {
+     "name": "count",
+     "type": "int",
+     "description": "Frames to show, evenly spaced over the window. Default 16. Ignored when `frames` is given."
+    },
+    {
+     "name": "start",
+     "type": "float, seconds",
+     "description": "Window start. Default 0."
+    },
+    {
+     "name": "end",
+     "type": "float, seconds | None",
+     "description": "Window end. Default: the end of the clip."
+    },
+    {
+     "name": "frames",
+     "type": "list[int] | None",
+     "description": "Exact frame indices to show instead of an even spacing."
+    },
+    {
+     "name": "columns",
+     "type": "int",
+     "description": "Tiles per row. Default 4."
+    },
+    {
+     "name": "tile_width",
+     "type": "int, pixels",
+     "description": "Width of each tile; height follows the aspect. Default 480."
+    },
+    {
+     "name": "crop",
+     "type": "list[float] | None",
+     "description": "[x0, y0, x1, y1] applied to every tile, as fractions of the frame (0..1) or as pixels (any value > 1). Default: the full frame."
+    },
+    {
+     "name": "fps",
+     "type": "float | None",
+     "description": "Frame rate when `video` is a frame folder without meta.json."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "sheet",
+     "type": "path",
+     "description": "The grid image."
+    },
+    {
+     "name": "frames",
+     "type": "list[int]",
+     "description": "Frame indices shown, in tile order."
+    },
+    {
+     "name": "times_s",
+     "type": "list[float]",
+     "description": "Their timestamps."
+    },
+    {
+     "name": "fps / n_frames / duration_s",
+     "type": "float / int / float",
+     "description": "Clip facts."
+    },
+    {
+     "name": "grid",
+     "type": "[rows, columns]",
+     "description": "Tile layout."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "make_contact_sheet",
+   "requirements": [
+    "opencv-python",
+    "numpy"
+   ],
+   "tags": [
+    "video",
+    "frames",
+    "contact sheet",
+    "look",
+    "semantic understanding"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.make_contact_sheet human_video.mp4 sheet.jpg --count 24 --columns 6",
+   "file": "skills/make_contact_sheet.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/make_contact_sheet.py"
+  },
+  {
    "name": "measure_box_on_table",
    "title": "Measure box on table",
    "type": "skill",
@@ -6999,6 +7115,113 @@
    "entrypoint": "measure_joint_trajectory",
    "file": "skills/measure_joint_trajectory.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_joint_trajectory.py"
+  },
+  {
+   "name": "measure_motion_timeline",
+   "title": "Measure motion timeline",
+   "type": "skill",
+   "category": "Measurements",
+   "summary": "Frame-difference motion energy over time for the whole frame and for named regions (default: left and right halves), with the active intervals, the peaks and the frame where motion first and last occurs in each region.",
+   "description": "Decodes the clip at a stride, converts to grey, blurs, and takes the absolute difference between successive sampled frames. Motion energy is the fraction of pixels whose change exceeds `pixel_thresh`, per region. Regions are boxes as fractions of the frame (or pixels when any value > 1); the defaults are the left and right halves, which on an egocentric table camera separate the two hands' sides. A region is active when its energy is above `active_thresh`; runs shorter than `min_duration_s` are dropped and gaps shorter than `merge_gap_s` are merged. Returns per region the active intervals in seconds, the peak time, the first and last active time and the energy curve (downsampled), plus the whole-frame intervals. Use it to set subgoal time windows, to find when a hand starts and stops acting, to locate a sudden event (a drop, a snap) as an energy spike, and to confirm which side of the frame moved. It measures motion, not identity: anything moving in a region counts, hands and objects alike. On a head-mounted camera the whole frame moves with the head; then compare regions against each other or raise active_thresh.",
+   "inputs": [
+    {
+     "name": "video",
+     "type": "path",
+     "description": "A video file, or a folder of frames written by extract_frames."
+    },
+    {
+     "name": "regions",
+     "type": "dict[str, list[float]] | None",
+     "description": "{name: [x0, y0, x1, y1]} as fractions or pixels. Default {'left': [0, 0, 0.5, 1], 'right': [0.5, 0, 1, 1]}."
+    },
+    {
+     "name": "stride",
+     "type": "int",
+     "description": "Sample every k-th frame. Default 2."
+    },
+    {
+     "name": "pixel_thresh",
+     "type": "int",
+     "description": "Grey-level change that counts as motion. Default 18."
+    },
+    {
+     "name": "active_thresh",
+     "type": "float",
+     "description": "Energy (fraction of changed pixels) above which a region is active. Default 0.004."
+    },
+    {
+     "name": "min_duration_s",
+     "type": "float",
+     "description": "Shortest interval kept. Default 0.3."
+    },
+    {
+     "name": "merge_gap_s",
+     "type": "float",
+     "description": "Gaps shorter than this are merged. Default 0.5."
+    },
+    {
+     "name": "fps",
+     "type": "float | None",
+     "description": "Frame rate for a frame folder without meta.json."
+    },
+    {
+     "name": "out_json",
+     "type": "path | None",
+     "description": "Also write the result here."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "fps / n_frames / duration_s",
+     "type": "float / int / float",
+     "description": "Clip facts."
+    },
+    {
+     "name": "regions",
+     "type": "dict",
+     "description": "Per region: intervals_s [[start, end], ...], first_active_s, last_active_s, peak_s, peak_energy, energy (downsampled list of [t, e])."
+    },
+    {
+     "name": "whole_frame",
+     "type": "dict",
+     "description": "The same for the entire frame."
+    },
+    {
+     "name": "events",
+     "type": "list",
+     "description": "Times of the strongest short energy spikes over the whole frame (largest rises between consecutive samples), up to 10."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "measure_motion_timeline",
+   "requirements": [
+    "opencv-python",
+    "numpy"
+   ],
+   "tags": [
+    "motion",
+    "timeline",
+    "frame difference",
+    "time windows",
+    "hands",
+    "semantic understanding"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.measure_motion_timeline human_video.mp4 --out-json motion.json",
+   "file": "skills/measure_motion_timeline.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_motion_timeline.py"
   },
   {
    "name": "measure_object_color",
@@ -11525,6 +11748,118 @@
    "cli": "python -m tool_library.verifiers.scene_qc scene.xml",
    "file": "verifiers/scene_qc.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_qc.py"
+  },
+  {
+   "name": "scene_semantic_consistency_check",
+   "title": "Scene semantic consistency check",
+   "type": "verifier",
+   "category": "Scene Assertions",
+   "summary": "Cross-field checks on a Stage 1 scene_semantic.json: unique ids, subgoal references that resolve, consecutive ordered subgoals with time windows inside the clip, acting hands that match the hand roles and the hands list, type-specific blocks present, evidence that cites times, and prompt words covered by the objects.",
+   "description": "Reads the JSON and checks what a schema cannot: every object id is unique and every subgoal object_ref (id or id:part) resolves to an object (and a declared part when parts are listed); subgoal indices run 1..N in order; time windows are ordered, start no later than the next subgoal's start, and lie inside the clip when its duration is known; the acting hand of each subgoal is in hands.used and its hand_roles text is not a resting phrase; every hand in hands.used acts in at least one subgoal; articulated objects carry an articulation block whose moving and fixed parts are named parts, deformable objects a deformation block; every object is referenced by some subgoal unless its role is static; every evidence string cites a time or frame; and each content word of the prompt (4+ letters, not a stop word) shares a stem with some word in the objects' names, parts, appearance or properties or in the task summary. Each finding names the JSON path and what to change.",
+   "inputs": [
+    {
+     "name": "path",
+     "type": "path",
+     "description": "The scene_semantic.json to check."
+    },
+    {
+     "name": "prompt",
+     "type": "str | None",
+     "description": "The task prompt; default: the file's task_prompt field."
+    },
+    {
+     "name": "video_duration_s",
+     "type": "float | None",
+     "description": "Clip length for the time-window check; default: the file's video.duration_s when present."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; uncovered_prompt_words; unreferenced_objects; hands_without_subgoals."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "scene_semantic_consistency_check",
+   "requirements": [],
+   "tags": [
+    "stage 1",
+    "semantic",
+    "consistency",
+    "subgoals",
+    "prompt coverage"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.verifiers.scene_semantic_consistency_check runs/my_task/stage1/scene_semantic.json",
+   "file": "verifiers/scene_semantic_consistency_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_semantic_consistency_check.py"
+  },
+  {
+   "name": "scene_semantic_schema_check",
+   "title": "Scene semantic schema check",
+   "type": "verifier",
+   "category": "Scene Assertions",
+   "summary": "Validates a Stage 1 scene_semantic.json against the schema: required keys, enumerated object types, roles, hands and motions, id format, and the per-entry fields of objects and subgoals.",
+   "description": "Loads the JSON and checks it against stage1_semantic_understanding/schema.json (JSON Schema draft 2020-12, via jsonschema when installed, otherwise an equivalent built-in walk). Reports every violation with its JSON path so the agent can fix the file. Form only: whether the content matches the video is the job of scene_semantic_consistency_check and of the agent.",
+   "inputs": [
+    {
+     "name": "path",
+     "type": "path",
+     "description": "The scene_semantic.json to check."
+    },
+    {
+     "name": "schema_path",
+     "type": "path | None",
+     "description": "Schema file. Default: the repository's stage1_semantic_understanding/schema.json."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues: list of '<json path>: <problem>'; counts of objects and subgoals."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "scene_semantic_schema_check",
+   "requirements": [
+    "jsonschema (optional)"
+   ],
+   "tags": [
+    "stage 1",
+    "semantic",
+    "schema",
+    "json"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.verifiers.scene_semantic_schema_check runs/my_task/stage1/scene_semantic.json",
+   "file": "verifiers/scene_semantic_schema_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_semantic_schema_check.py"
   },
   {
    "name": "scissors_cut_test",
