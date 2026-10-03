@@ -70,6 +70,8 @@ nav a:hover{color:var(--text);border-color:var(--line-2)}
 .card:focus-visible{outline:2px solid var(--skill);outline-offset:2px}
 .badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;font-weight:600}
 .badge.skill{color:var(--skill);background:var(--skill-dim)} .badge.verifier{color:var(--verifier);background:var(--verifier-dim)}
+.st{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;border:1px solid var(--line-2);color:var(--text-2)}
+.st.tested{color:var(--live);border-color:rgba(61,220,132,.35)}
 .card .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .card .cat{font-size:12px;color:var(--muted)}
 .card h3{margin:0;font-size:16px;font-weight:600;letter-spacing:-.005em}
@@ -192,8 +194,9 @@ function render() {
   const nS = tools.filter(t => t.type === 'skill').length, nV = tools.length - nS;
   countUp($('nSkills'), nS); countUp($('nVerifiers'), nV); countUp($('nTotal'), tools.length);
   const catsUsed = type => new Set(tools.filter(t => t.type === type).map(t => t.category)).size;
-  $('subSkills').textContent = `${catsUsed('skill')} of ${CATS.skill.length} categories populated`;
-  $('subVerifiers').textContent = `${catsUsed('verifier')} of ${CATS.verifier.length} categories populated`;
+  const tested = type => tools.filter(t => t.type === type && t.status === 'tested').length;
+  $('subSkills').textContent = `${tested('skill')} tested here · ${catsUsed('skill')} of ${CATS.skill.length} categories`;
+  $('subVerifiers').textContent = `${tested('verifier')} tested here · ${catsUsed('verifier')} of ${CATS.verifier.length} categories`;
   $('subTotal').textContent = state.generated ? `index built ${fmtDate(state.generated)}` : '';
   const st = $('status'); st.classList.toggle('live', state.source === 'live');
   const n = `${tools.length} tool${tools.length === 1 ? '' : 's'}`;
@@ -213,7 +216,7 @@ function render() {
 
   // cards
   const q = state.q.trim().toLowerCase();
-  const hay = t => [t.name, t.title, t.summary, t.category, ...(t.tags || []), ...(t.inputs || []).map(i => i.name), ...(t.outputs || []).map(o => o.name)].join(' ').toLowerCase();
+  const hay = t => [t.name, t.title, t.summary, t.category, t.status, ...(t.tags || []), ...(t.used_in || []), ...(t.inputs || []).map(i => i.name), ...(t.outputs || []).map(o => o.name)].join(' ').toLowerCase();
   const shown = tools.filter(t => (state.type === 'all' || t.type === state.type) && (!state.cat || t.category === state.cat) && (!q || hay(t).includes(q)));
   const order = t => (t.type === 'skill' ? 0 : 1) * 100 + CATS[t.type].indexOf(t.category);
   shown.sort((a, b) => order(a) - order(b) || a.title.localeCompare(b.title));
@@ -223,7 +226,7 @@ function render() {
       <h3>${esc(t.title)}</h3>
       <div class="name">${esc(t.name)}</div>
       <p>${esc(t.summary)}</p>
-      <div class="foot"><span>${(t.inputs || []).length} in → ${(t.outputs || []).length} out</span><span>${esc(t.added || '')}</span></div>
+      <div class="foot"><span>${(t.inputs || []).length} in → ${(t.outputs || []).length} out</span><span class="st ${esc(t.status || '')}">${esc(t.status || '')}</span></div>
     </article>`).join('')
     : `<div class="empty"><b>No tools here yet</b>${state.q ? 'Nothing matches the search.' : 'This category fills as DexAgent processes more demonstrations.'}</div>`;
   $('grid').querySelectorAll('.card').forEach(c => {
@@ -239,7 +242,7 @@ function ioTable(rows) {
 
 function openTool(name) {
   const t = state.tools.find(x => x.name === name); if (!t) return;
-  const kv = [['Category', t.category], ['Simulators', (t.simulators || []).join(', ')], ['Requirements', (t.requirements || []).join(', ')], ['Used in', (t.used_in || []).join(', ')], ['Entry point', t.entrypoint], ['Added', t.added]].filter(([, v]) => v);
+  const kv = [['Category', t.category], ['Status', t.status === 'tested' ? 'tested: its smoke test ran and passed' : t.status === 'ported' ? 'ported: runs, needs an external model or GPU stack not exercised here' : t.status], ['Simulators', (t.simulators || []).join(', ')], ['Requirements', (t.requirements || []).join(', ')], ['Used in', (t.used_in || []).join(', ')], ['Entry point', t.entrypoint], ['Added', t.added]].filter(([, v]) => v);
   $('drawer').innerHTML = `
     <button class="close" aria-label="Close">×</button>
     <span class="badge ${t.type}">${t.type}</span>
