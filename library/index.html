@@ -215,7 +215,7 @@ function render() {
 
   // cards
   const q = state.q.trim().toLowerCase();
-  const hay = t => [t.name, t.title, t.summary, t.category, t.status, ...(t.tags || []), ...(t.used_in || []), ...(t.inputs || []).map(i => i.name), ...(t.outputs || []).map(o => o.name)].join(' ').toLowerCase();
+  const hay = t => [t.name, t.title, t.summary, t.category, t.status, ...(t.tags || []), ...(t.used_in || []), ...(t.inputs || []).flatMap(i => [i.name, i.description]), ...(t.outputs || []).flatMap(o => [o.name, o.description]), t.description].join(' ').toLowerCase();
   const shown = tools.filter(t => (state.type === 'all' || t.type === state.type) && (!state.cat || t.category === state.cat) && (!q || hay(t).includes(q)));
   const order = t => (t.type === 'skill' ? 0 : 1) * 100 + CATS[t.type].indexOf(t.category);
   shown.sort((a, b) => order(a) - order(b) || a.title.localeCompare(b.title));
