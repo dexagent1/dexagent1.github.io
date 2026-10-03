@@ -1,0 +1,106 @@
+{
+ "generated": "2026-10-03T17:34:00Z",
+ "counts": {
+  "skills": 0,
+  "verifiers": 1
+ },
+ "categories": {
+  "skill": [
+   "Trajectory & Execution",
+   "Object Reconstruction",
+   "Perception & Grounding",
+   "Scene Runtime & Rendering",
+   "Grasp & Poses",
+   "Measurements"
+  ],
+  "verifier": [
+   "Task & Rollout Gates",
+   "Grasp Stress Tests",
+   "Reconstruction Mechanism Tests",
+   "Episode Audits",
+   "Scene Assertions",
+   "Scene Compile Checks"
+  ]
+ },
+ "tools": [
+  {
+   "name": "penetration_check",
+   "title": "Penetration check",
+   "type": "verifier",
+   "category": "Scene Compile Checks",
+   "summary": "Deepest interpenetration of every geom pair over a state or trajectory, on all visible geometry, optionally relative to a reference trajectory.",
+   "description": "Loads an MJCF scene and recompiles it with every visible geom collidable, so that parts a scene normally draws but does not collide, such as arm links, are checked as well. For each frame it runs MuJoCo's collision detection and keeps, per geom pair, the deepest penetration seen. A pair fails when its depth exceeds the tolerance; with a reference trajectory it fails only when it exceeds the depth the same pair reaches in the reference plus the tolerance, so contacts the verified episode already had (a grasp, a seated object) are not counted as new collisions. Bodies joined by an equality constraint and bodies of one limb are never checked against each other, and MuJoCo itself never collides two bodies that are both fixed to the world. Any robot and any environment work; nothing is task specific.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str | mujoco.MjModel",
+     "description": "MJCF file of the scene. A compiled model also works, but then only geoms that already collide are checked, because mesh hulls are built at compile time."
+    },
+    {
+     "name": "qpos",
+     "type": "ndarray [T, nq] or [nq] | None",
+     "description": "The state or trajectory to check; the model's initial state when omitted."
+    },
+    {
+     "name": "baseline_qpos",
+     "type": "ndarray [T, nq] | None",
+     "description": "Reference trajectory. Each pair may penetrate as deep as it does here, plus the tolerance."
+    },
+    {
+     "name": "tolerance",
+     "type": "float, metres",
+     "description": "Penetration allowed beyond the reference, or in absolute terms without one. Default 0.003."
+    },
+    {
+     "name": "limbs",
+     "type": "list[list[str]] | None",
+     "description": "Groups of body names whose members are not checked against each other, for example one arm with its hand. Child bodies are included."
+    },
+    {
+     "name": "ignore",
+     "type": "list[str]",
+     "description": "Regular expressions; a geom pair is skipped when either geom's 'body/geom' name matches one of them."
+    },
+    {
+     "name": "visual_groups",
+     "type": "list[int]",
+     "description": "MuJoCo geom groups that count as visible. Default [0, 1, 2]."
+    },
+    {
+     "name": "stride",
+     "type": "int",
+     "description": "Check every n-th frame. Default 1."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok (bool); violations: the failing pairs, worst first, each with the two 'body/geom' names, depth, excess over the reference and the frame; worst: the single worst pair; n_pairs_touching; n_frames; n_geoms_made_collidable; tolerance."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "collision",
+    "penetration",
+    "contact",
+    "trajectory",
+    "scene"
+   ],
+   "used_in": [
+    "Stage 4 robot data generation"
+   ],
+   "entrypoint": "check_penetration",
+   "cli": "python -m tool_library.verifiers.penetration_check scene.xml trajectory.npz --baseline reference.npz",
+   "added": "2026-10-03",
+   "file": "verifiers/penetration_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/penetration_check.py"
+  }
+ ]
+}
