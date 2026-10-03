@@ -1,5 +1,4 @@
 {
- "generated": "2026-10-03T19:03:36Z",
  "counts": {
   "skills": 74,
   "verifiers": 54
@@ -131,7 +130,6 @@
    ],
    "status": "tested",
    "entrypoint": "adapt_trajectory_to_layout",
-   "added": "2026-10-03",
    "file": "skills/adapt_trajectory_to_layout.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/adapt_trajectory_to_layout.py"
   },
@@ -214,7 +212,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/add_wrist_cameras.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/add_wrist_cameras.py"
   },
@@ -279,7 +276,6 @@
    ],
    "status": "tested",
    "entrypoint": "analyze_manipulation",
-   "added": "2026-10-03",
    "file": "skills/analyze_manipulation.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/analyze_manipulation.py"
   },
@@ -369,7 +365,6 @@
    ],
    "status": "tested",
    "entrypoint": "attach_arms",
-   "added": "2026-10-03",
    "file": "skills/attach_arms.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/attach_arms.py"
   },
@@ -448,7 +443,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/build_tabletop_world.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/build_tabletop_world.py"
   },
@@ -526,7 +520,6 @@
    ],
    "status": "tested",
    "entrypoint": "chain_subgoals",
-   "added": "2026-10-03",
    "file": "skills/chain_subgoals.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/chain_subgoals.py"
   },
@@ -593,7 +586,6 @@
    "status": "tested",
    "entrypoint": "compile_scene",
    "cli": "python -m tool_library.skills.compile_scene scene.xml",
-   "added": "2026-10-03",
    "file": "skills/compile_scene.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/compile_scene.py"
   },
@@ -668,7 +660,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/composite_renders.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/composite_renders.py"
   },
@@ -834,13 +825,15 @@
     "cabinet",
     "urdf",
     "articraft",
-    "prismatic"
+    "prismatic",
+    "reconstruct",
+    "parametric",
+    "object reconstruction"
    ],
    "used_in": [
     "Place Toy in Drawer"
    ],
    "cli": "python -m tool_library.skills.construct_articulated <out_dir> <width> <depth> <height> <rows_json>",
-   "added": "2026-10-03",
    "file": "skills/construct_articulated.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_articulated.py"
   },
@@ -984,14 +977,15 @@
     "battery",
     "cell",
     "rigid",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Battery Insertion"
    ],
    "status": "tested",
    "entrypoint": "construct_battery",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_battery out_dir",
    "file": "skills/construct_battery.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_battery.py"
@@ -1197,14 +1191,15 @@
     "holder",
     "spring",
     "receptacle",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Battery Insertion"
    ],
    "status": "tested",
    "entrypoint": "construct_battery_case",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_battery_case out_dir",
    "file": "skills/construct_battery_case.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_battery_case.py"
@@ -1430,14 +1425,15 @@
     "screw cap",
     "thread",
     "articulated",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Open the Bottle"
    ],
    "status": "tested",
    "entrypoint": "construct_bottle",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_bottle out_dir",
    "file": "skills/construct_bottle.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_bottle.py"
@@ -1496,6 +1492,16 @@
      "description": "Base thickness. Default 0.004."
     },
     {
+     "name": "lip",
+     "type": "float, metres",
+     "description": "Rolled lip proud of the wall at the rim. Default 0.001."
+    },
+    {
+     "name": "density",
+     "type": "float, kg/m3",
+     "description": "Used when mass is None. Default 600."
+    },
+    {
      "name": "n_wedges",
      "type": "int",
      "description": "Convex wall wedges. Default 20."
@@ -1544,13 +1550,14 @@
     "vessel",
     "hollow",
     "parametric",
-    "pick-and-place"
+    "pick-and-place",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Place Cup in Bowl"
    ],
    "cli": "python -m tool_library.skills.construct_bowl <out_dir>",
-   "added": "2026-10-03",
    "file": "skills/construct_bowl.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_bowl.py"
   },
@@ -1718,14 +1725,15 @@
    "tags": [
     "rack",
     "lab",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_conical_tube_rack",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_conical_tube_rack out_dir",
    "file": "skills/construct_conical_tube_rack.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_conical_tube_rack.py"
@@ -1805,14 +1813,15 @@
     "cube",
     "block",
     "rigid",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Giftbox Packing"
    ],
    "status": "tested",
    "entrypoint": "construct_cubes",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_cubes out_dir",
    "file": "skills/construct_cubes.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_cubes.py"
@@ -1896,6 +1905,51 @@
      "description": "Interior colour (measured). Default pale."
     },
     {
+     "name": "lining",
+     "type": "float, metres",
+     "description": "Inner lining shell thickness (visual). Default 0.0004."
+    },
+    {
+     "name": "sections",
+     "type": "int",
+     "description": "Revolve resolution of the visual meshes. Default 96."
+    },
+    {
+     "name": "specular",
+     "type": "float",
+     "description": "Material specular. Default 0.3."
+    },
+    {
+     "name": "shininess",
+     "type": "float",
+     "description": "Material shininess. Default 0.3."
+    },
+    {
+     "name": "collision_rgba",
+     "type": "list[float]",
+     "description": "Colour of the collision wedges; alpha 0 hides them. Default invisible."
+    },
+    {
+     "name": "density",
+     "type": "float, kg/m3",
+     "description": "Used when mass is None. Default 250."
+    },
+    {
+     "name": "friction",
+     "type": "list[float]",
+     "description": "MuJoCo friction triple. Default [1.0, 0.005, 0.0001]."
+    },
+    {
+     "name": "condim",
+     "type": "int",
+     "description": "Contact dimensionality. Default 4."
+    },
+    {
+     "name": "timestep",
+     "type": "float, s",
+     "description": "Simulation timestep written into the asset. Default 0.002."
+    },
+    {
      "name": "mass",
      "type": "float | None",
      "description": "Mass in kg; None uses density 250 over the wedges."
@@ -1975,14 +2029,15 @@
     "vessel",
     "hollow",
     "parametric",
-    "pick-and-place"
+    "pick-and-place",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Place Cup in Bowl",
     "Multi-Cup Grasping"
    ],
    "cli": "python -m tool_library.skills.construct_cup <out_dir>",
-   "added": "2026-10-03",
    "file": "skills/construct_cup.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_cup.py"
   },
@@ -2181,14 +2236,15 @@
     "rack",
     "cage",
     "receptacle",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Computer Installation"
    ],
    "status": "tested",
    "entrypoint": "construct_disk_rack",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_disk_rack out_dir",
    "file": "skills/construct_disk_rack.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_disk_rack.py"
@@ -2377,14 +2433,15 @@
    "tags": [
     "eraser",
     "tool",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Drawing and Wiping"
    ],
    "status": "tested",
    "entrypoint": "construct_eraser",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_eraser out_dir",
    "file": "skills/construct_eraser.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_eraser.py"
@@ -2513,6 +2570,11 @@
      "description": ">0 = springy card that wants to reopen. Default 0.0"
     },
     {
+     "name": "hinge_solreflimit",
+     "type": "list[float]",
+     "description": "Hinge limit solref [timeconst, dampratio]. Default [0.005, 1.0]."
+    },
+    {
      "name": "hinge_armature",
      "type": "float",
      "description": "Hinge armature. Default 0.005"
@@ -2576,14 +2638,15 @@
     "lid",
     "hinge",
     "articulated",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Giftbox Packing"
    ],
    "status": "tested",
    "entrypoint": "construct_fold_box",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_fold_box out_dir",
    "file": "skills/construct_fold_box.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_fold_box.py"
@@ -2783,14 +2846,15 @@
     "hard disk",
     "tray",
     "rigid",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Computer Installation"
    ],
    "status": "tested",
    "entrypoint": "construct_hard_disk",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_hard_disk out_dir",
    "file": "skills/construct_hard_disk.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_hard_disk.py"
@@ -3107,12 +3171,13 @@
     "latch",
     "snap",
     "articulated",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [],
    "status": "tested",
    "entrypoint": "construct_latch_box",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_latch_box out_dir",
    "file": "skills/construct_latch_box.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_latch_box.py"
@@ -3302,14 +3367,15 @@
     "marker",
     "pen",
     "tool",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Drawing and Wiping"
    ],
    "status": "tested",
    "entrypoint": "construct_marker",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_marker out_dir",
    "file": "skills/construct_marker.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_marker.py"
@@ -3471,7 +3537,10 @@
     "texture",
     "cup",
     "bowl",
-    "collision"
+    "collision",
+    "reconstruct",
+    "parametric",
+    "object reconstruction"
    ],
    "used_in": [
     "Place Cup in Bowl",
@@ -3481,7 +3550,6 @@
    ],
    "status": "tested",
    "entrypoint": "construct_mesh_asset",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_mesh_asset out_dir '{\"mesh\": \"object.obj\", ...}'",
    "file": "skills/construct_mesh_asset.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_mesh_asset.py"
@@ -3683,14 +3751,15 @@
     "spring",
     "tool",
     "lab",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_micropipette",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_micropipette out_dir",
    "file": "skills/construct_micropipette.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_micropipette.py"
@@ -3922,14 +3991,15 @@
     "snap",
     "lab",
     "articulated",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_microtube",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_microtube out_dir",
    "file": "skills/construct_microtube.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_microtube.py"
@@ -4119,14 +4189,15 @@
     "computer",
     "case",
     "receptacle",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Computer Installation"
    ],
    "status": "tested",
    "entrypoint": "construct_pc_case",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_pc_case out_dir",
    "file": "skills/construct_pc_case.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pc_case.py"
@@ -4235,14 +4306,15 @@
    "tags": [
     "pipette tip",
     "lab",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_pipette_tip",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_pipette_tip out_dir",
    "file": "skills/construct_pipette_tip.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pipette_tip.py"
@@ -4453,7 +4525,9 @@
     "cable",
     "deformable",
     "knot",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Knot the Rope",
@@ -4461,7 +4535,6 @@
    ],
    "status": "tested",
    "entrypoint": "construct_rope",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_rope out_dir",
    "file": "skills/construct_rope.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_rope.py"
@@ -4698,14 +4771,15 @@
     "cut",
     "tool",
     "articulated",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Scissor Cutting"
    ],
    "status": "tested",
    "entrypoint": "construct_scissors",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_scissors out_dir",
    "file": "skills/construct_scissors.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_scissors.py"
@@ -4840,14 +4914,15 @@
     "spring",
     "mechanism",
     "elastic",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Battery Insertion"
    ],
    "status": "tested",
    "entrypoint": "construct_spring",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_spring out_dir",
    "file": "skills/construct_spring.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_spring.py"
@@ -5039,14 +5114,15 @@
     "hinge",
     "lab",
     "receptacle",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_tip_box",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_tip_box out_dir",
    "file": "skills/construct_tip_box.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_tip_box.py"
@@ -5191,14 +5267,15 @@
     "decapper",
     "tool",
     "lab",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_tube_opener",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_tube_opener out_dir",
    "file": "skills/construct_tube_opener.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_tube_opener.py"
@@ -5363,14 +5440,15 @@
     "rack",
     "lab",
     "receptacle",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Biology Experiment"
    ],
    "status": "tested",
    "entrypoint": "construct_tube_rack",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_tube_rack out_dir",
    "file": "skills/construct_tube_rack.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_tube_rack.py"
@@ -5510,14 +5588,15 @@
     "whiteboard",
     "writable surface",
     "texture",
-    "parametric"
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Drawing and Wiping"
    ],
    "status": "tested",
    "entrypoint": "construct_whiteboard",
-   "added": "2026-10-03",
    "cli": "python -m tool_library.skills.construct_whiteboard out_dir",
    "file": "skills/construct_whiteboard.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_whiteboard.py"
@@ -5594,7 +5673,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.detect_objects frames/ scan.json --keywords cup bowl",
-   "added": "2026-10-03",
    "file": "skills/detect_objects.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/detect_objects.py"
   },
@@ -5683,7 +5761,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/erase_with_void.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/erase_with_void.py"
   },
@@ -5771,7 +5848,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.estimate_depth frames/ depth.npz --vda-repo Video-Depth-Anything --checkpoint metric_video_depth_anything_vitl.pth",
-   "added": "2026-10-03",
    "file": "skills/estimate_depth.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/estimate_depth.py"
   },
@@ -5841,7 +5917,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.estimate_gravity frames/ gravity.json",
-   "added": "2026-10-03",
    "file": "skills/estimate_gravity.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/estimate_gravity.py"
   },
@@ -5937,7 +6012,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/export_blender_bundle.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/export_blender_bundle.py"
   },
@@ -6025,7 +6099,6 @@
    ],
    "status": "tested",
    "entrypoint": "export_policy_trajectory",
-   "added": "2026-10-03",
    "file": "skills/export_policy_trajectory.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/export_policy_trajectory.py"
   },
@@ -6099,7 +6172,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.extract_frames video.mp4 frames/ --stride 2",
-   "added": "2026-10-03",
    "file": "skills/extract_frames.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/extract_frames.py"
   },
@@ -6192,7 +6264,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.extract_hand_meshes frames/ hands/",
-   "added": "2026-10-03",
    "file": "skills/extract_hand_meshes.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/extract_hand_meshes.py"
   },
@@ -6262,7 +6333,6 @@
     "Computer Installation",
     "Open the Bottle"
    ],
-   "added": "2026-10-03",
    "file": "skills/fit_camera_to_table_plane.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_camera_to_table_plane.py"
   },
@@ -6365,7 +6435,6 @@
     "Open the Bottle"
    ],
    "cli": "python -m tool_library.skills.fit_object_poses frames/ track/pred meshes/ depth.npz cup,bowl poses/ --focal 697",
-   "added": "2026-10-03",
    "file": "skills/fit_object_poses.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_object_poses.py"
   },
@@ -6466,7 +6535,6 @@
     "Battery Insertion",
     "Open the Bottle"
    ],
-   "added": "2026-10-03",
    "file": "skills/generate_rigid_grasps.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/generate_rigid_grasps.py"
   },
@@ -6561,7 +6629,6 @@
    "used_in": [
     "Place Cup in Bowl"
    ],
-   "added": "2026-10-03",
    "file": "skills/grasp_prior_bodex.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/grasp_prior_bodex.py"
   },
@@ -6649,7 +6716,6 @@
     "Drawing and Wiping",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "skills/handle_pinch_pose.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/handle_pinch_pose.py"
   },
@@ -6725,7 +6791,6 @@
    "used_in": [
     "Place Toy in Drawer"
    ],
-   "added": "2026-10-03",
    "file": "skills/identify_moving_joint.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/identify_moving_joint.py"
   },
@@ -6789,7 +6854,6 @@
    ],
    "status": "tested",
    "entrypoint": "measure_box_on_table",
-   "added": "2026-10-03",
    "file": "skills/measure_box_on_table.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_box_on_table.py"
   },
@@ -6866,7 +6930,6 @@
    ],
    "status": "tested",
    "entrypoint": "measure_carry_clearance",
-   "added": "2026-10-03",
    "file": "skills/measure_carry_clearance.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_carry_clearance.py"
   },
@@ -6934,7 +6997,6 @@
    ],
    "status": "tested",
    "entrypoint": "measure_joint_trajectory",
-   "added": "2026-10-03",
    "file": "skills/measure_joint_trajectory.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_joint_trajectory.py"
   },
@@ -7001,7 +7063,6 @@
     "Computer Installation",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/measure_object_color.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_object_color.py"
   },
@@ -7069,7 +7130,6 @@
    ],
    "status": "tested",
    "entrypoint": "measure_object_trajectory",
-   "added": "2026-10-03",
    "file": "skills/measure_object_trajectory.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_object_trajectory.py"
   },
@@ -7127,7 +7187,6 @@
    ],
    "status": "tested",
    "entrypoint": "measure_rope",
-   "added": "2026-10-03",
    "file": "skills/measure_rope.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_rope.py"
   },
@@ -7203,7 +7262,6 @@
     "Open the Bottle",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "skills/optimize_fingertip_contacts.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/optimize_fingertip_contacts.py"
   },
@@ -7290,7 +7348,6 @@
    ],
    "status": "tested",
    "entrypoint": "optimize_frame_locked",
-   "added": "2026-10-03",
    "file": "skills/optimize_frame_locked.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/optimize_frame_locked.py"
   },
@@ -7369,7 +7426,6 @@
    ],
    "status": "tested",
    "entrypoint": "optimize_reward_cem",
-   "added": "2026-10-03",
    "file": "skills/optimize_reward_cem.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/optimize_reward_cem.py"
   },
@@ -7495,13 +7551,14 @@
     "drawer",
     "cabinet",
     "articraft",
-    "mjcf"
+    "mjcf",
+    "reconstruct",
+    "object reconstruction"
    ],
    "used_in": [
     "Place Toy in Drawer"
    ],
    "cli": "python -m tool_library.skills.port_urdf_asset <model.urdf> <out_dir> [name] [scale]",
-   "added": "2026-10-03",
    "file": "skills/port_urdf_asset.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/port_urdf_asset.py"
   },
@@ -7595,7 +7652,6 @@
     "Open the Bottle",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "skills/pose_from_points.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/pose_from_points.py"
   },
@@ -7651,7 +7707,6 @@
    "status": "tested",
    "entrypoint": "probe_scene",
    "cli": "python -m tool_library.skills.probe_scene scene.xml",
-   "added": "2026-10-03",
    "file": "skills/probe_scene.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/probe_scene.py"
   },
@@ -7710,7 +7765,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.probe_video video.mp4 --thumbnails 4 --out-dir probe/",
-   "added": "2026-10-03",
    "file": "skills/probe_video.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/probe_video.py"
   },
@@ -7785,7 +7839,6 @@
     "Battery Insertion",
     "Computer Installation"
    ],
-   "added": "2026-10-03",
    "file": "skills/push_pose_from_point.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/push_pose_from_point.py"
   },
@@ -7856,7 +7909,6 @@
     "Battery Insertion",
     "Open the Bottle"
    ],
-   "added": "2026-10-03",
    "file": "skills/rank_grasps_q1.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/rank_grasps_q1.py"
   },
@@ -7937,7 +7989,6 @@
     "Open the Bottle"
    ],
    "cli": "python -m tool_library.skills.reconstruct_object_meshes frames/ track/pred meshes/ --sam3d-repo sam-3d-objects",
-   "added": "2026-10-03",
    "file": "skills/reconstruct_object_meshes.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/reconstruct_object_meshes.py"
   },
@@ -8037,7 +8088,6 @@
    ],
    "status": "tested",
    "entrypoint": "refit_to_real_rig",
-   "added": "2026-10-03",
    "file": "skills/refit_to_real_rig.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/refit_to_real_rig.py"
   },
@@ -8108,7 +8158,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.render_cycles bundle/ego --chunks 2",
-   "added": "2026-10-03",
    "file": "skills/render_cycles.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/render_cycles.py"
   },
@@ -8184,7 +8233,6 @@
     "Biology Experiment"
    ],
    "cli": "MUJOCO_GL=egl python -m tool_library.skills.render_scene scene.xml ego out.png",
-   "added": "2026-10-03",
    "file": "skills/render_scene.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/render_scene.py"
   },
@@ -8271,7 +8319,6 @@
     "Biology Experiment"
    ],
    "cli": "MUJOCO_GL=egl python -m tool_library.skills.render_trajectory_video scene.xml trajectory.npz out/ ego,left_wrist",
-   "added": "2026-10-03",
    "file": "skills/render_trajectory_video.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/render_trajectory_video.py"
   },
@@ -8360,7 +8407,6 @@
    ],
    "status": "tested",
    "entrypoint": "retarget_hand_motion",
-   "added": "2026-10-03",
    "file": "skills/retarget_hand_motion.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/retarget_hand_motion.py"
   },
@@ -8440,7 +8486,6 @@
     "Knot the Rope",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "skills/rope_pinch_pose.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/rope_pinch_pose.py"
   },
@@ -8509,7 +8554,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.segment_with_text_prompts frames/ masks/ --prompts hand arm cup",
-   "added": "2026-10-03",
    "file": "skills/segment_with_text_prompts.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/segment_with_text_prompts.py"
   },
@@ -8602,7 +8646,6 @@
    ],
    "status": "tested",
    "entrypoint": "solve_arm_ik",
-   "added": "2026-10-03",
    "file": "skills/solve_arm_ik.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/solve_arm_ik.py"
   },
@@ -8674,7 +8717,6 @@
     "Scissor Cutting",
     "Biology Experiment"
    ],
-   "added": "2026-10-03",
    "file": "skills/stage_on_bench.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/stage_on_bench.py"
   },
@@ -8750,7 +8792,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.skills.track_objects frames/ scan.json track/ --checkpoint sam2.1_hiera_large.pt",
-   "added": "2026-10-03",
    "file": "skills/track_objects.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/track_objects.py"
   },
@@ -8810,8 +8851,7 @@
     "Giftbox Packing"
    ],
    "status": "tested",
-   "entrypoint": "check_above",
-   "added": "2026-10-03",
+   "entrypoint": "above_check",
    "file": "verifiers/above_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/above_check.py"
   },
@@ -8883,8 +8923,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_arm_jerk",
-   "added": "2026-10-03",
+   "entrypoint": "arm_jerk_check",
    "file": "verifiers/arm_jerk_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/arm_jerk_check.py"
   },
@@ -8955,7 +8994,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_articulated_joint_travel",
+   "entrypoint": "articulated_joint_travel_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -8975,7 +9014,6 @@
     "Place Toy in Drawer"
    ],
    "cli": "python -m tool_library.verifiers.articulated_joint_travel_test <asset.xml | info.json>",
-   "added": "2026-10-03",
    "file": "verifiers/articulated_joint_travel_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/articulated_joint_travel_test.py"
   },
@@ -9030,8 +9068,7 @@
     "Scissor Cutting"
    ],
    "status": "tested",
-   "entrypoint": "check_articulation",
-   "added": "2026-10-03",
+   "entrypoint": "articulation_check",
    "file": "verifiers/articulation_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/articulation_check.py"
   },
@@ -9082,7 +9119,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_battery_seat",
+   "entrypoint": "battery_seat_test",
    "requirements": [
     "mujoco",
     "numpy",
@@ -9102,7 +9139,6 @@
     "Battery Insertion"
    ],
    "cli": "python -m tool_library.verifiers.battery_seat_test <case_params.json> <battery_params.json> [slot]",
-   "added": "2026-10-03",
    "file": "verifiers/battery_seat_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/battery_seat_test.py"
   },
@@ -9168,7 +9204,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_cable_drag",
+   "entrypoint": "cable_drag_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -9188,7 +9224,6 @@
     "Scissor Cutting"
    ],
    "cli": "python -m tool_library.verifiers.cable_drag_test <rope_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/cable_drag_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/cable_drag_test.py"
   },
@@ -9244,8 +9279,7 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_color_match",
-   "added": "2026-10-03",
+   "entrypoint": "color_match_check",
    "file": "verifiers/color_match_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/color_match_check.py"
   },
@@ -9307,8 +9341,7 @@
     "Computer Installation"
    ],
    "status": "tested",
-   "entrypoint": "check_contact",
-   "added": "2026-10-03",
+   "entrypoint": "contact_check",
    "file": "verifiers/contact_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/contact_check.py"
   },
@@ -9389,8 +9422,7 @@
     "Scissor Cutting"
    ],
    "status": "tested",
-   "entrypoint": "check_contact_force",
-   "added": "2026-10-03",
+   "entrypoint": "contact_force_check",
    "file": "verifiers/contact_force_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/contact_force_check.py"
   },
@@ -9475,8 +9507,7 @@
     "Computer Installation"
    ],
    "status": "tested",
-   "entrypoint": "check_final_pose",
-   "added": "2026-10-03",
+   "entrypoint": "final_pose_check",
    "file": "verifiers/final_pose_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/final_pose_check.py"
   },
@@ -9542,7 +9573,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_flip_cap_snap",
+   "entrypoint": "flip_cap_snap_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -9562,7 +9593,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.verifiers.flip_cap_snap_test <tube_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/flip_cap_snap_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/flip_cap_snap_test.py"
   },
@@ -9613,7 +9643,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_fold_box_fold",
+   "entrypoint": "fold_box_fold_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -9633,7 +9663,6 @@
     "Giftbox Packing"
    ],
    "cli": "python -m tool_library.verifiers.fold_box_fold_test <box_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/fold_box_fold_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/fold_box_fold_test.py"
   },
@@ -9708,7 +9737,6 @@
     "Battery Insertion",
     "Open the Bottle"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/force_closure_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/force_closure_check.py"
   },
@@ -9792,7 +9820,6 @@
     "Knot the Rope",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_approach_open_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_approach_open_test.py"
   },
@@ -9871,7 +9898,6 @@
     "Battery Insertion",
     "Open the Bottle"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_hold_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_hold_test.py"
   },
@@ -9957,7 +9983,6 @@
     "Open the Bottle",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_lift_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_lift_test.py"
   },
@@ -10042,7 +10067,6 @@
     "Open the Bottle",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_shake_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_shake_test.py"
   },
@@ -10111,7 +10135,6 @@
     "Knot the Rope",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_straddle_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_straddle_test.py"
   },
@@ -10205,7 +10228,6 @@
     "Open the Bottle",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_stress_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_stress_test.py"
   },
@@ -10278,7 +10300,6 @@
    "used_in": [
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/grasp_through_hole_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_through_hole_test.py"
   },
@@ -10343,8 +10364,7 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_height",
-   "added": "2026-10-03",
+   "entrypoint": "height_check",
    "file": "verifiers/height_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/height_check.py"
   },
@@ -10431,8 +10451,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_holds_at_video_end",
-   "added": "2026-10-03",
+   "entrypoint": "holds_at_video_end_check",
    "file": "verifiers/holds_at_video_end_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/holds_at_video_end_check.py"
   },
@@ -10498,7 +10517,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_ink_round_trip",
+   "entrypoint": "ink_round_trip_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -10518,7 +10537,6 @@
     "Drawing and Wiping"
    ],
    "cli": "python -m tool_library.verifiers.ink_round_trip_test <board_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/ink_round_trip_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/ink_round_trip_test.py"
   },
@@ -10580,8 +10598,7 @@
     "Scissor Cutting"
    ],
    "status": "tested",
-   "entrypoint": "check_joint_range",
-   "added": "2026-10-03",
+   "entrypoint": "joint_range_check",
    "file": "verifiers/joint_range_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/joint_range_check.py"
   },
@@ -10663,9 +10680,8 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_joint_speed",
+   "entrypoint": "joint_speed_check",
    "cli": "python -m tool_library.verifiers.joint_speed_check scene.xml trajectory.npz --ee right=robot_right_right_base_yaw",
-   "added": "2026-10-03",
    "file": "verifiers/joint_speed_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/joint_speed_check.py"
   },
@@ -10726,7 +10742,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_latch_snap",
+   "entrypoint": "latch_snap_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -10744,7 +10760,6 @@
    ],
    "used_in": [],
    "cli": "python -m tool_library.verifiers.latch_snap_test <latchbox_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/latch_snap_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/latch_snap_test.py"
   },
@@ -10820,8 +10835,7 @@
     "Open the Bottle"
    ],
    "status": "tested",
-   "entrypoint": "check_lift",
-   "added": "2026-10-03",
+   "entrypoint": "lift_check",
    "file": "verifiers/lift_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/lift_check.py"
   },
@@ -10866,9 +10880,8 @@
     "Giftbox Packing"
    ],
    "status": "tested",
-   "entrypoint": "check_model_finite",
+   "entrypoint": "model_finite_check",
    "cli": "python -m tool_library.verifiers.model_finite_check scene.xml",
-   "added": "2026-10-03",
    "file": "verifiers/model_finite_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/model_finite_check.py"
   },
@@ -10947,8 +10960,7 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_moving_joint",
-   "added": "2026-10-03",
+   "entrypoint": "moving_joint_check",
    "file": "verifiers/moving_joint_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/moving_joint_check.py"
   },
@@ -11008,8 +11020,7 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_no_contact",
-   "added": "2026-10-03",
+   "entrypoint": "no_contact_check",
    "file": "verifiers/no_contact_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/no_contact_check.py"
   },
@@ -11060,8 +11071,7 @@
     "Multi-Cup Grasping"
    ],
    "status": "tested",
-   "entrypoint": "check_no_float",
-   "added": "2026-10-03",
+   "entrypoint": "no_float_check",
    "file": "verifiers/no_float_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/no_float_check.py"
   },
@@ -11143,8 +11153,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_object_disturbance",
-   "added": "2026-10-03",
+   "entrypoint": "object_disturbance_check",
    "file": "verifiers/object_disturbance_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/object_disturbance_check.py"
   },
@@ -11232,9 +11241,8 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_penetration",
+   "entrypoint": "penetration_check",
    "cli": "python -m tool_library.verifiers.penetration_check scene.xml trajectory.npz --baseline reference.npz",
-   "added": "2026-10-03",
    "file": "verifiers/penetration_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/penetration_check.py"
   },
@@ -11285,7 +11293,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_plunger_two_stage",
+   "entrypoint": "plunger_two_stage_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -11305,7 +11313,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.verifiers.plunger_two_stage_test <pipette_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/plunger_two_stage_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/plunger_two_stage_test.py"
   },
@@ -11390,7 +11397,6 @@
     "Knot the Rope",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/pregrasp_clearance_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/pregrasp_clearance_test.py"
   },
@@ -11437,8 +11443,7 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_required_bodies",
-   "added": "2026-10-03",
+   "entrypoint": "required_bodies_check",
    "file": "verifiers/required_bodies_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/required_bodies_check.py"
   },
@@ -11516,9 +11521,8 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "run_scene_qc",
+   "entrypoint": "scene_qc",
    "cli": "python -m tool_library.verifiers.scene_qc scene.xml",
-   "added": "2026-10-03",
    "file": "verifiers/scene_qc.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_qc.py"
   },
@@ -11589,7 +11593,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_scissors_cut",
+   "entrypoint": "scissors_cut_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -11608,7 +11612,6 @@
     "Scissor Cutting"
    ],
    "cli": "python -m tool_library.verifiers.scissors_cut_test <scissors_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/scissors_cut_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scissors_cut_test.py"
   },
@@ -11680,9 +11683,8 @@
     "Open the Bottle"
    ],
    "status": "tested",
-   "entrypoint": "check_settle_stability",
+   "entrypoint": "settle_stability_check",
    "cli": "python -m tool_library.verifiers.settle_stability_check scene.xml",
-   "added": "2026-10-03",
    "file": "verifiers/settle_stability_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/settle_stability_check.py"
   },
@@ -11761,8 +11763,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_silhouette_iou",
-   "added": "2026-10-03",
+   "entrypoint": "silhouette_iou_check",
    "file": "verifiers/silhouette_iou_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/silhouette_iou_check.py"
   },
@@ -11813,7 +11814,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_spring_stiffness",
+   "entrypoint": "spring_stiffness_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -11832,7 +11833,6 @@
     "Battery Insertion"
    ],
    "cli": "python -m tool_library.verifiers.spring_stiffness_test <spring_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/spring_stiffness_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/spring_stiffness_test.py"
   },
@@ -11897,9 +11897,8 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_support",
+   "entrypoint": "support_check",
    "cli": "python -m tool_library.verifiers.support_check scene.xml",
-   "added": "2026-10-03",
    "file": "verifiers/support_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/support_check.py"
   },
@@ -11974,8 +11973,7 @@
     "Open the Bottle"
    ],
    "status": "tested",
-   "entrypoint": "check_table_clearance",
-   "added": "2026-10-03",
+   "entrypoint": "table_clearance_check",
    "file": "verifiers/table_clearance_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/table_clearance_check.py"
   },
@@ -12031,7 +12029,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_thread_self_locking",
+   "entrypoint": "thread_self_locking_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -12050,7 +12048,6 @@
     "Open the Bottle"
    ],
    "cli": "python -m tool_library.verifiers.thread_self_locking_test <bottle_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/thread_self_locking_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/thread_self_locking_test.py"
   },
@@ -12143,9 +12140,8 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "audit_trajectory",
+   "entrypoint": "trajectory_audit",
    "cli": "python -m tool_library.verifiers.trajectory_audit scene.xml trajectory.npz --ee right=<hand body> left=<hand body>",
-   "added": "2026-10-03",
    "file": "verifiers/trajectory_audit.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/trajectory_audit.py"
   },
@@ -12201,7 +12197,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_tube_seat",
+   "entrypoint": "tube_seat_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -12221,7 +12217,6 @@
     "Biology Experiment"
    ],
    "cli": "python -m tool_library.verifiers.tube_seat_test <rack_params.json>",
-   "added": "2026-10-03",
    "file": "verifiers/tube_seat_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/tube_seat_test.py"
   },
@@ -12300,8 +12295,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_uncovered_frames",
-   "added": "2026-10-03",
+   "entrypoint": "uncovered_frames_check",
    "file": "verifiers/uncovered_frames_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/uncovered_frames_check.py"
   },
@@ -12348,9 +12342,8 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_units",
+   "entrypoint": "units_check",
    "cli": "python -m tool_library.verifiers.units_check scene.xml",
-   "added": "2026-10-03",
    "file": "verifiers/units_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/units_check.py"
   },
@@ -12400,9 +12393,8 @@
     "Place Toy in Drawer"
    ],
    "status": "tested",
-   "entrypoint": "check_urdf_articulation",
+   "entrypoint": "urdf_articulation_check",
    "cli": "python -m tool_library.verifiers.urdf_articulation_check model.urdf",
-   "added": "2026-10-03",
    "file": "verifiers/urdf_articulation_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/urdf_articulation_check.py"
   },
@@ -12453,7 +12445,7 @@
     }
    ],
    "status": "tested",
-   "entrypoint": "test_vessel_containment",
+   "entrypoint": "vessel_containment_test",
    "requirements": [
     "mujoco",
     "numpy"
@@ -12474,7 +12466,6 @@
     "Multi-Cup Grasping"
    ],
    "cli": "python -m tool_library.verifiers.vessel_containment_test <vessel_params.json> [inner_params.json]",
-   "added": "2026-10-03",
    "file": "verifiers/vessel_containment_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/vessel_containment_test.py"
   },
@@ -12540,8 +12531,7 @@
     "Open the Bottle"
    ],
    "status": "tested",
-   "entrypoint": "check_weld_gap",
-   "added": "2026-10-03",
+   "entrypoint": "weld_gap_check",
    "file": "verifiers/weld_gap_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/weld_gap_check.py"
   },
@@ -12619,7 +12609,6 @@
     "Knot the Rope",
     "Scissor Cutting"
    ],
-   "added": "2026-10-03",
    "file": "verifiers/wrist_servo_offset_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/wrist_servo_offset_check.py"
   },
@@ -12690,8 +12679,7 @@
     "Scissor Cutting"
    ],
    "status": "tested",
-   "entrypoint": "check_wrist_spin",
-   "added": "2026-10-03",
+   "entrypoint": "wrist_spin_check",
    "file": "verifiers/wrist_spin_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/wrist_spin_check.py"
   },
@@ -12763,8 +12751,7 @@
     "Biology Experiment"
    ],
    "status": "tested",
-   "entrypoint": "check_wrist_stop",
-   "added": "2026-10-03",
+   "entrypoint": "wrist_stop_check",
    "file": "verifiers/wrist_stop_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/wrist_stop_check.py"
   }

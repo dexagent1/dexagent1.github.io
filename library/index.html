@@ -161,7 +161,7 @@ const CATS = {
   skill: ['Trajectory & Execution','Object Reconstruction','Perception & Grounding','Scene Runtime & Rendering','Grasp & Poses','Measurements'],
   verifier: ['Task & Rollout Gates','Grasp Stress Tests','Reconstruction Mechanism Tests','Episode Audits','Scene Assertions','Scene Compile Checks']
 };
-const state = { tools: [], type: 'all', cat: null, q: '', source: '', generated: '' };
+const state = { tools: [], type: 'all', cat: null, q: '', source: '' };
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -187,7 +187,6 @@ function countUp(el, to) {
   })(t0);
 }
 
-function fmtDate(iso) { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? iso : d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC'; }
 
 function render() {
   const tools = state.tools;
@@ -197,7 +196,7 @@ function render() {
   const tested = type => tools.filter(t => t.type === type && t.status === 'tested').length;
   $('subSkills').textContent = `${tested('skill')} tested here · ${catsUsed('skill')} of ${CATS.skill.length} categories`;
   $('subVerifiers').textContent = `${tested('verifier')} tested here · ${catsUsed('verifier')} of ${CATS.verifier.length} categories`;
-  $('subTotal').textContent = state.generated ? `index built ${fmtDate(state.generated)}` : '';
+  $('subTotal').textContent = `${state.tools.filter(t => t.status === 'tested').length} tested here`;
   const st = $('status'); st.classList.toggle('live', state.source === 'live');
   const n = `${tools.length} tool${tools.length === 1 ? '' : 's'}`;
   $('statusText').textContent = state.source === 'live'
@@ -277,7 +276,7 @@ async function load(first) {
   if (!got) { if (first) { state.source = ''; render(); } return; }
   const sig = JSON.stringify(got.data.tools);
   if (first || sig !== load.sig || got.label !== state.source) {
-    load.sig = sig; state.tools = got.data.tools; state.source = got.label; state.generated = got.data.generated || '';
+    load.sig = sig; state.tools = got.data.tools; state.source = got.label;
     render();
     if (first && location.hash.length > 1) openTool(decodeURIComponent(location.hash.slice(1)));
   }
