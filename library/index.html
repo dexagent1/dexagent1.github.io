@@ -4,148 +4,153 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DexAgent Tool Library</title>
-<meta name="description" content="DexAgent's self-evolving tool library: every skill and verifier, by category, with inputs, outputs and source.">
+<meta name="description" content="Live view of DexAgent's self-evolving tool library: every skill and verifier, by category, with inputs, outputs and source.">
 <link rel="icon" href="https://dexagent1.github.io/static/icons/icon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f7f5f0; --paper-2:#efece5; --ink:#1c1b19; --ink-2:#4a4844; --ink-3:#7d7a73; --rule:#d9d5cc; --rule-2:#c7c2b7;
-  --accent:#8C1515; --accent-2:#b03a2e; --skill:#2a5d8f; --verifier:#8C1515; --ok:#2f6b3a;
-  --serif:'Newsreader',Georgia,'Times New Roman',serif; --sans:'Source Sans 3','Source Sans Pro',Helvetica,Arial,sans-serif; --mono:'Source Code Pro',Menlo,Consolas,monospace;
+  --bg:#0a0c10; --bg-2:#0f1217; --panel:#12161d; --panel-2:#171c24; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#e7eaf0; --text-2:#aab2bf; --muted:#6f7886;
+  --skill:#38c6ec; --skill-dim:rgba(56,198,236,.14); --verifier:#f2b544; --verifier-dim:rgba(242,181,68,.14);
+  --live:#3ddc84; --radius:12px; --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace; --sans:'Inter',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline;text-underline-offset:3px}
-.page{max-width:1120px;margin:0 auto;padding:0 20px}
-/* masthead */
-.mast{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:22px 0 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
-.mast .site{display:flex;align-items:center;gap:10px;color:var(--ink)}
-.mast .site img{width:28px;height:28px}
-.mast .site b{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.005em}
-.mast .site span{color:var(--ink-3);font-size:15px;margin-left:2px}
-.mast nav a{color:var(--ink-2);font-size:15px;margin-left:18px}
-.hero{padding:44px 0 26px;border-bottom:1px solid var(--rule)}
-.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(38px,5.2vw,56px);line-height:1.08;letter-spacing:-.012em;margin:0 0 14px}
-.hero p{max-width:640px;margin:0;font-size:18px;color:var(--ink-2)}
-.hero p i{font-family:var(--serif);font-style:italic;color:var(--ink)}
-.figures{display:flex;gap:36px;flex-wrap:wrap;margin-top:30px}
-.fig .n{font-family:var(--serif);font-size:46px;font-weight:500;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums oldstyle-nums}
-.fig .l{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
-.fig .l u{text-decoration:none;border-bottom:2px solid var(--skill);padding-bottom:2px}
-.fig.verifier .l u{border-color:var(--verifier)}
-.live{margin-top:22px;font-family:var(--mono);font-size:12.5px;color:var(--ink-3);display:flex;align-items:center;gap:8px}
-.live .dot{width:7px;height:7px;border-radius:50%;background:var(--rule-2)}
-.live.on .dot{background:var(--ok)}
-/* body */
-.body{display:grid;grid-template-columns:230px 1fr;gap:48px;padding:34px 0 80px}
-.toc{position:sticky;top:20px;align-self:start;font-size:15px}
-.toc h4{font-family:var(--serif);font-weight:600;font-size:15px;letter-spacing:.02em;margin:0 0 8px;color:var(--ink)}
-.toc h4 + h4{margin-top:22px}
-.toc ul{list-style:none;margin:0 0 6px;padding:0}
-.toc li{display:flex;justify-content:space-between;gap:10px;padding:4px 0;color:var(--ink-2);cursor:pointer;border-bottom:1px dotted transparent}
-.toc li:hover{color:var(--ink)}
-.toc li.on{color:var(--accent)}
-.toc li.zero{color:var(--ink-3)}
-.toc li b{font-family:var(--mono);font-weight:400;font-size:12.5px;color:var(--ink-3)}
-.toc li.on b{color:var(--accent)}
-.toc .all{margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
-.toc .all li{padding:3px 0}
-.main{min-width:0}
-.find{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--rule-2);padding:6px 0 10px;margin-bottom:8px}
-.find input{flex:1;border:0;background:transparent;font:inherit;font-size:17px;color:var(--ink);outline:0;padding:4px 0}
-.find input::placeholder{color:var(--ink-3)}
-.find svg{width:18px;height:18px;color:var(--ink-3);flex:none}
-.find .count{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);white-space:nowrap}
-.section{padding:26px 0 8px}
-.section h2{font-family:var(--serif);font-weight:500;font-size:26px;letter-spacing:-.005em;margin:0 0 4px;display:flex;align-items:baseline;gap:12px}
-.section h2 small{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);letter-spacing:0}
-.section .kind{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
-.tool{border-top:1px solid var(--rule);padding:16px 0 16px}
-.tool:last-child{border-bottom:1px solid var(--rule)}
-.tool .row{display:grid;grid-template-columns:1fr auto;gap:8px 20px;cursor:pointer;align-items:baseline}
-.tool .row:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.tool h3{font-family:var(--serif);font-weight:500;font-size:22px;margin:0;letter-spacing:-.005em}
-.tool h3 .arrow{display:inline-block;margin-left:8px;color:var(--ink-3);font-size:16px;transition:transform .18s}
-.tool.open h3 .arrow{transform:rotate(90deg)}
-.tool .id{font-family:var(--mono);font-size:12.5px;color:var(--ink-3)}
-.tool .sum{grid-column:1/-1;margin:2px 0 0;color:var(--ink-2);max-width:720px}
-.type{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-.type::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--skill);display:inline-block}
-.type.verifier::before{background:var(--verifier)}
-.detail{display:none;margin-top:16px;max-width:760px}
-.tool.open .detail{display:block}
-.detail p{margin:0 0 16px;color:var(--ink-2)}
-.detail h4{font-family:var(--serif);font-weight:600;font-size:16px;margin:20px 0 8px;color:var(--ink)}
-table.io{width:100%;border-collapse:collapse;font-size:15px}
-table.io td{padding:7px 10px 7px 0;vertical-align:top;border-top:1px solid var(--rule);line-height:1.4}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background-image:
+  radial-gradient(900px 420px at 15% -10%, rgba(56,198,236,.10), transparent 60%),
+  radial-gradient(700px 360px at 90% 0%, rgba(242,181,68,.07), transparent 60%),
+  linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:auto,auto,48px 48px,48px 48px; background-attachment:fixed}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+/* header */
+header{padding:22px 0 6px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:40px;height:40px}
+.brand h1{font-size:20px;font-weight:700;margin:0;letter-spacing:-.01em}
+.brand h1 span{color:var(--text-2);font-weight:500}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{font-size:13px;color:var(--text-2);padding:7px 11px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02)}
+nav a:hover{color:var(--text);border-color:var(--line-2)}
+.lead{margin:22px 0 0;max-width:720px;color:var(--text-2);font-size:15px;line-height:1.55}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--text-2);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 rgba(61,220,132,.5)}
+.status.live .dot{background:var(--live);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,132,.45)}70%{box-shadow:0 0 0 8px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 8px}
+.kpi{position:relative;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--text-2))}
+.kpi .label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);font-weight:600}
+.kpi .num{font-family:var(--mono);font-size:44px;font-weight:600;line-height:1.1;margin:8px 0 4px;color:var(--text);font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:12.5px;color:var(--muted)}
+.kpi.skill{--c:var(--skill)} .kpi.verifier{--c:var(--verifier)} .kpi.total{--c:#b6bfcc}
+/* controls */
+.controls{position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg) 85%,transparent);padding:14px 0 10px;margin-top:10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;background:var(--panel)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--text-2);font:inherit;font-size:13px;font-weight:500;padding:8px 14px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:rgba(255,255,255,.08);color:var(--text)}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line-2);border-radius:9px;padding:0 12px}
+.search input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font:inherit;font-size:14px;padding:9px 0}
+.search svg{width:16px;height:16px;color:var(--muted);flex:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text-2);font:inherit;font-size:12.5px;padding:6px 10px;border-radius:999px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.chip b{font-family:var(--mono);font-weight:500;color:var(--muted);font-size:12px}
+.chip.on{border-color:var(--line-2);background:rgba(255,255,255,.09);color:var(--text)} .chip.on b{color:var(--text)}
+.chip.zero{opacity:.55}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin:14px 0 40px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 14px;cursor:pointer;transition:border-color .15s,transform .15s,background .15s;display:flex;flex-direction:column;gap:8px;min-height:150px}
+.card:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-1px)}
+.card:focus-visible{outline:2px solid var(--skill);outline-offset:2px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;font-weight:600}
+.badge.skill{color:var(--skill);background:var(--skill-dim)} .badge.verifier{color:var(--verifier);background:var(--verifier-dim)}
+.card .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card .cat{font-size:12px;color:var(--muted)}
+.card h3{margin:0;font-size:16px;font-weight:600;letter-spacing:-.005em}
+.card .name{font-family:var(--mono);font-size:12px;color:var(--text-2)}
+.card p{margin:0;font-size:13.5px;line-height:1.5;color:var(--text-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:6px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;color:var(--text-2);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 12px;border:1px dashed var(--line-2);border-radius:var(--radius);font-size:14px}
+.empty b{display:block;color:var(--text-2);font-weight:600;margin-bottom:4px}
+/* drawer */
+.backdrop{position:fixed;inset:0;background:rgba(5,7,10,.6);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);background:var(--bg-2);border-left:1px solid var(--line-2);transform:translateX(100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);z-index:21;overflow-y:auto;padding:22px 22px 40px}
+body.open .backdrop{opacity:1;pointer-events:auto} body.open .drawer{transform:none}
+.drawer .close{position:absolute;top:14px;right:14px;appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text-2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1}
+.drawer h2{margin:10px 0 2px;font-size:22px;letter-spacing:-.01em}
+.drawer .name{font-family:var(--mono);font-size:12.5px;color:var(--text-2)}
+.drawer .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 16px;font-size:12.5px;color:var(--muted)}
+.drawer .summary{font-size:15px;line-height:1.55;color:var(--text);margin:0 0 14px}
+.drawer p.desc{font-size:14px;line-height:1.6;color:var(--text-2);margin:0 0 18px}
+.drawer h4{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;font-weight:600}
+table.io{width:100%;border-collapse:collapse;font-size:13px}
+table.io td{padding:8px 8px;border-top:1px solid var(--line);vertical-align:top;line-height:1.45}
 table.io tr:first-child td{border-top:0}
-table.io td.n{font-family:var(--mono);font-size:13.5px;color:var(--ink);width:22%}
-table.io td.t{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);width:28%;word-break:break-word}
-table.io td.d{color:var(--ink-2)}
-.facts{display:grid;grid-template-columns:130px 1fr;gap:5px 14px;font-size:15px;margin:0}
-.facts dt{color:var(--ink-3)} .facts dd{margin:0;color:var(--ink-2)}
-.tags{display:inline-flex;gap:6px;flex-wrap:wrap}
-.tags span{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:var(--paper-2);border-radius:4px;padding:2px 7px}
-pre.cli{position:relative;margin:0;background:var(--paper-2);border:1px solid var(--rule);border-radius:6px;padding:12px 70px 12px 14px;font-family:var(--mono);font-size:13px;color:var(--ink);white-space:pre-wrap;word-break:break-word;line-height:1.5}
-pre.cli button{position:absolute;top:8px;right:8px;appearance:none;border:1px solid var(--rule-2);background:var(--paper);color:var(--ink-2);font:inherit;font-size:12px;padding:3px 9px;border-radius:4px;cursor:pointer}
-.src{display:inline-block;margin-top:18px;font-size:15px}
-.none{color:var(--ink-3);padding:40px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-style:italic;font-family:var(--serif);font-size:19px}
-footer{border-top:1px solid var(--rule);padding:18px 0 48px;color:var(--ink-3);font-size:14px}
-footer code{font-family:var(--mono);font-size:12.5px}
-@media (max-width:860px){
-  .body{grid-template-columns:1fr;gap:18px;padding-top:22px}
-  .toc{position:static;border-bottom:1px solid var(--rule);padding-bottom:14px}
-  .toc ul{display:flex;flex-wrap:wrap;gap:4px 16px}
-  .toc li{padding:2px 0}
-  .toc .all{border:0;padding:0;margin:0 0 8px}
-  .hero{padding:30px 0 22px}
-  .figures{gap:24px}
-  .fig .n{font-size:38px}
-  .tool .row{grid-template-columns:1fr}
-}
-@media (max-width:600px){
-  table.io,table.io tbody,table.io tr,table.io td{display:block;width:auto}
-  table.io tr{border-top:1px solid var(--rule);padding:8px 0}
-  table.io tr:first-child{border-top:0}
-  table.io td{border:0;padding:1px 0}
-  table.io td.n{display:inline;padding-right:10px}
-  table.io td.t{display:inline}
-  .facts{grid-template-columns:96px 1fr}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+table.io td.n{font-family:var(--mono);font-size:12.5px;color:var(--text);width:24%;word-break:break-word}
+table.io td.t{font-family:var(--mono);font-size:11.5px;color:var(--muted);width:26%;word-break:break-word}
+table.io td.d{color:var(--text-2);width:50%}
+.iobox{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:13px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;color:var(--text-2)}
+pre.cli{position:relative;margin:0;background:#0b0e13;border:1px solid var(--line);border-radius:10px;padding:12px 44px 12px 14px;font-family:var(--mono);font-size:12.5px;color:var(--text);white-space:pre-wrap;word-break:break-word;line-height:1.5}
+pre.cli button{position:absolute;top:8px;right:8px;appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text-2);font:inherit;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer}
+.src{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:13.5px;padding:9px 13px;border-radius:9px;border:1px solid var(--line-2);background:var(--panel);color:var(--text)}
+.src:hover{border-color:rgba(255,255,255,.28)}
+footer{color:var(--muted);font-size:12.5px;padding:10px 0 40px;font-family:var(--mono)}
+@media (max-width:720px){.kpis{grid-template-columns:1fr 1fr}.kpi.total{grid-column:1/-1}.kpi .num{font-size:36px}.drawer{padding:18px 16px 32px}.kv{grid-template-columns:100px 1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="mast">
-    <a class="site" href="https://dexagent1.github.io/"><img src="https://dexagent1.github.io/static/icons/icon-192.png" alt=""><b>DexAgent</b><span>Tool Library</span></a>
-    <nav><a href="https://dexagent1.github.io/">Project page</a><a href="https://arxiv.org/abs/2609.35318">Paper</a><a href="https://github.com/dexagent1/DexAgent/tree/main/tool_library">Source</a></nav>
-  </div>
-
-  <section class="hero">
-    <h1>The tool library, as it stands.</h1>
-    <p>DexAgent keeps what it learns. Each time it turns a human video into robot data it may write a new <i>skill</i>, which produces an asset, a pose or a motion, or a new <i>verifier</i>, which checks one and says pass or fail. This page lists every tool currently in the repository, grouped the way the paper groups them.</p>
-    <div class="figures">
-      <div class="fig skill"><div class="n" id="nSkills">0</div><div class="l"><u>Skills</u></div></div>
-      <div class="fig verifier"><div class="n" id="nVerifiers">0</div><div class="l"><u>Verifiers</u></div></div>
-      <div class="fig"><div class="n" id="nCats">0</div><div class="l">of 12 categories in use</div></div>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <a class="brand" href="https://dexagent1.github.io/">
+        <img src="https://dexagent1.github.io/static/icons/icon-192.png" alt="">
+        <h1>DexAgent <span>Tool Library</span></h1>
+      </a>
+      <nav>
+        <a href="https://dexagent1.github.io/">Website</a>
+        <a href="https://arxiv.org/abs/2609.35318">Paper</a>
+        <a href="https://github.com/dexagent1/DexAgent/tree/main/tool_library">GitHub</a>
+      </nav>
     </div>
-    <div class="live" id="live"><span class="dot"></span><span id="liveText">reading the index…</span></div>
+    <p class="lead">Every skill and verifier DexAgent has accumulated, as they stand in the repository right now. A <b>skill</b> produces an asset, a pose or a motion; a <b>verifier</b> checks one and reports pass or fail. Pick a type and a category, or search, and open a tool for its inputs, outputs and source.</p>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">loading index…</span></div>
+  </header>
+
+  <section class="kpis" aria-label="Totals">
+    <div class="kpi skill"><div class="label">Skills</div><div class="num" id="nSkills">0</div><div class="sub" id="subSkills">&nbsp;</div></div>
+    <div class="kpi verifier"><div class="label">Verifiers</div><div class="num" id="nVerifiers">0</div><div class="sub" id="subVerifiers">&nbsp;</div></div>
+    <div class="kpi total"><div class="label">Total tools</div><div class="num" id="nTotal">0</div><div class="sub" id="subTotal">&nbsp;</div></div>
   </section>
 
-  <div class="body">
-    <aside class="toc" id="toc"></aside>
-    <main class="main">
-      <label class="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search tools" autocomplete="off"><span class="count" id="shownCount"></span></label>
-      <div id="sections"></div>
-    </main>
-  </div>
+  <section class="controls">
+    <div class="row">
+      <div class="seg" role="tablist" id="typeSeg">
+        <button class="on" data-type="all">All</button>
+        <button data-type="skill">Skills</button>
+        <button data-type="verifier">Verifiers</button>
+      </div>
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search by name, tag, input or output…" autocomplete="off"></label>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
 
-  <footer>Built from <a href="https://github.com/dexagent1/DexAgent/blob/main/tool_library/index.json"><code>tool_library/index.json</code></a> in the DexAgent repository and re-read every minute. To add a tool, see the <a href="https://github.com/dexagent1/DexAgent/tree/main/tool_library">library README</a>.</footer>
+  <main class="grid" id="grid" aria-live="polite"></main>
+  <footer>Source of truth: <a href="https://github.com/dexagent1/DexAgent/blob/main/tool_library/index.json">tool_library/index.json</a> in the DexAgent repository, built by <code>build_index.py</code>. This page re-reads it every 60 s.</footer>
 </div>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-label="Tool details"></aside>
 
 <script>
 const LIVE = 'https://raw.githubusercontent.com/dexagent1/DexAgent/main/tool_library/index.json';
@@ -154,10 +159,9 @@ const CATS = {
   skill: ['Trajectory & Execution','Object Reconstruction','Perception & Grounding','Scene Runtime & Rendering','Grasp & Poses','Measurements'],
   verifier: ['Task & Rollout Gates','Grasp Stress Tests','Reconstruction Mechanism Tests','Episode Audits','Scene Assertions','Scene Compile Checks']
 };
-const state = { tools: [], filter: 'all', q: '', source: '', generated: '', open: null };
+const state = { tools: [], type: 'all', cat: null, q: '', source: '', generated: '' };
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
 async function fetchIndex() {
   for (const [url, label] of [[LIVE, 'live'], [LOCAL, 'snapshot']]) {
@@ -166,102 +170,113 @@ async function fetchIndex() {
       if (!r.ok) continue;
       const data = await r.json();
       if (Array.isArray(data.tools)) return { data, label };
-    } catch (e) { /* next source */ }
+    } catch (e) { /* try the next source */ }
   }
   return null;
 }
-function fmtDate(iso) { const d = new Date(iso); return isNaN(d) ? (iso || '') : d.toISOString().slice(0, 10); }
 
-function visible() {
-  const q = state.q.trim().toLowerCase();
-  const hay = t => [t.name, t.title, t.summary, t.description, t.category, ...(t.tags || []), ...(t.inputs || []).map(i => i.name), ...(t.outputs || []).map(o => o.name)].join(' ').toLowerCase();
-  return state.tools.filter(t => {
-    if (state.filter === 'skill' || state.filter === 'verifier') { if (t.type !== state.filter) return false; }
-    else if (state.filter !== 'all' && t.category !== state.filter) return false;
-    return !q || hay(t).includes(q);
-  });
-}
-
-function renderToc() {
-  const n = (ty, c) => state.tools.filter(t => t.type === ty && (!c || t.category === c)).length;
-  const li = (key, label, count, cls = '') => `<li class="${state.filter === key ? 'on' : ''} ${cls} ${count ? '' : 'zero'}" data-f="${esc(key)}"><span>${esc(label)}</span><b>${count}</b></li>`;
-  $('toc').innerHTML = `
-    <ul class="all">${li('all', 'All tools', state.tools.length)}${li('skill', 'All skills', n('skill'))}${li('verifier', 'All verifiers', n('verifier'))}</ul>
-    <h4>Skills</h4><ul>${CATS.skill.map(c => li(c, c, n('skill', c))).join('')}</ul>
-    <h4>Verifiers</h4><ul>${CATS.verifier.map(c => li(c, c, n('verifier', c))).join('')}</ul>`;
-  $('toc').querySelectorAll('li').forEach(el => el.onclick = () => { state.filter = el.dataset.f; render(); });
+function countUp(el, to) {
+  const from = +el.dataset.v || 0; if (from === to) { el.textContent = to; return; }
+  const t0 = performance.now(), dur = 700;
+  (function step(now) {
+    const u = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - u, 3);
+    el.textContent = Math.round(from + (to - from) * e);
+    if (u < 1) requestAnimationFrame(step); else el.dataset.v = to;
+  })(t0);
 }
 
-function ioTable(rows) {
-  if (!rows || !rows.length) return '<p>none</p>';
-  return `<table class="io">${rows.map(r => `<tr><td class="n">${esc(r.name)}</td><td class="t">${esc(r.type || '')}</td><td class="d">${esc(r.description || '')}</td></tr>`).join('')}</table>`;
-}
-function detail(t) {
-  const facts = [['Category', t.category], ['Simulators', (t.simulators || []).join(', ')], ['Requires', (t.requirements || []).join(', ')], ['Used in', (t.used_in || []).join(', ')], ['Entry point', t.entrypoint], ['Added', t.added]].filter(([, v]) => v);
-  return `<div class="detail">
-    <p>${esc(t.description)}</p>
-    <h4>Inputs</h4>${ioTable(t.inputs)}
-    <h4>Outputs</h4>${ioTable(t.outputs)}
-    <h4>Details</h4><dl class="facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}${(t.tags || []).length ? `<dt>Tags</dt><dd><span class="tags">${t.tags.map(x => `<span>${esc(x)}</span>`).join('')}</span></dd>` : ''}</dl>
-    ${t.cli ? `<h4>Command line</h4><pre class="cli"><button type="button" data-copy>copy</button>${esc(t.cli)}</pre>` : ''}
-    ${t.url ? `<a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">Read the source on GitHub →</a>` : ''}
-  </div>`;
-}
+function fmtDate(iso) { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? iso : d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC'; }
 
 function render() {
   const tools = state.tools;
   const nS = tools.filter(t => t.type === 'skill').length, nV = tools.length - nS;
-  $('nSkills').textContent = nS; $('nVerifiers').textContent = nV;
-  $('nCats').textContent = new Set(tools.map(t => t.type + '/' + t.category)).size;
-  $('live').classList.toggle('on', state.source === 'live');
-  $('liveText').textContent = state.source === 'live'
-    ? `live from the repository · index built ${fmtDate(state.generated)}`
-    : state.source === 'snapshot' ? `snapshot · index built ${fmtDate(state.generated)}` : 'the index could not be read';
-  renderToc();
+  countUp($('nSkills'), nS); countUp($('nVerifiers'), nV); countUp($('nTotal'), tools.length);
+  const catsUsed = type => new Set(tools.filter(t => t.type === type).map(t => t.category)).size;
+  $('subSkills').textContent = `${catsUsed('skill')} of ${CATS.skill.length} categories populated`;
+  $('subVerifiers').textContent = `${catsUsed('verifier')} of ${CATS.verifier.length} categories populated`;
+  $('subTotal').textContent = state.generated ? `index built ${fmtDate(state.generated)}` : '';
+  const st = $('status'); st.classList.toggle('live', state.source === 'live');
+  const n = `${tools.length} tool${tools.length === 1 ? '' : 's'}`;
+  $('statusText').textContent = state.source === 'live'
+    ? `live from github.com/dexagent1/DexAgent · ${n}`
+    : state.source === 'snapshot' ? `snapshot copy · ${n}` : 'index unavailable';
 
-  const shown = visible();
-  $('shownCount').textContent = shown.length === tools.length ? '' : `${shown.length} of ${tools.length}`;
-  const groups = [];
-  for (const ty of ['skill', 'verifier']) for (const c of CATS[ty]) {
-    const items = shown.filter(t => t.type === ty && t.category === c).sort((a, b) => a.title.localeCompare(b.title));
-    if (items.length) groups.push({ ty, c, items });
+  // category chips for the selected type
+  const types = state.type === 'all' ? ['skill', 'verifier'] : [state.type];
+  const chips = [];
+  for (const ty of types) for (const c of CATS[ty]) {
+    const n = tools.filter(t => t.type === ty && t.category === c).length;
+    chips.push(`<button class="chip ${state.cat === c ? 'on' : ''} ${n ? '' : 'zero'}" data-cat="${esc(c)}"><span class="badge ${ty}" style="padding:2px 6px">${ty === 'skill' ? 'S' : 'V'}</span>${esc(c)}<b>${n}</b></button>`);
   }
-  $('sections').innerHTML = groups.length ? groups.map(g => `
-    <section class="section">
-      <div class="kind">${g.ty}s</div>
-      <h2>${esc(g.c)} <small>${plural(g.items.length, 'tool')}</small></h2>
-      ${g.items.map(t => `
-        <article class="tool ${state.open === t.name ? 'open' : ''}" id="${esc(t.name)}">
-          <div class="row" tabindex="0" data-name="${esc(t.name)}">
-            <h3>${esc(t.title)}<span class="arrow">›</span></h3>
-            <span class="type ${t.type}">${t.type}</span>
-            <div class="id">${esc(t.file || t.name)}</div>
-            <p class="sum">${esc(t.summary)}</p>
-          </div>
-          ${detail(t)}
-        </article>`).join('')}
-    </section>`).join('')
-    : `<div class="none">${state.q ? 'Nothing matches that search.' : 'No tools in this category yet. It fills as DexAgent processes more demonstrations.'}</div>`;
-  $('sections').querySelectorAll('.row').forEach(r => {
-    const go = () => { state.open = state.open === r.dataset.name ? null : r.dataset.name; history.replaceState(null, '', state.open ? '#' + state.open : location.pathname); render(); };
-    r.onclick = go; r.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
-  });
-  $('sections').querySelectorAll('[data-copy]').forEach(b => b.onclick = e => {
-    e.stopPropagation(); navigator.clipboard?.writeText(b.parentElement.textContent.replace(/^copy|^copied/, '').trim());
-    b.textContent = 'copied'; setTimeout(() => b.textContent = 'copy', 1200);
+  $('chips').innerHTML = chips.join('');
+  $('chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { state.cat = state.cat === b.dataset.cat ? null : b.dataset.cat; render(); });
+
+  // cards
+  const q = state.q.trim().toLowerCase();
+  const hay = t => [t.name, t.title, t.summary, t.category, ...(t.tags || []), ...(t.inputs || []).map(i => i.name), ...(t.outputs || []).map(o => o.name)].join(' ').toLowerCase();
+  const shown = tools.filter(t => (state.type === 'all' || t.type === state.type) && (!state.cat || t.category === state.cat) && (!q || hay(t).includes(q)));
+  const order = t => (t.type === 'skill' ? 0 : 1) * 100 + CATS[t.type].indexOf(t.category);
+  shown.sort((a, b) => order(a) - order(b) || a.title.localeCompare(b.title));
+  $('grid').innerHTML = shown.length ? shown.map(t => `
+    <article class="card" tabindex="0" data-name="${esc(t.name)}">
+      <div class="head"><span class="badge ${t.type}">${t.type}</span><span class="cat">${esc(t.category)}</span></div>
+      <h3>${esc(t.title)}</h3>
+      <div class="name">${esc(t.name)}</div>
+      <p>${esc(t.summary)}</p>
+      <div class="foot"><span>${(t.inputs || []).length} in → ${(t.outputs || []).length} out</span><span>${esc(t.added || '')}</span></div>
+    </article>`).join('')
+    : `<div class="empty"><b>No tools here yet</b>${state.q ? 'Nothing matches the search.' : 'This category fills as DexAgent processes more demonstrations.'}</div>`;
+  $('grid').querySelectorAll('.card').forEach(c => {
+    c.onclick = () => openTool(c.dataset.name);
+    c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTool(c.dataset.name); } };
   });
 }
 
+function ioTable(rows) {
+  if (!rows || !rows.length) return '<div class="iobox"><table class="io"><tr><td class="d">none</td></tr></table></div>';
+  return `<div class="iobox"><table class="io">${rows.map(r => `<tr><td class="n">${esc(r.name)}</td><td class="t">${esc(r.type || '')}</td><td class="d">${esc(r.description || '')}</td></tr>`).join('')}</table></div>`;
+}
+
+function openTool(name) {
+  const t = state.tools.find(x => x.name === name); if (!t) return;
+  const kv = [['Category', t.category], ['Simulators', (t.simulators || []).join(', ')], ['Requirements', (t.requirements || []).join(', ')], ['Used in', (t.used_in || []).join(', ')], ['Entry point', t.entrypoint], ['Added', t.added]].filter(([, v]) => v);
+  $('drawer').innerHTML = `
+    <button class="close" aria-label="Close">×</button>
+    <span class="badge ${t.type}">${t.type}</span>
+    <h2>${esc(t.title)}</h2>
+    <div class="name">${esc(t.file || t.name)}</div>
+    <div class="meta">${(t.tags || []).map(x => `<span class="tag">${esc(x)}</span>`).join('')}</div>
+    <p class="summary">${esc(t.summary)}</p>
+    <p class="desc">${esc(t.description)}</p>
+    <h4>Inputs</h4>${ioTable(t.inputs)}
+    <h4>Outputs</h4>${ioTable(t.outputs)}
+    <h4>Details</h4><dl class="kv">${kv.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+    ${t.cli ? `<h4>Command line</h4><pre class="cli"><button type="button" data-copy>copy</button>${esc(t.cli)}</pre>` : ''}
+    ${t.url ? `<a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">View source on GitHub ↗</a>` : ''}`;
+  $('drawer').querySelector('.close').onclick = closeTool;
+  const cp = $('drawer').querySelector('[data-copy]');
+  if (cp) cp.onclick = () => { navigator.clipboard?.writeText(t.cli); cp.textContent = 'copied'; setTimeout(() => cp.textContent = 'copy', 1200); };
+  document.body.classList.add('open'); $('drawer').scrollTop = 0;
+  if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+}
+function closeTool() { document.body.classList.remove('open'); if (location.hash) history.replaceState(null, '', location.pathname + location.search); }
+
+$('backdrop').onclick = closeTool;
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTool(); });
+$('typeSeg').querySelectorAll('button').forEach(b => b.onclick = () => {
+  state.type = b.dataset.type; $('typeSeg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  if (state.cat && state.type !== 'all' && !CATS[state.type].includes(state.cat)) state.cat = null; render();
+});
 $('q').oninput = e => { state.q = e.target.value; render(); };
+
 async function load(first) {
   const got = await fetchIndex();
-  if (!got) { if (first) render(); return; }
+  if (!got) { if (first) { state.source = ''; render(); } return; }
   const sig = JSON.stringify(got.data.tools);
   if (first || sig !== load.sig || got.label !== state.source) {
     load.sig = sig; state.tools = got.data.tools; state.source = got.label; state.generated = got.data.generated || '';
-    if (first && location.hash.length > 1) state.open = decodeURIComponent(location.hash.slice(1));
     render();
-    if (first && state.open) document.getElementById(state.open)?.scrollIntoView({ block: 'start' });
+    if (first && location.hash.length > 1) openTool(decodeURIComponent(location.hash.slice(1)));
   }
 }
 load(true);
