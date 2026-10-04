@@ -1,7 +1,7 @@
 {
  "counts": {
   "skills": 91,
-  "verifiers": 64
+  "verifiers": 65
  },
  "categories": {
   "skill": [
@@ -11604,6 +11604,85 @@
    "cli": "python -m tool_library.verifiers.battery_seat_test <case_params.json> <battery_params.json> [slot]",
    "file": "verifiers/battery_seat_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/battery_seat_test.py"
+  },
+  {
+   "name": "box_enclosure_check",
+   "title": "Box enclosure check",
+   "type": "verifier",
+   "category": "Scene Compile Checks",
+   "summary": "A box-like object must enclose a cavity: from the centre of its interior, rays must hit its own bottom and all four side walls within its extent, the interior must be hollow (sample points not inside any of its geoms), and the top is reported as open or closed (a lid); a slab with a hinged panel, or a solid block, fails with the missing faces named.",
+   "description": "Collects the object's bodies (the named body with its subtree, or every body with the name as prefix) and their collidable or visible geoms, builds the object's axis-aligned extent in its root body frame, and takes the interior centre at mid height. Hollowness: a grid of interior sample points (the extent shrunk by `wall_margin`) is tested for containment in the object's box, cylinder, sphere and capsule geoms (mesh geoms by their bounding sphere); the cavity fraction must exceed `min_cavity`. Faces: rays cast from the centre along -z, +x, -x, +y, -y in the object frame must hit one of the object's geoms before leaving the extent; +z tells whether the top is closed. With `expect_top` ('open' | 'closed' | None) the top state is also checked. Reports the face hits with distances, the cavity fraction, the interior size, and one issue per missing face. Meant for cardboard boxes, trays, drawers, bins and gift boxes; a cup is a vessel (vessel_containment_test), not a box.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str | mujoco.MjModel",
+     "description": "MJCF file, XML string, or compiled model (an asset or the whole scene)."
+    },
+    {
+     "name": "object",
+     "type": "str",
+     "description": "Root body name or name prefix of the box."
+    },
+    {
+     "name": "min_walls",
+     "type": "int",
+     "description": "Side walls required (of 4). Default 4."
+    },
+    {
+     "name": "require_bottom",
+     "type": "bool",
+     "description": "Default True."
+    },
+    {
+     "name": "expect_top",
+     "type": "str | None",
+     "description": "'open', 'closed' or None (not checked)."
+    },
+    {
+     "name": "min_cavity",
+     "type": "float",
+     "description": "Fraction of interior sample points that must be empty. Default 0.6."
+    },
+    {
+     "name": "wall_margin",
+     "type": "float, metres",
+     "description": "Shrink of the extent for the interior samples. Default 0.012."
+    },
+    {
+     "name": "qpos",
+     "type": "list | None",
+     "description": "State to evaluate; default keyframe 0 or qpos0."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; faces: {bottom, x_pos, x_neg, y_pos, y_neg, top: {hit, geom, distance_m}}; cavity_fraction; interior_size_m; n_geoms; top_state."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "box_enclosure_check",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "tags": [
+    "box",
+    "container",
+    "enclosure",
+    "walls",
+    "cavity",
+    "stage 2"
+   ],
+   "used_in": [
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Computer Installation"
+   ],
+   "cli": "python -m tool_library.verifiers.box_enclosure_check scene.xml box_box",
+   "file": "verifiers/box_enclosure_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/box_enclosure_check.py"
   },
   {
    "name": "cable_drag_test",
