@@ -1,7 +1,7 @@
 {
  "counts": {
-  "skills": 76,
-  "verifiers": 56
+  "skills": 91,
+  "verifiers": 64
  },
  "categories": {
   "skill": [
@@ -367,6 +367,135 @@
    "entrypoint": "attach_arms",
    "file": "skills/attach_arms.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/attach_arms.py"
+  },
+  {
+   "name": "build_isaac_scene",
+   "title": "Build Isaac Sim scene",
+   "type": "skill",
+   "category": "Scene Runtime & Rendering",
+   "summary": "Exports a MuJoCo scene (robot, table, rigid objects at a given state) to Isaac Sim 5.0, adds each deformable cord (rope, cable, string) as a chain of capsule rigid bodies on D6 joints with bending stiffness and joint friction laid along its measured centreline, settles under PhysX gravity, renders through the registered camera, and saves the USD stage, the settled centrelines and a drift report.",
+   "description": "The deformable route of Stage 2: non-deformable objects are reconstructed and placed in MuJoCo; a scene with a rope-like object is then rebuilt in Isaac Sim with the same bench, camera and placement so the cord can be simulated with PhysX. The export reads every visible geom of the scene at `qpos` (boxes, capsules, cylinders, spheres, meshes with their vertices), the table gets collision, rigid objects get convex-hull collision, robot geoms are visual. Each deformable is {name, points (N, 3) in the rig frame, radius, rgb, density, fix_start, fix_end, bend_stiffness, bend_damping, joint_friction}; `junction` {center, radius, rgb} ties several strands to one small body (a knot). Links are `segment_m` long (default 8 mm), 1/480 s TGS, settled for `settle_s`. Runs the Isaac script in the Isaac Sim Python given by `isaac_python`, DEXAGENT_ISAAC_PYTHON or dexagent.yaml, with HOME redirected to `isaac_home` (Isaac writes gigabytes of cache) and the EULA accepted. Returns the render, the stage path, per-cord link counts and the mean drift during settling (a cord laid on the table should drift millimetres; centimetres mean it was floating or interpenetrating).",
+   "inputs": [
+    {
+     "name": "scene_xml",
+     "type": "path",
+     "description": "The MuJoCo scene (bench + rigid objects)."
+    },
+    {
+     "name": "camera",
+     "type": "path | dict",
+     "description": "camera.json in the rig frame."
+    },
+    {
+     "name": "deformables",
+     "type": "list[dict]",
+     "description": "Cords to add: name, points [[x,y,z],...] rig metres, radius, rgb, density (1100), fix_start, fix_end, bend_stiffness (0.004), bend_damping (0.002), joint_friction (0.0015)."
+    },
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Receives export.json, <tag>_sim.png, <tag>_scene.usda, <tag>_report.json, settled centrelines."
+    },
+    {
+     "name": "qpos",
+     "type": "list | path | None",
+     "description": "Scene state to export (npy or list); default the model's initial state."
+    },
+    {
+     "name": "junction",
+     "type": "dict | None",
+     "description": "{center, radius, rgb}: a small rigid body the strands' first links are jointed to."
+    },
+    {
+     "name": "segment_m",
+     "type": "float",
+     "description": "Link length. Default 0.008."
+    },
+    {
+     "name": "settle_s",
+     "type": "float",
+     "description": "Settling time under gravity. Default 1.5."
+    },
+    {
+     "name": "self_collision",
+     "type": "bool",
+     "description": "Cord self-collision between its own links. Default False: neighbouring links overlap and would push the chain apart; the table and the rigid objects still collide with every link."
+    },
+    {
+     "name": "tag",
+     "type": "str",
+     "description": "Output file prefix. Default 'isaac'."
+    },
+    {
+     "name": "isaac_python",
+     "type": "path | None",
+     "description": "Isaac Sim's Python; default DEXAGENT_ISAAC_PYTHON."
+    },
+    {
+     "name": "isaac_home",
+     "type": "path | None",
+     "description": "HOME for Isaac's caches; default DEXAGENT_ISAAC_HOME or out_dir/isaac_home."
+    },
+    {
+     "name": "timeout_s",
+     "type": "float",
+     "description": "Default 1800."
+    },
+    {
+     "name": "frame",
+     "type": "path | None",
+     "description": "Video frame for a 50/50 overlay of the render."
+    },
+    {
+     "name": "exclude_bodies",
+     "type": "list[str] | None",
+     "description": "Body name prefixes left out of the export (bodies named like a deformable are always left out: Isaac rebuilds the cord)."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "sim_png / scene_usda / report_json / export_json",
+     "type": "path",
+     "description": "Written files."
+    },
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "Per cord: n_links, segment_m, length_m, radius_m, mean_drift_m, max_drift_m, settled_centreline; '_' holds settle_s, physics_dt."
+    },
+    {
+     "name": "overlay_png",
+     "type": "path | None",
+     "description": "Render blended with the frame when given."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "build_isaac_scene",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy",
+    "scipy",
+    "Isaac Sim 5.0 (pip isaacsim) in its own Python for the simulation step"
+   ],
+   "simulators": [
+    "Isaac Sim",
+    "MuJoCo"
+   ],
+   "tags": [
+    "isaac sim",
+    "deformable",
+    "rope",
+    "cable",
+    "physx",
+    "stage 2"
+   ],
+   "used_in": [
+    "Knot the Rope",
+    "Scissor Cutting"
+   ],
+   "cli": "python -m tool_library.skills.build_isaac_scene scene.xml camera.json deformables.json out/ --isaac-python /path/to/isaac/bin/python",
+   "file": "skills/build_isaac_scene.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/build_isaac_scene.py"
   },
   {
    "name": "build_tabletop_world",
@@ -1205,6 +1334,73 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_battery_case.py"
   },
   {
+   "name": "construct_battery_case_contact_slide",
+   "title": "Construct battery holder with single-slide spring contacts",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "An open N-slot battery holder whose spring contact in every slot is one prismatic joint with the spring's full compression travel and series-equivalent stiffness.",
+   "description": "Builds the holder with the construct_battery_case builder (cell size, slot count, spring ends, walls, colours, wires), then rewrites each slot's spring chain: the first coil joint keeps its axis and becomes the contact slide with range [-total_travel, upper_slack] (total_travel = sum of the coil travels, negative = compressed), stiffness 1/sum(1/k_i) and one coil's damping; the other coil joints are removed so the coils ride on the contact rigidly. upper_slack (default 1e-5 m) lets the contact sit at its free length without resting on a hard stop. Assumes the builder names coil joints <name>_s<i>spring_c<k>. Fails with ValueError if the requested min_travel is not reached; raise spring_free_length or lower spring_wire_radius / spring_n_coils to get more travel.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Folder that receives the MJCF, meshes and <name>_params.json."
+    },
+    {
+     "name": "preview",
+     "type": "bool",
+     "description": "Render preview stills when the base builder supports it. Default False."
+    },
+    {
+     "name": "upper_slack",
+     "type": "float",
+     "description": "Upper limit of the contact slide above the free length, metres. Default 1e-5."
+    },
+    {
+     "name": "min_travel",
+     "type": "float",
+     "description": "Required compression travel of each contact slide, metres; ValueError below it. Default 0.0 (no requirement)."
+    },
+    {
+     "name": "**params",
+     "type": "dict",
+     "description": "Any construct_battery_case parameter (battery_diameter, battery_length, n_slots, springs_at, slot_clearance, seated_preload, spring_stiffness, spring_free_length, spring_coil_radius, spring_wire_radius, spring_n_coils, colours, with_wires, include_floor, ...); unknown keys raise."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "The construct_battery_case build dict with, per slot, spring_joints = [the single contact joint], contact_joint, contact_travel_m and contact_stiffness_N_per_m; xml and params_json paths."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "trimesh"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "battery",
+    "holder",
+    "spring",
+    "prismatic",
+    "contact",
+    "articulated",
+    "object reconstruction"
+   ],
+   "used_in": [
+    "Battery Insertion"
+   ],
+   "status": "tested",
+   "entrypoint": "construct_battery_case_contact_slide",
+   "cli": "python -m tool_library.skills.construct_battery_case_contact_slide out_dir",
+   "file": "skills/construct_battery_case_contact_slide.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_battery_case_contact_slide.py"
+  },
+  {
    "name": "construct_bottle",
    "title": "Construct bottle with screw cap",
    "type": "skill",
@@ -1437,6 +1633,258 @@
    "cli": "python -m tool_library.skills.construct_bottle out_dir",
    "file": "skills/construct_bottle.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_bottle.py"
+  },
+  {
+   "name": "construct_bottle_straw",
+   "title": "Construct bottle with screw cap and drinking straw",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A threaded screw-cap bottle (sports bottle) whose cap carries a drinking tube hanging down into the body, so lifting the cap off withdraws the tube through the mouth.",
+   "description": "Fork of construct_bottle that adds a drinking straw: a thin tube of straw_length hanging from the cap ceiling down the bottle axis, part of the cap body (it moves with the cap, rotates with it while unscrewing and leaves with it). The straw is visual-only (no collider), so it never jams the thread; the build reports straw_clear_lift_m, the cap lift above its seat at which the straw end leaves the mouth, which a planner must exceed before moving the cap sideways. straw_length 0 gives the plain bottle. A straw longer than the interior raises ValueError. Builds the bottle as a lathe mesh over primitive colliders and the cap as a free body with a hollow skirt, from one dictionary of numbers: body radius and height, shoulder and neck, cap size and wall, thread pitch and turns, colours, masses, friction. The thread is modelled, because MuJoCo has no screw joint and URDF cannot express one: a carrier body inside the bottle carries a yaw hinge and a lift slide, an equality constraint locks lift = pitch/2pi x yaw, dry friction on the yaw joint makes the thread self-locking (an axial push or pull cannot back-drive it), and a weld between carrier and cap is the engagement, which disengages when the cap has travelled thread_pitch x thread_turns. A visible helical ridge is drawn on the neck. The asset has no actuators; the only way to open it is torque on the cap. Every parameter is written to <name>_params.json so a build can be repeated or refitted by editing numbers. The thread_self_locking_test verifier proves a built bottle.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Folder that receives the MJCF, its meshes and <name>_params.json."
+    },
+    {
+     "name": "preview",
+     "type": "bool",
+     "description": "Also render preview stills of the mechanism at its extremes. Default False."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Asset name; prefixes every body, joint and mesh. Default bottle"
+    },
+    {
+     "name": "body_radius",
+     "type": "float",
+     "description": "Widest radius of the barrel, metres. Default 0.035"
+    },
+    {
+     "name": "body_height",
+     "type": "float",
+     "description": "Barrel height from base to shoulder, metres. Default 0.15"
+    },
+    {
+     "name": "shoulder_height",
+     "type": "float",
+     "description": "Taper height from shoulder to neck, metres. Default 0.045"
+    },
+    {
+     "name": "neck_radius",
+     "type": "float",
+     "description": "Threaded neck radius (the thread crest, what a caliper measures), metres. Default 0.0135"
+    },
+    {
+     "name": "neck_height",
+     "type": "float",
+     "description": "Neck height from the taper to the mouth, metres. Default 0.022"
+    },
+    {
+     "name": "cap_radius",
+     "type": "float",
+     "description": "Cap outer radius, metres. Default 0.016"
+    },
+    {
+     "name": "cap_height",
+     "type": "float",
+     "description": "Cap height, metres. Default 0.024"
+    },
+    {
+     "name": "cap_wall",
+     "type": "float",
+     "description": "Cap side-wall thickness, metres. Default 0.002"
+    },
+    {
+     "name": "cap_top_wall",
+     "type": "float | None",
+     "description": "Cap ceiling thickness, metres; None uses cap_wall. cap_height minus this is the engagement depth"
+    },
+    {
+     "name": "thread_pitch",
+     "type": "float",
+     "description": "Metres of lift per full turn of the cap. Default 0.005"
+    },
+    {
+     "name": "thread_turns",
+     "type": "float",
+     "description": "Turns from seated to disengaged. Default 5.0"
+    },
+    {
+     "name": "thread_right_handed",
+     "type": "bool",
+     "description": "True: counter-clockwise (seen from above) unscrews, like a real bottle. Default True"
+    },
+    {
+     "name": "thread_ridge_radius",
+     "type": "float",
+     "description": "Visual ridge tube radius. Default 0.0011"
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[4]",
+     "description": "Bottle colour as rgba in 0..1; alpha below 1 renders a translucent bottle. Default [0.35, 0.62, 0.88, 0.45]"
+    },
+    {
+     "name": "cap_rgba",
+     "type": "list[4]",
+     "description": "Cap colour as rgba. Default [0.2, 0.45, 0.85, 1.0]"
+    },
+    {
+     "name": "thread_rgba",
+     "type": "list[4]",
+     "description": "Visible thread ridge colour as rgba. Default [0.3, 0.58, 0.84, 0.85]"
+    },
+    {
+     "name": "cap_stripe_count",
+     "type": "int",
+     "description": "Visual grip ribs on the cap so its rotation reads on camera; 0 for none. Default 0"
+    },
+    {
+     "name": "cap_stripe_rgba",
+     "type": "list[4]",
+     "description": "Cap stripe rgba, colour as rgba in 0..1. Default [0.62, 0.62, 0.6, 1.0]"
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Bottle base centre in the world, metres. Default [0.0, 0.0, 0.0]"
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Bottle yaw, degrees. Default 0.0"
+    },
+    {
+     "name": "body_mass",
+     "type": "float",
+     "description": "Bottle mass, kilograms. Default 0.3"
+    },
+    {
+     "name": "cap_mass",
+     "type": "float",
+     "description": "Cap mass, kilograms. Default 0.0035"
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "Contact friction triple of every bottle and cap geom. Default [1.8, 0.02, 0.001]"
+    },
+    {
+     "name": "contact_solref",
+     "type": "list[2]",
+     "description": "Contact solref, MuJoCo solref. Default [0.004, 1.0]"
+    },
+    {
+     "name": "yaw_frictionloss",
+     "type": "float",
+     "description": "Dry friction on the thread rotation, N*m; what makes the thread self-locking. Default 0.02"
+    },
+    {
+     "name": "yaw_damping",
+     "type": "float",
+     "description": "Sets the spin rate under a given twist. Default 0.008"
+    },
+    {
+     "name": "lift_damping",
+     "type": "float",
+     "description": "Lift damping, joint damping. Default 0.002"
+    },
+    {
+     "name": "cap_skirt_segments",
+     "type": "int",
+     "description": "Hollow cap skirt = N boxes in a ring. Default 12"
+    },
+    {
+     "name": "bottle_fixed",
+     "type": "bool",
+     "description": "True: the bottle is fixed to the world (another hand holds it); False: it is a free body. Default True"
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Timestep, seconds. Default 0.00025"
+    },
+    {
+     "name": "thread_solref",
+     "type": "list[2]",
+     "description": "Thread solref, MuJoCo solref. Default [0.0005, 1.0]"
+    },
+    {
+     "name": "thread_solimp",
+     "type": "list[3]",
+     "description": "Thread solimp, MuJoCo solimp. Default [0.99, 0.9999, 1e-05]"
+    },
+    {
+     "name": "carrier_mass",
+     "type": "float",
+     "description": "Apparent inertia of the thread carrier. Default 0.02"
+    },
+    {
+     "name": "carrier_inertia",
+     "type": "float",
+     "description": "Carrier inertia. Default 0.0001"
+    },
+    {
+     "name": "straw_length",
+     "type": "float",
+     "description": "Drinking tube length below the cap ceiling, metres; 0 = no straw. Default 0.0"
+    },
+    {
+     "name": "straw_radius",
+     "type": "float",
+     "description": "Drinking tube outer radius, metres. Default 0.0035"
+    },
+    {
+     "name": "straw_rgba",
+     "type": "list[float]",
+     "description": "Drinking tube colour (clear plastic). Default [0.85, 0.92, 0.95, 0.35]"
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane to the standalone asset. Default True"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml: the MJCF path; params_json: every parameter as built; the names of the bodies, joints and equality constraints the mechanism exposes, and the derived measurements (sizes, travel, masses); straw: geom name, length, bottom height when seated and straw_clear_lift_m; stills when preview is set."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "trimesh",
+    "imageio",
+    "Pillow"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "bottle",
+    "screw cap",
+    "straw",
+    "drinking tube",
+    "sports bottle",
+    "thread",
+    "articulated",
+    "parametric",
+    "reconstruct",
+    "object reconstruction"
+   ],
+   "used_in": [
+    "Open the Bottle"
+   ],
+   "status": "tested",
+   "entrypoint": "construct_bottle_straw",
+   "cli": "python -m tool_library.skills.construct_bottle_straw out_dir",
+   "file": "skills/construct_bottle_straw.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_bottle_straw.py"
   },
   {
    "name": "construct_bowl",
@@ -2860,6 +3308,178 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_hard_disk.py"
   },
   {
+   "name": "construct_hinged_lid_box",
+   "title": "Hinged-lid box with a set initial lid state",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A rigid box (base tray with four walls) whose lid is hinged along the top of the back wall, optionally with a creased skirt on the lid's free edge, built so that the asset's initial state (qpos0) already shows the lid at a measured opening angle.",
+   "description": "A gift box, shoebox or chest: the base and its four walls are one rigid body, the lid is a child body on ONE revolute joint along the top outer edge of the back (+y) wall, and an optional skirt is a second revolute crease on the lid's free edge that folds down over the outside of the front wall. Joint angles: lid 0 = shut on the walls, 90 = vertical, 180 = folded flat behind the box at hinge height; skirt 0 = in plane with the lid, 90 = square to it (down the front face when shut, straight up when the lid is folded back). Unlike a box built shut, the lid and skirt bodies are written AT their initial angles and each joint's `ref` equals that angle, so a scene that starts from qpos0 (or a keyframe padded with qpos0) shows the open lid of the first video frame while joint value 0 still means shut. lid_init_deg='rest' computes the angle past 180 at which the lid's free edge rests on the plane under the base (a lid folded back onto the table). Shut is a hard joint stop (stiff solreflimit); lid-vs-base and skirt-vs-base contacts are excluded because hinge and crease are one piece of board. Assumes a rectangular box, uniform board thickness.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Folder for <name>.xml and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Body name prefix. Default 'box'."
+    },
+    {
+     "name": "length",
+     "type": "float",
+     "description": "Outer size along x (left-right, along the hinge), m. Default 0.24."
+    },
+    {
+     "name": "width",
+     "type": "float",
+     "description": "Outer size along y (front-back), m. Default 0.18."
+    },
+    {
+     "name": "height",
+     "type": "float",
+     "description": "Outer wall height of the base including its floor, m. Default 0.06."
+    },
+    {
+     "name": "thickness",
+     "type": "float",
+     "description": "Board thickness, m. Default 0.003."
+    },
+    {
+     "name": "lid_flap",
+     "type": "bool",
+     "description": "Add the creased skirt on the lid's free edge. Default True."
+    },
+    {
+     "name": "lid_flap_h",
+     "type": "float | None",
+     "description": "Skirt height, m; None = the wall height. Default None."
+    },
+    {
+     "name": "lid_init_deg",
+     "type": "float | 'rest'",
+     "description": "Initial lid angle (0 shut, 180 flat at hinge height); 'rest' = folded back onto the support plane. Default 0.0."
+    },
+    {
+     "name": "skirt_init_deg",
+     "type": "float",
+     "description": "Initial skirt angle against the lid. Default 90.0."
+    },
+    {
+     "name": "lid_range_deg",
+     "type": "list[2]",
+     "description": "Lid joint range, deg; the upper end must admit a lid folded back onto the table. Default [0.0, 240.0]."
+    },
+    {
+     "name": "skirt_range_deg",
+     "type": "list[2]",
+     "description": "Skirt joint range, deg; the upper stop is the skirt flush on the front wall. Default [-5.0, 90.0]."
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[4]",
+     "description": "Base and walls colour. Default [0.72, 0.19, 0.17, 1]."
+    },
+    {
+     "name": "lid_rgba",
+     "type": "list[4] | None",
+     "description": "Lid colour; None = body_rgba. Default None."
+    },
+    {
+     "name": "density",
+     "type": "float",
+     "description": "Board density, kg/m3. Default 600."
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "Geom friction. Default [0.9, 0.02, 0.001]."
+    },
+    {
+     "name": "hinge_damping",
+     "type": "float",
+     "description": "Lid and skirt joint damping. Default 0.02."
+    },
+    {
+     "name": "hinge_frictionloss",
+     "type": "float",
+     "description": "Lid joint dry friction, N m. Default 0.004."
+    },
+    {
+     "name": "skirt_frictionloss",
+     "type": "float | None",
+     "description": "Skirt dry friction; None = 3x its gravity torque so it holds its angle. Default None."
+    },
+    {
+     "name": "hinge_armature",
+     "type": "float",
+     "description": "Joint armature. Default 0.005."
+    },
+    {
+     "name": "hinge_solreflimit",
+     "type": "list[2]",
+     "description": "Joint-limit solref. Default [0.005, 1.0]."
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Centre of the base underside. Default [0, 0, 0]."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Yaw about z, deg. Default 0."
+    },
+    {
+     "name": "fixed_base",
+     "type": "bool",
+     "description": "No free joint on the base. Default False."
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Seconds. Default 0.002."
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Floor plane for standalone previews; off for the bench. Default True."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml, params_json, base_body, lid_body, lid_joint, lid_geom, skirt_body, skirt_joint, skirt_geom, lid_init_deg, skirt_init_deg, closed_deg (0), skirt_closed_deg (90), push_local/push_bodies (free edges), inner_volume_l, mass_kg."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "construct_hinged_lid_box",
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "box",
+    "gift box",
+    "lid",
+    "hinge",
+    "skirt",
+    "articulated",
+    "initial state",
+    "object reconstruction"
+   ],
+   "used_in": [
+    "Giftbox Packing"
+   ],
+   "cli": "python -m tool_library.skills.construct_hinged_lid_box out_dir",
+   "file": "skills/construct_hinged_lid_box.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_hinged_lid_box.py"
+  },
+  {
    "name": "construct_latch_box",
    "title": "Construct latching container",
    "type": "skill",
@@ -4203,6 +4823,191 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pc_case.py"
   },
   {
+   "name": "construct_phone",
+   "title": "Construct a smartphone with a charging port",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A smartphone as a free rigid slab with a real charging-port cavity on one short edge, a camera bump on the back, and declared port frame sites.",
+   "description": "Builds a phone-shaped slab (rounded-rectangle visual mesh) whose collision model is a set of boxes that leave an open receptacle cavity centred on the bottom short edge, so a plug of the port size can slide in along the long axis and is stopped by the cavity floor, while an offset plug is blocked by the edge face. Two rounded pads set into the upper and lower cavity walls protrude port_grip_m into the opening and squeeze a seated plug like the latch springs of a real receptacle, so the plug is held by friction; their rounded front ends are the lead-in. The body origin is the centre of the face resting on the table; +y points from the port edge to the camera-bump edge; +z points out of the back (the back faces up when the phone lies back-up). Sites: <name>_port_mouth (z axis = insertion direction), <name>_port_floor, <name>_bump, <name>_center. Sizes default to a 6.1-inch phone; set length, width and thickness from the measured footprint or the known model.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Folder that receives <name>.xml, the visual mesh and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Asset and body name prefix. Default phone"
+    },
+    {
+     "name": "length",
+     "type": "float",
+     "description": "Long-edge length in metres. Default 0.1476"
+    },
+    {
+     "name": "width",
+     "type": "float",
+     "description": "Short-edge width in metres. Default 0.0716"
+    },
+    {
+     "name": "thickness",
+     "type": "float",
+     "description": "Slab thickness in metres. Default 0.0078"
+    },
+    {
+     "name": "corner_r",
+     "type": "float",
+     "description": "Plan-view corner radius of the visual slab in metres. Default 0.010"
+    },
+    {
+     "name": "port_w",
+     "type": "float",
+     "description": "Port opening width (across the edge) in metres. Default 0.0084 (USB-C)"
+    },
+    {
+     "name": "port_h",
+     "type": "float",
+     "description": "Port opening height (through the thickness) in metres. Default 0.0026 (USB-C)"
+    },
+    {
+     "name": "port_depth",
+     "type": "float",
+     "description": "Cavity depth along the long axis in metres. Default 0.0068"
+    },
+    {
+     "name": "port_offset_x",
+     "type": "float",
+     "description": "Lateral offset of the port from the edge centre in metres. Default 0.0"
+    },
+    {
+     "name": "port_grip_m",
+     "type": "float",
+     "description": "Protrusion of the two retention pads into the opening (retention by friction); 0 = loose fit; the squeeze on a plug is port_grip_m minus the plug clearance. Default 0.00013"
+    },
+    {
+     "name": "bump",
+     "type": "bool",
+     "description": "Add the camera bump on the back. Default True"
+    },
+    {
+     "name": "bump_side",
+     "type": "str",
+     "description": "'left' (-x) or 'right' (+x) corner of the far (+y) end, seen from the back. Default left"
+    },
+    {
+     "name": "bump_size",
+     "type": "float",
+     "description": "Camera bump square side in metres. Default 0.032"
+    },
+    {
+     "name": "bump_h",
+     "type": "float",
+     "description": "Camera bump height above the back in metres. Default 0.0015"
+    },
+    {
+     "name": "bump_inset",
+     "type": "float",
+     "description": "Bump inset from the two edges in metres. Default 0.006"
+    },
+    {
+     "name": "n_lenses",
+     "type": "int",
+     "description": "Lenses on the bump (1-3, diagonal). Default 2"
+    },
+    {
+     "name": "lens_r",
+     "type": "float",
+     "description": "Lens ring radius in metres. Default 0.0058"
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[4]",
+     "description": "Back/frame colour. Default [0.85, 0.6, 0.52, 1]"
+    },
+    {
+     "name": "lens_rgba",
+     "type": "list[4]",
+     "description": "Lens colour. Default [0.08, 0.08, 0.1, 1]"
+    },
+    {
+     "name": "port_rgba",
+     "type": "list[4]",
+     "description": "Port opening decal colour. Default [0.05, 0.05, 0.05, 1]"
+    },
+    {
+     "name": "mass",
+     "type": "float",
+     "description": "Total mass in kg. Default 0.171"
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "MuJoCo friction triple. Default [0.9, 0.01, 0.001]"
+    },
+    {
+     "name": "port_friction",
+     "type": "list[3]",
+     "description": "Friction triple of the cavity walls. Default [1.0, 0.01, 0.001]"
+    },
+    {
+     "name": "free",
+     "type": "bool",
+     "description": "Free body (True) or fixed to its parent. Default True"
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Body position in the asset frame. Default [0, 0, 0]"
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Yaw about z in degrees. Default 0"
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane (for standalone tests). Default False"
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Simulation timestep written into the asset. Default 0.001"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml: the MJCF path; params_json; body, joint, geoms; sites (port_mouth, port_floor, bump, center); port: {width, height, depth, mouth_local, axis_local, grip_m, cavity_geoms}; dims and mass_kg."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "phone",
+    "smartphone",
+    "charging port",
+    "usb-c",
+    "receptacle",
+    "slab",
+    "rigid",
+    "parametric",
+    "object reconstruction"
+   ],
+   "status": "tested",
+   "entrypoint": "construct_phone",
+   "cli": "python -m tool_library.skills.construct_phone out_dir",
+   "file": "skills/construct_phone.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_phone.py"
+  },
+  {
    "name": "construct_pipette_tip",
    "title": "Construct pipette tip",
    "type": "skill",
@@ -4318,6 +5123,600 @@
    "cli": "python -m tool_library.skills.construct_pipette_tip out_dir",
    "file": "skills/construct_pipette_tip.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pipette_tip.py"
+  },
+  {
+   "name": "construct_plush_toy",
+   "title": "Construct plush toy",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A small stuffed toy as a light free body of overlapping ellipsoids (torso, head, ears) sized to a measured length x width x height, made compliant through soft contact parameters so fingers sink into it under a grasp.",
+   "description": "Builds an MJCF asset with one free body: a torso ellipsoid, a head ellipsoid placed toward +x, and n_ears small ellipsoids on top of the head, all scaled so the union spans the given length (x), width (y) and height (z) with its base at z=0. Every geom collides with solref=(soft_timeconst, soft_dampratio) and solimp=(soft_dmin, soft_dmax, soft_width): a long time constant and a wide impedance band let a pinch push the contact several millimetres in, which is how a rigid-body simulator shows a plush squashing in the hand. Mass is the measured or estimated mass (default 30 g), friction is fabric-like (default 1.0, condim 4 for torsional grip). The accent colour (eyes / nose) is a pair of tiny visual-only spheres on the head. Sites: '<name>_grasp' at the torso centre and '<name>_top' on the top surface. Assumes x is the long axis of the toy; set yaw_deg to orient it. Unknown parameters raise ValueError.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "str",
+     "description": "Directory receiving <name>.xml and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Body/geom prefix. Default 'plush'."
+    },
+    {
+     "name": "length",
+     "type": "float, metres",
+     "description": "Overall length along x (measured). Default 0.08."
+    },
+    {
+     "name": "width",
+     "type": "float, metres",
+     "description": "Overall width along y (measured). Default 0.06."
+    },
+    {
+     "name": "height",
+     "type": "float, metres",
+     "description": "Overall height along z, at rest (may be the squashed height). Default 0.05."
+    },
+    {
+     "name": "head_frac",
+     "type": "float",
+     "description": "Head diameter as a fraction of length. Default 0.45 (0 = no head)."
+    },
+    {
+     "name": "n_ears",
+     "type": "int",
+     "description": "Small ellipsoids on top of the head: 0, 1 or 2. Default 2."
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[float]",
+     "description": "Fabric colour (measured). Default pale yellow."
+    },
+    {
+     "name": "accent_rgba",
+     "type": "list[float] | None",
+     "description": "Eye / nose colour; None for no accents. Default dark brown."
+    },
+    {
+     "name": "mass",
+     "type": "float, kg",
+     "description": "Total mass. Default 0.03."
+    },
+    {
+     "name": "friction",
+     "type": "float",
+     "description": "Sliding friction. Default 1.0."
+    },
+    {
+     "name": "soft_timeconst",
+     "type": "float, s",
+     "description": "Contact solref time constant; larger = softer. Default 0.03."
+    },
+    {
+     "name": "soft_dampratio",
+     "type": "float",
+     "description": "Contact solref damping ratio. Default 1.0."
+    },
+    {
+     "name": "soft_dmin",
+     "type": "float",
+     "description": "solimp dmin. Default 0.5."
+    },
+    {
+     "name": "soft_dmax",
+     "type": "float",
+     "description": "solimp dmax. Default 0.95."
+    },
+    {
+     "name": "soft_width",
+     "type": "float, m",
+     "description": "solimp width: the depth over which impedance ramps. Default 0.012."
+    },
+    {
+     "name": "pos",
+     "type": "list[float]",
+     "description": "Initial base position [x, y, z]. Default [0, 0, 0]."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Initial yaw about z. Default 0."
+    },
+    {
+     "name": "free",
+     "type": "bool",
+     "description": "Free joint (True) or fixed to the world. Default True."
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane for stand-alone testing. Default False."
+    },
+    {
+     "name": "timestep",
+     "type": "float, s",
+     "description": "Option timestep. Default 0.002."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "xml",
+     "type": "str",
+     "description": "The MJCF asset path."
+    },
+    {
+     "name": "params_json",
+     "type": "str",
+     "description": "Every parameter as built."
+    },
+    {
+     "name": "body",
+     "type": "str",
+     "description": "Root body name."
+    },
+    {
+     "name": "bodies",
+     "type": "list[str]",
+     "description": "All body names."
+    },
+    {
+     "name": "joint",
+     "type": "str | None",
+     "description": "Free joint name."
+    },
+    {
+     "name": "sites",
+     "type": "list[str]",
+     "description": "Grasp and top sites."
+    },
+    {
+     "name": "mass_kg",
+     "type": "float",
+     "description": "Total mass as compiled."
+    },
+    {
+     "name": "size_m",
+     "type": "list[float]",
+     "description": "Compiled bounding box [dx, dy, dz] of the collision geoms."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "construct_plush_toy",
+   "requirements": [
+    "numpy",
+    "mujoco"
+   ],
+   "tags": [
+    "plush",
+    "plushie",
+    "stuffed animal",
+    "soft",
+    "toy",
+    "compliant",
+    "deformable"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.construct_plush_toy out_dir",
+   "file": "skills/construct_plush_toy.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_plush_toy.py"
+  },
+  {
+   "name": "construct_pump_sprayer",
+   "title": "Construct pump sprayer",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A finger-pump spray bottle as a free rigid body whose pump head is a separate body on a preloaded spring slide joint along the bottle axis: pressed down through a short stroke by a finger, it springs back.",
+   "description": "Builds one MJCF: a cylindrical bottle body (with a visual colour band), a shoulder, neck and collar, and a pump head (stem, actuator cylinder and a side nozzle) as a child body on a slide joint along the bottle's z axis. The joint range is [-stroke, 0]; its spring has stiffness `spring_stiffness` and a springref placed above the top stop so the head rests at 0 with `preload_N` pressing it against the stop: a finger must exceed the preload to start the stroke and needs preload + stiffness * stroke to bottom out; released, it returns. Geom densities are set so the body and head weigh `mass` and `head_mass`; the body-head contact pair is excluded explicitly (the parent filter does not apply once the bottle is welded to the world). The bottle origin is the centre of its base, z up; the nozzle points along +x rotated by `nozzle_azimuth_deg`. Sites: press (top of the head), nozzle (tip), grasp (mid body). Assumes a round bottle; sizes in metres. Unknown parameters and inconsistent sizes raise ValueError.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Receives <name>.xml and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Asset name and prefix. Default 'sprayer'."
+    },
+    {
+     "name": "body_radius",
+     "type": "float",
+     "description": "Bottle radius. Default 0.020."
+    },
+    {
+     "name": "body_height",
+     "type": "float",
+     "description": "Cylindrical body height. Default 0.085."
+    },
+    {
+     "name": "shoulder_height",
+     "type": "float",
+     "description": "Shoulder height between body and neck. Default 0.010."
+    },
+    {
+     "name": "neck_radius",
+     "type": "float",
+     "description": "Neck radius. Default 0.010."
+    },
+    {
+     "name": "neck_height",
+     "type": "float",
+     "description": "Neck height. Default 0.008."
+    },
+    {
+     "name": "collar_radius",
+     "type": "float",
+     "description": "Pump collar radius. Default 0.012."
+    },
+    {
+     "name": "collar_height",
+     "type": "float",
+     "description": "Pump collar height (sits on top of the neck). Default 0.008."
+    },
+    {
+     "name": "stem_radius",
+     "type": "float",
+     "description": "Pump stem radius. Default 0.004."
+    },
+    {
+     "name": "stem_height",
+     "type": "float",
+     "description": "Exposed stem between collar and head at rest; must exceed the stroke. Default 0.009."
+    },
+    {
+     "name": "head_radius",
+     "type": "float",
+     "description": "Actuator head radius. Default 0.010."
+    },
+    {
+     "name": "head_height",
+     "type": "float",
+     "description": "Actuator head height. Default 0.020."
+    },
+    {
+     "name": "nozzle_length",
+     "type": "float",
+     "description": "Side nozzle length. Default 0.005."
+    },
+    {
+     "name": "nozzle_radius",
+     "type": "float",
+     "description": "Side nozzle radius. Default 0.0025."
+    },
+    {
+     "name": "nozzle_azimuth_deg",
+     "type": "float",
+     "description": "Nozzle direction about z from +x. Default 0."
+    },
+    {
+     "name": "stroke",
+     "type": "float",
+     "description": "Pump stroke in metres. Default 0.006."
+    },
+    {
+     "name": "spring_stiffness",
+     "type": "float",
+     "description": "Return spring N/m. Default 500."
+    },
+    {
+     "name": "preload_N",
+     "type": "float",
+     "description": "Spring force holding the head on its top stop. Default 2.0."
+    },
+    {
+     "name": "head_damping",
+     "type": "float",
+     "description": "Slide damping N s/m. Default 1.0."
+    },
+    {
+     "name": "head_armature",
+     "type": "float",
+     "description": "Slide armature kg (numerical stability). Default 0.002."
+    },
+    {
+     "name": "head_mass",
+     "type": "float",
+     "description": "Pump head mass kg. Default 0.005."
+    },
+    {
+     "name": "band_z",
+     "type": "float",
+     "description": "Bottom of the colour band above the base. Default 0.0."
+    },
+    {
+     "name": "band_height",
+     "type": "float",
+     "description": "Colour band height; 0 for none. Default 0.025."
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[4]",
+     "description": "Bottle colour."
+    },
+    {
+     "name": "band_rgba",
+     "type": "list[4]",
+     "description": "Band colour."
+    },
+    {
+     "name": "head_rgba",
+     "type": "list[4]",
+     "description": "Pump head and collar colour."
+    },
+    {
+     "name": "mass",
+     "type": "float",
+     "description": "Bottle (without head) mass kg, liquid included. Default 0.08."
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "MuJoCo friction triple. Default [1.0, 0.01, 0.001]."
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Base centre position. Default [0, 0, 0]."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Yaw about z. Default 0."
+    },
+    {
+     "name": "free",
+     "type": "bool",
+     "description": "Free body (True) or fixed to its parent. Default True."
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane (stand-alone previews only). Default False."
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Option timestep. Default 0.002."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml, params_json, body, head_body, joint, sites {press, nozzle, grasp}, stroke_m, spring_stiffness, preload_N, full_stroke_force_N, height_m, radius_m, mass_kg."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "construct_pump_sprayer",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "spray bottle",
+    "pump",
+    "sprayer",
+    "prismatic",
+    "spring",
+    "articulated",
+    "object reconstruction"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.construct_pump_sprayer out_dir",
+   "file": "skills/construct_pump_sprayer.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pump_sprayer.py"
+  },
+  {
+   "name": "construct_pump_sprayer_down_axis",
+   "title": "Construct pump sprayer (stroke as positive joint travel)",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A finger-pump spray bottle as a free rigid body whose pump head is a separate body on a preloaded spring slide joint along the bottle axis: pressed down through a short stroke by a finger, it springs back.",
+   "description": "Fork of construct_pump_sprayer with the library's joint convention: the slide axis points DOWN the bottle (0 0 -1) and the range is [0, stroke], so the rest state is the lower limit and pressing increases the joint value, as articulation_check and the travel tests expect. Builds one MJCF: a cylindrical bottle body (with a visual colour band), a shoulder, neck and collar, and a pump head (stem, actuator cylinder and a side nozzle) as a child body on a slide joint along the bottle's z axis. The joint range is [0, stroke]; its spring has stiffness `spring_stiffness` and a springref placed beyond the rest stop so the head rests at 0 with `preload_N` pressing it against the stop: a finger must exceed the preload to start the stroke and needs preload + stiffness * stroke to bottom out; released, it returns. Geom densities are set so the body and head weigh `mass` and `head_mass`; the body-head contact pair is excluded explicitly (the parent filter does not apply once the bottle is welded to the world). The bottle origin is the centre of its base, z up; the nozzle points along +x rotated by `nozzle_azimuth_deg`. Sites: press (top of the head), nozzle (tip), grasp (mid body). Assumes a round bottle; sizes in metres. Unknown parameters and inconsistent sizes raise ValueError.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Receives <name>.xml and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Asset name and prefix. Default 'sprayer'."
+    },
+    {
+     "name": "body_radius",
+     "type": "float",
+     "description": "Bottle radius. Default 0.020."
+    },
+    {
+     "name": "body_height",
+     "type": "float",
+     "description": "Cylindrical body height. Default 0.085."
+    },
+    {
+     "name": "shoulder_height",
+     "type": "float",
+     "description": "Shoulder height between body and neck. Default 0.010."
+    },
+    {
+     "name": "neck_radius",
+     "type": "float",
+     "description": "Neck radius. Default 0.010."
+    },
+    {
+     "name": "neck_height",
+     "type": "float",
+     "description": "Neck height. Default 0.008."
+    },
+    {
+     "name": "collar_radius",
+     "type": "float",
+     "description": "Pump collar radius. Default 0.012."
+    },
+    {
+     "name": "collar_height",
+     "type": "float",
+     "description": "Pump collar height (sits on top of the neck). Default 0.008."
+    },
+    {
+     "name": "stem_radius",
+     "type": "float",
+     "description": "Pump stem radius. Default 0.004."
+    },
+    {
+     "name": "stem_height",
+     "type": "float",
+     "description": "Exposed stem between collar and head at rest; must exceed the stroke. Default 0.009."
+    },
+    {
+     "name": "head_radius",
+     "type": "float",
+     "description": "Actuator head radius. Default 0.010."
+    },
+    {
+     "name": "head_height",
+     "type": "float",
+     "description": "Actuator head height. Default 0.020."
+    },
+    {
+     "name": "nozzle_length",
+     "type": "float",
+     "description": "Side nozzle length. Default 0.005."
+    },
+    {
+     "name": "nozzle_radius",
+     "type": "float",
+     "description": "Side nozzle radius. Default 0.0025."
+    },
+    {
+     "name": "nozzle_azimuth_deg",
+     "type": "float",
+     "description": "Nozzle direction about z from +x. Default 0."
+    },
+    {
+     "name": "stroke",
+     "type": "float",
+     "description": "Pump stroke in metres. Default 0.006."
+    },
+    {
+     "name": "spring_stiffness",
+     "type": "float",
+     "description": "Return spring N/m. Default 500."
+    },
+    {
+     "name": "preload_N",
+     "type": "float",
+     "description": "Spring force holding the head on its top stop. Default 2.0."
+    },
+    {
+     "name": "head_damping",
+     "type": "float",
+     "description": "Slide damping N s/m. Default 1.0."
+    },
+    {
+     "name": "head_armature",
+     "type": "float",
+     "description": "Slide armature kg (numerical stability). Default 0.002."
+    },
+    {
+     "name": "head_mass",
+     "type": "float",
+     "description": "Pump head mass kg. Default 0.005."
+    },
+    {
+     "name": "band_z",
+     "type": "float",
+     "description": "Bottom of the colour band above the base. Default 0.0."
+    },
+    {
+     "name": "band_height",
+     "type": "float",
+     "description": "Colour band height; 0 for none. Default 0.025."
+    },
+    {
+     "name": "body_rgba",
+     "type": "list[4]",
+     "description": "Bottle colour."
+    },
+    {
+     "name": "band_rgba",
+     "type": "list[4]",
+     "description": "Band colour."
+    },
+    {
+     "name": "head_rgba",
+     "type": "list[4]",
+     "description": "Pump head and collar colour."
+    },
+    {
+     "name": "mass",
+     "type": "float",
+     "description": "Bottle (without head) mass kg, liquid included. Default 0.08."
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "MuJoCo friction triple. Default [1.0, 0.01, 0.001]."
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Base centre position. Default [0, 0, 0]."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Yaw about z. Default 0."
+    },
+    {
+     "name": "free",
+     "type": "bool",
+     "description": "Free body (True) or fixed to its parent. Default True."
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane (stand-alone previews only). Default False."
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Option timestep. Default 0.002."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml, params_json, body, head_body, joint, sites {press, nozzle, grasp}, stroke_m, spring_stiffness, preload_N, full_stroke_force_N, height_m, radius_m, mass_kg."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "construct_pump_sprayer_down_axis",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "spray bottle",
+    "pump",
+    "sprayer",
+    "prismatic",
+    "spring",
+    "articulated",
+    "object reconstruction"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.construct_pump_sprayer_down_axis out_dir",
+   "file": "skills/construct_pump_sprayer_down_axis.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_pump_sprayer_down_axis.py"
   },
   {
    "name": "construct_rope",
@@ -4783,6 +6182,167 @@
    "cli": "python -m tool_library.skills.construct_scissors out_dir",
    "file": "skills/construct_scissors.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_scissors.py"
+  },
+  {
+   "name": "construct_sponge_pad",
+   "title": "Construct sponge pad",
+   "type": "skill",
+   "category": "Object Reconstruction",
+   "summary": "A soft rectangular foam pad as a free body: a backing slab plus an nx x ny grid of foam cells, each on a sprung slide joint normal to the pad, so a pressing palm squashes it locally with a measured overall stiffness while it slides on the table with friction.",
+   "description": "Compliance is modelled as a bed of springs: the pad's bottom `base_frac` of the thickness is a rigid slab (the free root body, which touches the table) and the rest is split into nx x ny box cells, each a child body on a slide joint along the pad normal with range [-max_compression_frac x cell height, 0], stiffness stiffness_N_per_m / (nx ny) (cells act in parallel, so a uniform press of F newtons squashes the pad by F / stiffness_N_per_m), critical damping and a small armature for numerical stability. An uneven press (fingers on one end) squashes only the cells under it, which is how the pad 'bends' under the fingers; the slab itself stays flat. The mass is density x volume (or `mass`), shared by volume. Origin at the centre of the bottom face, length along x, width along y. Sites: top (centre of the top face) and grip (centre of the slab). Unknown parameters raise ValueError.",
+   "inputs": [
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Receives <name>.xml and <name>_params.json."
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "Asset name and prefix. Default 'sponge'."
+    },
+    {
+     "name": "length",
+     "type": "float",
+     "description": "Pad length (x), m. Default 0.12."
+    },
+    {
+     "name": "width",
+     "type": "float",
+     "description": "Pad width (y), m. Default 0.08."
+    },
+    {
+     "name": "thickness",
+     "type": "float",
+     "description": "Uncompressed thickness, m. Default 0.02."
+    },
+    {
+     "name": "base_frac",
+     "type": "float",
+     "description": "Fraction of the thickness that is the rigid backing slab. Default 0.35."
+    },
+    {
+     "name": "nx",
+     "type": "int",
+     "description": "Cells along the length. Default 4."
+    },
+    {
+     "name": "ny",
+     "type": "int",
+     "description": "Cells along the width. Default 3."
+    },
+    {
+     "name": "stiffness_N_per_m",
+     "type": "float",
+     "description": "Whole-pad compression stiffness under a uniform press. Default 2000."
+    },
+    {
+     "name": "max_compression_frac",
+     "type": "float",
+     "description": "Largest squash as a fraction of the cell height. Default 0.6."
+    },
+    {
+     "name": "cell_gap",
+     "type": "float",
+     "description": "Gap between neighbouring cells, m. Default 0.001."
+    },
+    {
+     "name": "cell_armature",
+     "type": "float",
+     "description": "Armature of each cell joint, kg. Default 0.004."
+    },
+    {
+     "name": "damping_ratio",
+     "type": "float",
+     "description": "Cell damping as a fraction of critical. Default 1.0."
+    },
+    {
+     "name": "density",
+     "type": "float",
+     "description": "Foam density kg/m3 (ignored when mass is given). Default 40."
+    },
+    {
+     "name": "mass",
+     "type": "float | None",
+     "description": "Total mass kg. Default None (from density)."
+    },
+    {
+     "name": "rgba",
+     "type": "list[4]",
+     "description": "Foam colour."
+    },
+    {
+     "name": "base_rgba",
+     "type": "list[4] | None",
+     "description": "Slab colour; default the foam colour."
+    },
+    {
+     "name": "friction",
+     "type": "list[3]",
+     "description": "MuJoCo friction triple. Default [1.0, 0.01, 0.001]."
+    },
+    {
+     "name": "contact_solref",
+     "type": "list[2]",
+     "description": "Contact solref of the pad geoms, applied with priority 1 so it wins over the table's: a gram-scale pad under a newton-scale press otherwise sinks millimetres into a soft contact and creeps under any drag. Default [0.004, 1.0]."
+    },
+    {
+     "name": "contact_solimp",
+     "type": "list[3]",
+     "description": "Contact solimp of the pad geoms. Default [0.99, 0.999, 0.001]."
+    },
+    {
+     "name": "pos",
+     "type": "list[3]",
+     "description": "Bottom-centre position. Default [0, 0, 0]."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Yaw about z. Default 0."
+    },
+    {
+     "name": "include_floor",
+     "type": "bool",
+     "description": "Add a floor plane (stand-alone previews only). Default False."
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Option timestep. Default 0.002."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "built",
+     "type": "dict",
+     "description": "xml, params_json, body, base_geom, cells, cell_joints, cell_stiffness, stiffness_N_per_m, max_compression_m, size_m [l, w, t], mass_kg, sites."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "construct_sponge_pad",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "sponge",
+    "foam",
+    "pad",
+    "soft",
+    "compliant",
+    "deformable",
+    "scrub",
+    "wipe",
+    "object reconstruction"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.construct_sponge_pad out_dir",
+   "file": "skills/construct_sponge_pad.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/construct_sponge_pad.py"
   },
   {
    "name": "construct_spring",
@@ -6337,6 +7897,145 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_camera_to_table_plane.py"
   },
   {
+   "name": "fit_object_placement",
+   "title": "Fit object placement",
+   "type": "skill",
+   "category": "Scene Runtime & Rendering",
+   "summary": "Optimizes the pose of one object body in a scene (x, y, yaw by default; optionally z, pitch, roll, and a uniform size scale) so that its rendered silhouette through the registered video camera matches the object's video mask, by coarse search then Nelder-Mead on 1 - IoU with hand pixels ignored; writes the scene with the fitted pose.",
+   "description": "The paper's placement step. Loads the scene, adds the video camera (camera.json, or a camera already in the scene by name), and renders the segmentation of the object's body subtree at the mask resolution for each candidate pose. A fixed root body is moved by writing its pose; a free-jointed body by writing its free joint. Search: the yaw range on a grid combined with random x, y jitter inside the bounds around the start pose (the current pose, or the mask footprint's contact centre when `init_from_mask` is set), then scipy Nelder-Mead from the best candidate. IoU is computed on pixels outside `ignore_mask` only. With `scale` in the parameters the object's mesh and primitive sizes are scaled uniformly about its root (for an object whose size was guessed). Returns the fitted pose in the rig frame, the IoU before and after, the pixel offset of the silhouette centroids, and an overlay image (mask magenta, fitted silhouette green). With out_xml it rewrites the scene so the body starts at the fitted pose. A low final IoU with a good shape means the camera or the size is wrong, not the pose.",
+   "inputs": [
+    {
+     "name": "scene_xml",
+     "type": "path",
+     "description": "The scene (bench with the asset attached, from stage_on_bench)."
+    },
+    {
+     "name": "body",
+     "type": "str",
+     "description": "Root body of the object (for example 'btl_bottle')."
+    },
+    {
+     "name": "mask",
+     "type": "path | ndarray",
+     "description": "The object's video mask at the camera resolution."
+    },
+    {
+     "name": "camera",
+     "type": "path | dict | str",
+     "description": "camera.json, its dict, or the name of a camera in the scene."
+    },
+    {
+     "name": "ignore_mask",
+     "type": "path | ndarray | None",
+     "description": "Pixels excluded from the IoU (hands, arms, occluders)."
+    },
+    {
+     "name": "params",
+     "type": "list[str]",
+     "description": "Which of x, y, z, yaw, pitch, roll, scale to optimize. Default ['x', 'y', 'yaw']."
+    },
+    {
+     "name": "bounds",
+     "type": "dict | None",
+     "description": "Half-ranges around the start: {x: 0.15, y: 0.15, z: 0.02, yaw: 180, pitch: 15, roll: 15, scale: 0.3} (metres, degrees, fraction). Defaults as listed."
+    },
+    {
+     "name": "init_from_mask",
+     "type": "bool",
+     "description": "Start x, y at the mask's contact centre on the table. Default True."
+    },
+    {
+     "name": "n_coarse",
+     "type": "int",
+     "description": "Random candidates in the coarse stage (times the yaw grid). Default 48."
+    },
+    {
+     "name": "n_yaw",
+     "type": "int",
+     "description": "Yaw grid size when yaw is optimized. Default 12."
+    },
+    {
+     "name": "n_refine",
+     "type": "int",
+     "description": "Nelder-Mead evaluations. Default 120."
+    },
+    {
+     "name": "render_scale",
+     "type": "float",
+     "description": "Render at this fraction of the mask resolution for speed. Default 0.5."
+    },
+    {
+     "name": "out_xml",
+     "type": "path | None",
+     "description": "Write the scene with the fitted pose here."
+    },
+    {
+     "name": "out_png",
+     "type": "path | None",
+     "description": "Overlay image path (needs frame)."
+    },
+    {
+     "name": "frame",
+     "type": "path | None",
+     "description": "Video frame for the overlay."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "pose",
+     "type": "dict",
+     "description": "x, y, z, yaw_deg, pitch_deg, roll_deg (rig frame) and scale."
+    },
+    {
+     "name": "iou / iou_start",
+     "type": "float",
+     "description": "Silhouette IoU after and before the fit."
+    },
+    {
+     "name": "centroid_offset_px",
+     "type": "list[2]",
+     "description": "Rendered minus mask silhouette centroid."
+    },
+    {
+     "name": "out_xml / overlay_png",
+     "type": "path",
+     "description": "Written files."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "fit_object_placement",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy",
+    "scipy",
+    "opencv-python"
+   ],
+   "tags": [
+    "placement",
+    "silhouette",
+    "IoU",
+    "pose fit",
+    "camera",
+    "stage 2"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.fit_object_placement scene.xml btl_bottle mask.png camera.json --out-xml scene_fit.xml --out-png fit.png --frame frame00000.jpg",
+   "file": "skills/fit_object_placement.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_object_placement.py"
+  },
+  {
    "name": "fit_object_poses",
    "title": "Fit object poses",
    "type": "skill",
@@ -6437,6 +8136,133 @@
    "cli": "python -m tool_library.skills.fit_object_poses frames/ track/pred meshes/ depth.npz cup,bowl poses/ --focal 697",
    "file": "skills/fit_object_poses.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_object_poses.py"
+  },
+  {
+   "name": "fit_placement_through_transparent",
+   "title": "Fit placement through transparent parts",
+   "type": "skill",
+   "category": "Measurements",
+   "summary": "Grid-then-refine fit of a free body's x, y, yaw (and optionally z) to its video mask through a scene camera, with transparent geoms (alpha below a threshold) made non-occluding, for objects seen through clear drawer fronts, walls or glass.",
+   "description": "Compiles the scene, hides every geom whose rgba alpha < alpha_max (and that does not belong to the fitted body) by moving it to geom group 5 and disabling that group, and renders MuJoCo segmentation through `camera` at render_scale. The body's pose is searched on a coarse grid over the given half ranges around its initial pose (x, y in metres, yaw in degrees, optional z), then refined by shrinking the grid around the best cell `n_refine` times; the score is the IoU between the body's visible pixels and the mask, with pixels of `ignore_mask` excluded from both. The body must be a free body (its pose is set through the free joint's qpos). With out_xml, the body's pos/quat attributes are rewritten in a copy of the scene XML text. Returns the best pose, its IoU, the starting IoU, the number of transparent geoms hidden and an overlay PNG when asked.",
+   "inputs": [
+    {
+     "name": "scene_xml",
+     "type": "path",
+     "description": "Scene MJCF with the camera and the body."
+    },
+    {
+     "name": "body",
+     "type": "str",
+     "description": "Free body to place."
+    },
+    {
+     "name": "mask",
+     "type": "path",
+     "description": "Binary mask PNG at the camera resolution."
+    },
+    {
+     "name": "camera",
+     "type": "str",
+     "description": "Camera name in the scene."
+    },
+    {
+     "name": "ignore_mask",
+     "type": "path | None",
+     "description": "Pixels to ignore (hands)."
+    },
+    {
+     "name": "half_range",
+     "type": "dict",
+     "description": "Search half widths {'x': m, 'y': m, 'yaw': deg, 'z'?: m}. Default x 0.03, y 0.03, yaw 30."
+    },
+    {
+     "name": "alpha_max",
+     "type": "float",
+     "description": "Geoms with alpha below this do not occlude. Default 0.6."
+    },
+    {
+     "name": "steps",
+     "type": "int",
+     "description": "Grid points per parameter per round. Default 7."
+    },
+    {
+     "name": "n_refine",
+     "type": "int",
+     "description": "Refinement rounds. Default 3."
+    },
+    {
+     "name": "render_scale",
+     "type": "float",
+     "description": "Render resolution factor. Default 0.5."
+    },
+    {
+     "name": "out_xml",
+     "type": "path | None",
+     "description": "Write the scene with the fitted pose here."
+    },
+    {
+     "name": "out_png",
+     "type": "path | None",
+     "description": "Overlay of mask (green) and render (red)."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "pose",
+     "type": "dict",
+     "description": "x, y, z, yaw_deg of the body in the world frame."
+    },
+    {
+     "name": "iou",
+     "type": "float",
+     "description": "Best IoU."
+    },
+    {
+     "name": "iou_start",
+     "type": "float",
+     "description": "IoU at the initial pose."
+    },
+    {
+     "name": "n_transparent_geoms",
+     "type": "int",
+     "description": "Geoms made non-occluding."
+    },
+    {
+     "name": "visible_px",
+     "type": "int",
+     "description": "Rendered body pixels at the best pose (full resolution equivalent)."
+    },
+    {
+     "name": "out_xml",
+     "type": "str | None",
+     "description": "Written scene."
+    },
+    {
+     "name": "overlay_png",
+     "type": "str | None",
+     "description": "Overlay image."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "fit_placement_through_transparent",
+   "requirements": [
+    "numpy",
+    "mujoco",
+    "Pillow"
+   ],
+   "tags": [
+    "placement",
+    "transparent",
+    "occlusion",
+    "silhouette",
+    "iou",
+    "drawer",
+    "glass"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.fit_placement_through_transparent scene.xml body mask.png camera",
+   "file": "skills/fit_placement_through_transparent.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fit_placement_through_transparent.py"
   },
   {
    "name": "generate_rigid_grasps",
@@ -7117,6 +8943,98 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_joint_trajectory.py"
   },
   {
+   "name": "measure_mask_footprint",
+   "title": "Measure mask footprint",
+   "type": "skill",
+   "category": "Measurements",
+   "summary": "Back-projects an object's video mask through the registered camera onto the tabletop: the contact line from the mask's bottom edge (where the object meets the table), its width in metres, the apparent height, and the footprint centroid and axes from the full mask, as initial size and pose for a constructor and the placement fit.",
+   "description": "Two readings of one silhouette. The bottom edge of the mask (lowest mask pixel per column, cleaned of hand pixels with ignore_mask) lies on the table when the object stands on it: back-projected onto z = 0 it gives the near contact line, its centre, its span in metres (the object's width across the view) and the depth of the object. The apparent height is the mask's vertical pixel extent above that contact line converted to metres at the object's depth, an overestimate for objects deeper than tall. The full mask back-projected onto the plane gives a footprint polygon whose area, centroid, principal axes and yaw are right for flat objects (boards, boxes seen from above, lids) and stretched away from the camera for tall ones; `height_guess_m` lifts the plane for that projection when known. Returns everything in the rig frame with the pixel box and a debug overlay. Not a measurement of hidden extents: the far side of a tall object is not visible, so use the width and the contact line as the reliable numbers.",
+   "inputs": [
+    {
+     "name": "mask",
+     "type": "path | ndarray",
+     "description": "Binary mask PNG (non-zero = object) at the video resolution."
+    },
+    {
+     "name": "camera",
+     "type": "path | dict",
+     "description": "camera.json from register_table_camera or read_egodex_episode."
+    },
+    {
+     "name": "ignore_mask",
+     "type": "path | ndarray | None",
+     "description": "Pixels to ignore (hands, arms)."
+    },
+    {
+     "name": "height_guess_m",
+     "type": "float",
+     "description": "Plane height used for the full-mask footprint projection (half the object's height is a good guess). Default 0."
+    },
+    {
+     "name": "out_png",
+     "type": "path | None",
+     "description": "Debug overlay: contact line and footprint drawn on the frame (frame needed)."
+    },
+    {
+     "name": "frame",
+     "type": "path | None",
+     "description": "The video frame for the overlay."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "contact",
+     "type": "dict",
+     "description": "center_xy (rig), left_xy, right_xy, width_m, depth_m (distance along the optical axis), n_pixels."
+    },
+    {
+     "name": "apparent_height_m",
+     "type": "float",
+     "description": "Mask height above the contact line in metres at the object's depth."
+    },
+    {
+     "name": "footprint",
+     "type": "dict",
+     "description": "centroid_xy, length_m and width_m along the principal axes, yaw_deg of the long axis, area_m2, polygon_xy (convex hull) from the full-mask plane projection."
+    },
+    {
+     "name": "bbox_px",
+     "type": "list[4]",
+     "description": "x0, y0, x1, y1 of the mask."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "measure_mask_footprint",
+   "requirements": [
+    "numpy",
+    "opencv-python"
+   ],
+   "tags": [
+    "mask",
+    "footprint",
+    "placement",
+    "size",
+    "table plane",
+    "stage 2"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.measure_mask_footprint mask.png camera.json --frame frame00000.jpg --out-png footprint.png",
+   "file": "skills/measure_mask_footprint.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/measure_mask_footprint.py"
+  },
+  {
    "name": "measure_motion_timeline",
    "title": "Measure motion timeline",
    "type": "skill",
@@ -7239,12 +9157,12 @@
     {
      "name": "masks_dir",
      "type": "path",
-     "description": "Folder of palette label maps frame%05d.png (from track_objects)."
+     "description": "Folder of palette label maps frame%05d.png (from track_objects), or one binary mask PNG of the object at ref_frame (from segment_with_text_prompts)."
     },
     {
      "name": "label",
-     "type": "int",
-     "description": "The object's label value in the maps."
+     "type": "int | None",
+     "description": "The object's label value in the label maps; None (or a binary mask file) means every non-zero pixel."
     },
     {
      "name": "ref_frame",
@@ -7366,13 +9284,13 @@
    "inputs": [
     {
      "name": "mask",
-     "type": "ndarray [H, W] bool",
+     "type": "ndarray [H, W] bool | path",
      "description": "Rope silhouette (any segmenter)."
     },
     {
      "name": "camera",
-     "type": "dict from common.tablecam.camera",
-     "description": "The table camera."
+     "type": "dict | path",
+     "description": "The table camera (common.tablecam.camera), or a camera.json / dict from register_table_camera or read_egodex_episode; then centreline_rig and points (rig frame, for build_isaac_scene) are returned too."
     },
     {
      "name": "n_points, smooth_win",
@@ -8136,6 +10054,92 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/rank_grasps_q1.py"
   },
   {
+   "name": "read_egodex_episode",
+   "title": "Read EgoDex episode",
+   "type": "skill",
+   "category": "Perception & Grounding",
+   "summary": "Opens an EgoDex episode (hdf5 + mp4): writes the first frame (or a strided set), the head camera as camera.json in the rig frame via the table plane found from the fingertip heights, the task text, and the 2D hand joints per frame.",
+   "description": "EgoDex stores the camera intrinsics (camera/intrinsic), the per-frame camera pose and 3D skeleton (transforms/*, ARKit world, gravity-aligned y-up) and the task description in the file attributes. The table plane is the horizontal plane through the low percentile of all fingertip heights over the episode minus a pad (fingertips touch the table during every task); the rig frame is built from it: z up, y the chosen frame's optical axis projected onto the plane, x = y cross z, origin so that the camera's foot lands at `cam_xy` (default (0.019, 0.05): the robot mounts 5 cm behind the camera foot, since a head camera 0.3 to 0.4 m up with a 72 degree lens would otherwise see the parked robot hands in the middle of the frame). Writes frame%05d.jpg files, camera.json (fx, fy, cx, cy, fovy_deg, pos, quat_wxyz, R_cv in the rig frame; the frame's own pose), episode.json (task, description, objects named by the dataset, n_frames, fps, table height, rig transform world<-rig, fingertip pixels at the frame) and hands.npz (every joint's 3D rig position and 2D pixel per frame).",
+   "inputs": [
+    {
+     "name": "hdf5",
+     "type": "path",
+     "description": "The episode's .hdf5."
+    },
+    {
+     "name": "mp4",
+     "type": "path | None",
+     "description": "The episode's .mp4; default: same stem as the hdf5."
+    },
+    {
+     "name": "out_dir",
+     "type": "path",
+     "description": "Receives frames, camera.json, episode.json, hands.npz."
+    },
+    {
+     "name": "frame",
+     "type": "int",
+     "description": "The frame whose camera pose defines the rig frame and camera.json. Default 0."
+    },
+    {
+     "name": "stride",
+     "type": "int",
+     "description": "Also write every k-th frame; 0 writes only `frame`. Default 0."
+    },
+    {
+     "name": "cam_xy",
+     "type": "list[2]",
+     "description": "Camera foot in the rig frame. Default [0.019, 0.05]."
+    },
+    {
+     "name": "tip_percentile",
+     "type": "float",
+     "description": "Percentile of fingertip heights taken as the tabletop. Default 1.0."
+    },
+    {
+     "name": "tip_pad_m",
+     "type": "float",
+     "description": "Fingertip centre height above the surface when touching. Default 0.008."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "frames",
+     "type": "list[path]",
+     "description": "Written frame files (the chosen frame first)."
+    },
+    {
+     "name": "camera",
+     "type": "dict",
+     "description": "camera.json content in the rig frame."
+    },
+    {
+     "name": "episode",
+     "type": "dict",
+     "description": "task, description, dataset objects, n_frames, fps, width, height, table_height_world, rig {R_world_rig, origin_world}, fingertips_px at the frame, hands_npz."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "read_egodex_episode",
+   "requirements": [
+    "h5py",
+    "opencv-python",
+    "numpy",
+    "scipy"
+   ],
+   "tags": [
+    "egodex",
+    "camera",
+    "table plane",
+    "hands",
+    "stage 2"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.skills.read_egodex_episode episode.hdf5 out/ --stride 30",
+   "file": "skills/read_egodex_episode.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/read_egodex_episode.py"
+  },
+  {
    "name": "reconstruct_object_meshes",
    "title": "Reconstruct object meshes",
    "type": "skill",
@@ -8315,6 +10319,145 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/refit_to_real_rig.py"
   },
   {
+   "name": "register_table_camera",
+   "title": "Register table camera",
+   "type": "skill",
+   "category": "Perception & Grounding",
+   "summary": "Writes camera.json, the video camera in the rig frame, from one of three sources: the setup's calibrated ego camera, given intrinsics and pose, or estimates (focal or fovy, pitch, roll, height above the table, optional yaw and foot position) such as GeoCalib's angles and a depth-plane height; also draws a table grid overlay to judge the registration.",
+   "description": "The rig frame is the setup's: origin between the robot mounts on the tabletop, x toward the right station, y into the work, z up. `source='setup'` reads cameras.ego from setup.yaml and rescales it to the video's resolution. `source='given'` takes fx, fy, cx, cy (or fovy_deg) with pos and quat_wxyz (MuJoCo convention) or R_cv (OpenCV axes in the rig frame). `source='estimate'` builds the pose from pitch_deg (below horizontal), roll_deg, height_m above the tabletop, yaw_deg (90 = looking straight into the work) and the camera's foot position foot_xy on the table (default: the setup camera's foot), with fovy_deg or focal_px (default: the setup's). Writes camera.json (fx, fy, cx, cy, fovy_deg, pos, quat_wxyz, R_cv) and, when a frame is given, camera_check.png: the frame with the rig axes, a 10 cm grid on the tabletop and the horizon drawn through the camera, so a wrong pitch, height or focal shows as a grid that does not lie on the table.",
+   "inputs": [
+    {
+     "name": "out_json",
+     "type": "path",
+     "description": "Where camera.json is written."
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "description": "'setup' | 'given' | 'estimate'. Default 'setup'."
+    },
+    {
+     "name": "width",
+     "type": "int",
+     "description": "Video width in pixels (required unless frame is given)."
+    },
+    {
+     "name": "height",
+     "type": "int",
+     "description": "Video height in pixels."
+    },
+    {
+     "name": "setup_yaml",
+     "type": "path | None",
+     "description": "setup.yaml; default: the repository's setup/setup.yaml."
+    },
+    {
+     "name": "fovy_deg",
+     "type": "float | None",
+     "description": "Vertical field of view (given/estimate)."
+    },
+    {
+     "name": "focal_px",
+     "type": "float | None",
+     "description": "Focal length in pixels at the given resolution (alternative to fovy_deg)."
+    },
+    {
+     "name": "intrinsics",
+     "type": "dict | None",
+     "description": "{fx, fy, cx, cy} for source='given'."
+    },
+    {
+     "name": "pos",
+     "type": "list[3] | None",
+     "description": "Camera position in the rig frame (given)."
+    },
+    {
+     "name": "quat_wxyz",
+     "type": "list[4] | None",
+     "description": "MuJoCo camera orientation (given); or give R_cv."
+    },
+    {
+     "name": "R_cv",
+     "type": "list[list] | None",
+     "description": "3x3 OpenCV camera axes in the rig frame (given)."
+    },
+    {
+     "name": "pitch_deg",
+     "type": "float | None",
+     "description": "Optical axis below horizontal (estimate)."
+    },
+    {
+     "name": "roll_deg",
+     "type": "float",
+     "description": "Roll about the optical axis (estimate). Default 0."
+    },
+    {
+     "name": "height_m",
+     "type": "float | None",
+     "description": "Camera height above the tabletop (estimate)."
+    },
+    {
+     "name": "yaw_deg",
+     "type": "float",
+     "description": "Optical axis yaw from rig +x (estimate). Default 90."
+    },
+    {
+     "name": "foot_xy",
+     "type": "list[2] | None",
+     "description": "Where the camera stands over the table, rig x, y (estimate). Default: the setup camera's foot."
+    },
+    {
+     "name": "frame",
+     "type": "path | None",
+     "description": "A frame of the video to draw camera_check.png on."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "camera",
+     "type": "dict",
+     "description": "The camera.json content: width, height, fx, fy, cx, cy, fovy_deg, pos, quat_wxyz, R_cv, pitch_deg, yaw_deg, height_above_table_m, source."
+    },
+    {
+     "name": "out_json / check_png",
+     "type": "path",
+     "description": "The written files."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "register_table_camera",
+   "requirements": [
+    "numpy",
+    "scipy",
+    "pyyaml",
+    "opencv-python"
+   ],
+   "tags": [
+    "camera",
+    "registration",
+    "extrinsics",
+    "intrinsics",
+    "rig frame",
+    "stage 2"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.register_table_camera camera.json --source setup --width 640 --height 480 --frame frame00000.jpg",
+   "file": "skills/register_table_camera.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/register_table_camera.py"
+  },
+  {
    "name": "render_cycles",
    "title": "Render with Cycles",
    "type": "skill",
@@ -8383,6 +10526,98 @@
    "cli": "python -m tool_library.skills.render_cycles bundle/ego --chunks 2",
    "file": "skills/render_cycles.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/render_cycles.py"
+  },
+  {
+   "name": "render_frame_compare",
+   "title": "Render frame comparison",
+   "type": "skill",
+   "category": "Scene Runtime & Rendering",
+   "summary": "Renders the scene through the registered video camera (added from camera.json when the scene lacks it) at its initial or a given state and writes a side-by-side image: the video frame, the render, and a 50/50 blend, optionally with a fourth panel from an Isaac Sim render.",
+   "description": "Loads the MuJoCo scene, adds the video camera from camera.json (or uses a named camera), renders RGB at the camera's resolution at the initial state (keyframe 0 when present) or `qpos`, and composes [frame | render | blend] with labels; with `isaac_png` a fourth panel shows the Isaac render and a fifth its blend. The blend is where a placement error shows as a double image. Returns the paths and the mean absolute pixel difference inside `mask` (the objects' pixels) as a rough fit number; silhouette_iou_check is the real measure.",
+   "inputs": [
+    {
+     "name": "scene_xml",
+     "type": "path",
+     "description": "MuJoCo scene."
+    },
+    {
+     "name": "camera",
+     "type": "path | dict | str",
+     "description": "camera.json, its dict, or a camera name in the scene."
+    },
+    {
+     "name": "frame",
+     "type": "path",
+     "description": "The video frame to compare with."
+    },
+    {
+     "name": "out_png",
+     "type": "path",
+     "description": "The composite image."
+    },
+    {
+     "name": "qpos",
+     "type": "list | path | None",
+     "description": "State to render; default initial / keyframe 0."
+    },
+    {
+     "name": "isaac_png",
+     "type": "path | None",
+     "description": "An Isaac Sim render of the same scene to add as extra panels."
+    },
+    {
+     "name": "mask",
+     "type": "path | None",
+     "description": "Union mask of the objects for the difference number."
+    },
+    {
+     "name": "labels",
+     "type": "list[str] | None",
+     "description": "Panel labels; default ['video', 'simulation', 'blend']."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "out_png / render_png",
+     "type": "path",
+     "description": "The composite and the bare render."
+    },
+    {
+     "name": "mean_abs_diff",
+     "type": "float | None",
+     "description": "Mean |frame - render| over the mask, 0..255."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "render_frame_compare",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy",
+    "opencv-python"
+   ],
+   "tags": [
+    "render",
+    "comparison",
+    "frame 0",
+    "camera",
+    "stage 2"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.skills.render_frame_compare scene.xml camera.json frame00000.jpg frame0_compare.png",
+   "file": "skills/render_frame_compare.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/render_frame_compare.py"
   },
   {
    "name": "render_scene",
@@ -8888,7 +11123,7 @@
     {
      "name": "assets",
      "type": "list[dict]",
-     "description": "[{'name', 'xml', 'x', 'y', 'z'=0, 'yaw_deg'=0}] in rig coordinates."
+     "description": "[{'name', 'xml', 'x', 'y', 'z'=0, 'yaw_deg'=0, 'joints'={joint: value}}] in rig coordinates; 'joints' sets the asset's initial joint values (an open lid, a pulled drawer) in the scene's keyframes, joint names as in the asset (the prefix is added)."
     },
     {
      "name": "out_xml",
@@ -8908,7 +11143,12 @@
     {
      "name": "rig",
      "type": "dict | None",
-     "description": "Explicit {'origin': [x,y,z], 'R': 3x3 columns x,y,z} overriding the derivation."
+     "description": "Explicit {'origin': [x,y,z], 'R': 3x3 columns x,y,z} overriding the derivation. The DexAgent setup scene's world frame IS the rig frame: pass origin [0,0,0] and the identity."
+    },
+    {
+     "name": "cameras",
+     "type": "dict | None",
+     "description": "{name: camera.json path or dict} cameras to write into the world (for example {'video_cam': 'camera.json'})."
     }
    ],
    "outputs": [
@@ -9246,7 +11486,7 @@
    "type": "verifier",
    "category": "Scene Compile Checks",
    "summary": "An object declared articulated is built with at least one hinge or slide joint that has a usable range, not as a rigid free body.",
-   "description": "Stage 1 decides what moves; stage 2 must build it that way. A drawer added as a rigid mesh passes every geometric check and still cannot open. For each named object the verifier collects the bodies that belong to it (the body itself and everything whose name starts with its slug) and looks for hinge or slide joints on them. It fails when there is none, when the object is a free rigid body instead, or when the joint has a degenerate range (`min_travel`: 1 cm for a slide, 5 degrees for a hinge). It also drives each joint across its range and reports whether the moving part actually displaces, which catches a joint attached to the wrong link.",
+   "description": "Stage 1 decides what moves; stage 2 must build it that way. A drawer added as a rigid mesh passes every geometric check and still cannot open. For each named object the verifier collects the bodies that belong to it (the body itself and everything whose name starts with its slug) and looks for hinge or slide joints on them. It fails when there is none, when the object is a free rigid body instead, or when the joint has a degenerate range (`min_travel`: 3 mm for a slide, 5 degrees for a hinge, summed over the object's joints of a kind so a sprung contact split into stages counts). It also drives each joint across its range and reports whether the moving part actually displaces, which catches a joint attached to the wrong link.",
    "inputs": [
     {
      "name": "scene",
@@ -9261,7 +11501,7 @@
     {
      "name": "min_travel",
      "type": "float",
-     "description": "Smallest joint range accepted: metres for slides, radians for hinges. Default 0.01 m / 0.087 rad."
+     "description": "Smallest joint range accepted: metres for slides, radians for hinges. Default 0.003 m / 0.087 rad."
     }
    ],
    "outputs": [
@@ -10592,6 +12832,106 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/height_check.py"
   },
   {
+   "name": "hinged_lid_closure_test",
+   "title": "Hinged lid: rests open, closes, stays shut",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Three force-only trials on a box with a hinged lid (and optional skirt crease): the lid stays where frame 0 left it, a capped hinge torque swings it shut (then folds the skirt down), and released it stays seated shut under gravity.",
+   "description": "Loads a standalone asset MJCF (with its floor) and runs three trials from qpos0. REST: no forces for rest_s seconds; the lid and skirt must stay within tol_deg of their initial angles (an open lid lying folded back must not creep). CLOSE: a speed-limited torque on the lid joint toward closed_deg, capped at torque_factor times the lid subtree's gravity torque about the hinge (or torque_Nm), for close_s seconds, then a capped torque on the skirt joint toward skirt_closed_deg; both must reach their closed angle within tol_deg. HOLD: all torques removed for hold_s seconds; the lid and skirt must stay shut within tol_deg and the base must not slip more than root_slip_m at rest or after release. Torques act on the joints directly (qfrc_applied), so the trial judges the mechanism and its stops, not a grasp. Returns ok, issues and every measured angle.",
+   "inputs": [
+    {
+     "name": "xml",
+     "type": "path",
+     "description": "Standalone asset MJCF (built with include_floor on)."
+    },
+    {
+     "name": "lid_joint",
+     "type": "str",
+     "description": "Name of the lid hinge joint."
+    },
+    {
+     "name": "skirt_joint",
+     "type": "str | None",
+     "description": "Name of the skirt crease joint, or None. Default None."
+    },
+    {
+     "name": "closed_deg",
+     "type": "float",
+     "description": "Lid joint value when shut. Default 0."
+    },
+    {
+     "name": "skirt_closed_deg",
+     "type": "float",
+     "description": "Skirt joint value when folded down. Default 90."
+    },
+    {
+     "name": "torque_Nm",
+     "type": "float | None",
+     "description": "Fixed closing torque; None = torque_factor x gravity torque. Default None."
+    },
+    {
+     "name": "torque_factor",
+     "type": "float",
+     "description": "Multiple of the moving part's gravity torque. Default 3.0."
+    },
+    {
+     "name": "rest_s",
+     "type": "float",
+     "description": "REST trial length, s. Default 2.0."
+    },
+    {
+     "name": "close_s",
+     "type": "float",
+     "description": "Seconds per closing push. Default 3.0."
+    },
+    {
+     "name": "hold_s",
+     "type": "float",
+     "description": "HOLD trial length, s. Default 3.0."
+    },
+    {
+     "name": "tol_deg",
+     "type": "float",
+     "description": "Angle tolerance, deg. Default 3.0."
+    },
+    {
+     "name": "root_slip_m",
+     "type": "float",
+     "description": "Allowed base translation during REST and HOLD (the pushes may shift a free base), m. Default 0.01."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; rest: initial/final angles and drift; close: reached angles and torques; hold: final angles and drift; root_slip_m."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "hinged_lid_closure_test",
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "lid",
+    "hinge",
+    "box",
+    "close",
+    "stays shut",
+    "articulated",
+    "mechanism test"
+   ],
+   "used_in": [
+    "Giftbox Packing"
+   ],
+   "file": "verifiers/hinged_lid_closure_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/hinged_lid_closure_test.py"
+  },
+  {
    "name": "holds_at_video_end_check",
    "title": "Holds at video end check",
    "type": "verifier",
@@ -10824,6 +13164,102 @@
    "entrypoint": "joint_range_check",
    "file": "verifiers/joint_range_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/joint_range_check.py"
+  },
+  {
+   "name": "joint_release_hold_test",
+   "title": "Joint release hold test",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Sets a hinge or slide joint to each of several positions, releases it under gravity with no actuation, and checks that it stays there (a lid that stays open, a drawer that stays half out).",
+   "description": "For every requested joint position the model is reset, the joint is set to that position with zero velocity, and the passive dynamics run for hold_s seconds with gravity. The joint must end within tol of where it was released, and a free root body must not slide more than root_slip_m. A model without a plane geom gets a floor at z=0 (add_floor) so a free base rests instead of falling, which would hide gravity torques on the joint. Positions are degrees for hinges and metres for slides. Positions outside the joint range are reported as issues, not clipped. Assumes the asset rests on the floor at its initial state (base at z=0).",
+   "inputs": [
+    {
+     "name": "xml",
+     "type": "path",
+     "description": "MJCF of the asset (or a scene) containing the joint."
+    },
+    {
+     "name": "joint",
+     "type": "str",
+     "description": "Name of the hinge or slide joint to test."
+    },
+    {
+     "name": "positions",
+     "type": "list[float]",
+     "description": "Release positions: degrees (hinge) or metres (slide)."
+    },
+    {
+     "name": "hold_s",
+     "type": "float",
+     "description": "Seconds of passive simulation per release. Default 3.0."
+    },
+    {
+     "name": "tol",
+     "type": "float",
+     "description": "Allowed drift: degrees (hinge) or metres (slide). Default 3.0 for hinges, 0.005 for slides when None."
+    },
+    {
+     "name": "root_slip_m",
+     "type": "float",
+     "description": "Allowed translation of a free root body. Default 0.01."
+    },
+    {
+     "name": "add_floor",
+     "type": "bool",
+     "description": "Add a floor plane at z=0 when the model has no plane geom. Default True."
+    },
+    {
+     "name": "keyframe",
+     "type": "int | None",
+     "description": "Keyframe to start from (a scene's home pose). Default None = qpos0."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "ok",
+     "type": "bool",
+     "description": "Every release position held within tol and the root did not slip."
+    },
+    {
+     "name": "issues",
+     "type": "list[str]",
+     "description": "What failed and what parameter to change."
+    },
+    {
+     "name": "trials",
+     "type": "list[dict]",
+     "description": "Per position: released, final, drift, root_slip_m, held."
+    },
+    {
+     "name": "joint_type",
+     "type": "str",
+     "description": "hinge or slide."
+    },
+    {
+     "name": "range",
+     "type": "list[float]",
+     "description": "Joint range in the reported units."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "joint_release_hold_test",
+   "requirements": [
+    "mujoco",
+    "numpy"
+   ],
+   "tags": [
+    "hinge",
+    "slide",
+    "lid",
+    "drawer",
+    "hold",
+    "friction",
+    "articulated",
+    "verifier"
+   ],
+   "used_in": [],
+   "file": "verifiers/joint_release_hold_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/joint_release_hold_test.py"
   },
   {
    "name": "joint_speed_check",
@@ -11381,6 +13817,127 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/object_disturbance_check.py"
   },
   {
+   "name": "pad_press_slide_test",
+   "title": "Pad press-and-slide test",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Lays a compliant pad (sponge, scrubber, eraser) on a floor, presses its top with a palm-like force, then drags it sideways below and above the friction limit: it must squash at its built stiffness, hold under the light drag, slide flat and in contact under the strong drag, and spring back on release.",
+   "description": "Loads the asset (built dict with `xml`, or an MJCF path), adds a floor plane with friction `floor_friction` and finds the free root body and the compliant slide joints in its subtree (the foam cells). Phases: settle; press (press_force_N spread evenly over the top bodies: the cells, or the root when there are none) and measure the mean squash and the whole-pad stiffness F / squash against built['stiffness_N_per_m'] or the sum of the cell stiffnesses; hold (keep the press, add a horizontal drag from a palm target moving at drag_speed_m_s (spring-damper coupling) capped at hold_frac x mu x normal load: the pad must move less than max_hold_slip_m); slide (the same servo capped at slide_frac x mu x load, i.e. a palm moving with the pad: the pad must travel at least min_slide_m while its slab stays within max_lift_m of the floor, tilts less than max_tilt_deg and keeps floor contact (or stays within 0.5 mm of its rest height) in min_contact_frac of the steps); release (all forces off: the squash must recover to within recover_frac of the cell travel). A rigid pad without compliant joints fails the squash check. Never raises on a bad pad; reports.",
+   "inputs": [
+    {
+     "name": "built",
+     "type": "dict | path",
+     "description": "Constructor output with 'xml', or an MJCF path."
+    },
+    {
+     "name": "press_force_N",
+     "type": "float",
+     "description": "Palm press. Default 5.0."
+    },
+    {
+     "name": "floor_friction",
+     "type": "float",
+     "description": "Floor sliding friction. Default 1.0."
+    },
+    {
+     "name": "hold_frac",
+     "type": "float",
+     "description": "Light drag as a fraction of the friction limit. Default 0.4."
+    },
+    {
+     "name": "slide_frac",
+     "type": "float",
+     "description": "Strong drag as a fraction of the friction limit. Default 1.6."
+    },
+    {
+     "name": "drag_speed_m_s",
+     "type": "float",
+     "description": "Speed the palm drags at; the drag force is servoed to it and capped. Default 0.1."
+    },
+    {
+     "name": "phase_s",
+     "type": "float",
+     "description": "Seconds per phase. Default 0.5."
+    },
+    {
+     "name": "stiffness_tol_pct",
+     "type": "float",
+     "description": "Allowed stiffness error. Default 40."
+    },
+    {
+     "name": "min_compression_m",
+     "type": "float",
+     "description": "Smallest squash that counts as compliant. Default 0.001."
+    },
+    {
+     "name": "max_hold_slip_m",
+     "type": "float",
+     "description": "Largest travel under the light drag. Default 0.005."
+    },
+    {
+     "name": "min_slide_m",
+     "type": "float",
+     "description": "Smallest travel under the strong drag. Default 0.02."
+    },
+    {
+     "name": "max_lift_m",
+     "type": "float",
+     "description": "Largest rise of the slab while sliding. Default 0.003."
+    },
+    {
+     "name": "max_tilt_deg",
+     "type": "float",
+     "description": "Largest tilt while sliding. Default 10."
+    },
+    {
+     "name": "min_contact_frac",
+     "type": "float",
+     "description": "Fraction of sliding steps with floor contact. Default 0.95."
+    },
+    {
+     "name": "recover_frac",
+     "type": "float",
+     "description": "Residual squash allowed after release, fraction of cell travel. Default 0.1."
+    },
+    {
+     "name": "out_json",
+     "type": "path | None",
+     "description": "Optional report file."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; compression_m; measured_stiffness_N_per_m; expected_stiffness_N_per_m; hold_slip_m; slide_m; max_lift_m; max_tilt_deg; contact_frac; residual_compression_m; verdict."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "pad_press_slide_test",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "sponge",
+    "pad",
+    "soft",
+    "compliance",
+    "friction",
+    "slide",
+    "wipe",
+    "scrub",
+    "mechanism test"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.verifiers.pad_press_slide_test built.json",
+   "file": "verifiers/pad_press_slide_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/pad_press_slide_test.py"
+  },
+  {
    "name": "penetration_check",
    "title": "Penetration check",
    "type": "verifier",
@@ -11468,6 +14025,176 @@
    "cli": "python -m tool_library.verifiers.penetration_check scene.xml trajectory.npz --baseline reference.npz",
    "file": "verifiers/penetration_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/penetration_check.py"
+  },
+  {
+   "name": "plug_port_retention_test",
+   "title": "Plug-port insertion and retention test",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Pushes a standard plug into a built receptacle with a capped force, then loads it outward, ramps a pull-out force and tries a misaligned push: the plug must seat, stay seated by friction, come out under a hand-sized pull and be blocked when off the slot.",
+   "description": "Loads the asset XML of a device with a declared port (a build dict with xml, body and port: {width, height, depth, mouth_local, axis_local}), holds the device kinematically at the origin (as a hand would) and adds a free plug: a box tip sized to the port minus a clearance on a larger housing that stops at the edge face. Four force-only trials with gravity on: (1) insert: an axial push of insert_force_N for insert_s from 3 mm outside the mouth must reach seat_frac of the cavity depth; (2) hold: with the push removed and an outward load of hold_load_N plus gravity along the pull direction (port facing down, the worst case), the tip must still be min_held_depth_m deep after hold_s (creep beyond max_slip_m is reported as a warning); (3) extract: an outward force ramped to max_extract_N must pull the plug out (a friction fit, not a weld) at no less than min_extract_N (the friction hold); (4) blocked: a plug offset sideways by one port width must not enter deeper than 0.5 mm. Assumes the device is a rigid body with the port as a cavity in its collision geometry.",
+   "inputs": [
+    {
+     "name": "built",
+     "type": "dict|path",
+     "description": "Build dict (or its JSON path) with xml, body and port {width, height, depth, mouth_local, axis_local}."
+    },
+    {
+     "name": "tip_clearance_m",
+     "type": "float",
+     "description": "Gap between plug tip and cavity on each side. Default 0.0001"
+    },
+    {
+     "name": "housing_scale",
+     "type": "float",
+     "description": "Housing cross-section relative to the port (must be > 1 so it stops at the edge). Default 1.5"
+    },
+    {
+     "name": "housing_len",
+     "type": "float",
+     "description": "Housing length in metres. Default 0.013"
+    },
+    {
+     "name": "plug_mass",
+     "type": "float",
+     "description": "Plug mass in kg. Default 0.006"
+    },
+    {
+     "name": "insert_force_N",
+     "type": "float",
+     "description": "Axial push cap during insertion (a USB-C plug takes 5-20 N by hand). Default 8.0"
+    },
+    {
+     "name": "insert_s",
+     "type": "float",
+     "description": "Insertion duration in seconds. Default 0.6"
+    },
+    {
+     "name": "seat_frac",
+     "type": "float",
+     "description": "Fraction of the cavity depth the tip must reach. Default 0.85"
+    },
+    {
+     "name": "min_extract_N",
+     "type": "float",
+     "description": "The static pull-out force must be at least this (the friction hold). Default 1.0"
+    },
+    {
+     "name": "min_held_depth_m",
+     "type": "float",
+     "description": "After the hold the tip must still be at least this deep in the cavity. Default 0.001"
+    },
+    {
+     "name": "hold_load_N",
+     "type": "float",
+     "description": "Outward load during the hold (cord weight). Default 0.3"
+    },
+    {
+     "name": "hold_s",
+     "type": "float",
+     "description": "Hold duration in seconds. Default 1.0"
+    },
+    {
+     "name": "max_slip_m",
+     "type": "float",
+     "description": "Slip during the hold above this is reported as soft-contact creep (a warning in the verdict, not a failure). Default 0.0015"
+    },
+    {
+     "name": "max_extract_N",
+     "type": "float",
+     "description": "Peak of the pull-out ramp; the plug must come out below it. Default 25.0"
+    },
+    {
+     "name": "push_speed",
+     "type": "float",
+     "description": "The push is a velocity servo along the axis toward this speed (m/s), capped at insert_force_N, like a hand that moves the plug at a steady pace. Default 0.4"
+    },
+    {
+     "name": "contact_timeconst",
+     "type": "float",
+     "description": "Contact time constant of the plug geoms (they take priority over the device geoms). MuJoCo soft contacts scale with mass, so a gram-scale plug needs a short one or it sinks through the cavity floor; clamped to >= 2 timesteps. Default 0.0005"
+    },
+    {
+     "name": "noslip_iterations",
+     "type": "int",
+     "description": "MuJoCo noslip iterations for the trials: soft friction otherwise lets a gram-scale plug creep out at a few mm/s under a steady load, which no real friction fit does; the scene that relies on the hold needs the same option. Default 0"
+    },
+    {
+     "name": "timestep",
+     "type": "float",
+     "description": "Simulation timestep. Default 0.0002"
+    },
+    {
+     "name": "out_json",
+     "type": "path",
+     "description": "Optional report path."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "ok",
+     "type": "bool",
+     "description": "All four trials passed."
+    },
+    {
+     "name": "issues",
+     "type": "list[str]",
+     "description": "What failed and which parameter to change."
+    },
+    {
+     "name": "insert_depth_m",
+     "type": "float",
+     "description": "Tip depth reached in trial 1."
+    },
+    {
+     "name": "hold_slip_m",
+     "type": "float",
+     "description": "Outward slip in trial 2."
+    },
+    {
+     "name": "hold_creep_warning",
+     "type": "str",
+     "description": "Set when the plug crept more than max_slip_m during the hold without falling out."
+    },
+    {
+     "name": "extract_force_N",
+     "type": "float",
+     "description": "Force at release in trial 3 (None when it never came out)."
+    },
+    {
+     "name": "blocked_depth_m",
+     "type": "float",
+     "description": "Depth reached by the misaligned plug in trial 4."
+    },
+    {
+     "name": "verdict",
+     "type": "str",
+     "description": "One sentence."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "plug",
+    "port",
+    "socket",
+    "receptacle",
+    "usb-c",
+    "insert",
+    "friction fit",
+    "retention",
+    "connector"
+   ],
+   "status": "tested",
+   "entrypoint": "plug_port_retention_test",
+   "cli": "python -m tool_library.verifiers.plug_port_retention_test built.json",
+   "file": "verifiers/plug_port_retention_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/plug_port_retention_test.py"
   },
   {
    "name": "plunger_two_stage_test",
@@ -11624,6 +14351,174 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/pregrasp_clearance_test.py"
   },
   {
+   "name": "pump_stroke_test",
+   "title": "Pump stroke test",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Pushes a sprung slide joint (a spray pump head, a push button, a plunger) along its axis with a capped force: it must rest on its stop, resist a sub-preload push, follow its spring rate, bottom out under a finger force and spring back, for several cycles.",
+   "description": "Loads the asset (a built dict with `xml` and `joint`, or an MJCF path), removes its free joints so the parent is held, and finds the slide joint (`joint`, else the built's `joint`, else the only slide joint). From the model it reads the stroke (the joint range), the stiffness and the preload (stiffness x (springref - top stop)). It then applies a force on the moving body along the joint axis, towards the bottom stop: 0 N (must rest within rest_tol_frac of the stroke from the top), half the preload (must not move: the preload is real), preload + half the spring travel force (displacement gives the measured stiffness, compared within stiffness_tol_pct), the full press force (must reach full_frac of the stroke) and release (must return to rest), repeated `cycles` times. The moving body's weight is included in the applied force. Reports every displacement and the verdict; never raises on a bad mechanism.",
+   "inputs": [
+    {
+     "name": "built",
+     "type": "dict | path",
+     "description": "Constructor output with 'xml' (and 'joint'), or an MJCF path."
+    },
+    {
+     "name": "joint",
+     "type": "str | None",
+     "description": "Slide joint to test. Default: built['joint'] or the only slide joint."
+    },
+    {
+     "name": "press_force_N",
+     "type": "float | None",
+     "description": "Full press force. Default preload + 1.5 x stiffness x stroke."
+    },
+    {
+     "name": "cycles",
+     "type": "int",
+     "description": "Press/release cycles. Default 3."
+    },
+    {
+     "name": "phase_s",
+     "type": "float",
+     "description": "Seconds per phase. Default 0.4."
+    },
+    {
+     "name": "rest_tol_frac",
+     "type": "float",
+     "description": "Allowed rest offset as a fraction of the stroke. Default 0.15."
+    },
+    {
+     "name": "full_frac",
+     "type": "float",
+     "description": "Fraction of the stroke the full press must reach. Default 0.9."
+    },
+    {
+     "name": "stiffness_tol_pct",
+     "type": "float",
+     "description": "Allowed error of the measured spring rate. Default 35."
+    },
+    {
+     "name": "out_json",
+     "type": "path | None",
+     "description": "Optional report file."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; joint; stroke_m; stiffness_N_per_m; preload_N; measured_stiffness_N_per_m; displacements per phase and cycle; press_force_N."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "pump_stroke_test",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "pump",
+    "spray bottle",
+    "button",
+    "plunger",
+    "spring",
+    "slide joint",
+    "mechanism test"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.verifiers.pump_stroke_test built.json",
+   "file": "verifiers/pump_stroke_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/pump_stroke_test.py"
+  },
+  {
+   "name": "pump_stroke_test_either_stop",
+   "title": "Pump stroke test (either rest stop)",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Pushes a sprung slide joint (a spray pump head, a push button, a plunger) along its axis with a capped force: it must rest on its stop, resist a sub-preload push, follow its spring rate, bottom out under a finger force and spring back, for several cycles.",
+   "description": "Fork of pump_stroke_test that does not assume the rest stop is the upper limit: the rest stop is the limit the spring pushes towards (springref beyond it), and the press goes towards the other limit, so it accepts both joint conventions. Loads the asset (a built dict with `xml` and `joint`, or an MJCF path), removes its free joints so the parent is held, and finds the slide joint (`joint`, else the built's `joint`, else the only slide joint). From the model it reads the stroke (the joint range), the stiffness and the preload (stiffness x (springref - top stop)). It then applies a force on the moving body along the joint axis, towards the bottom stop: 0 N (must rest within rest_tol_frac of the stroke from the top), half the preload (must not move: the preload is real), preload + half the spring travel force (displacement gives the measured stiffness, compared within stiffness_tol_pct), the full press force (must reach full_frac of the stroke) and release (must return to rest), repeated `cycles` times. The moving body's weight is included in the applied force. Reports every displacement and the verdict; never raises on a bad mechanism.",
+   "inputs": [
+    {
+     "name": "built",
+     "type": "dict | path",
+     "description": "Constructor output with 'xml' (and 'joint'), or an MJCF path."
+    },
+    {
+     "name": "joint",
+     "type": "str | None",
+     "description": "Slide joint to test. Default: built['joint'] or the only slide joint."
+    },
+    {
+     "name": "press_force_N",
+     "type": "float | None",
+     "description": "Full press force. Default preload + 1.5 x stiffness x stroke."
+    },
+    {
+     "name": "cycles",
+     "type": "int",
+     "description": "Press/release cycles. Default 3."
+    },
+    {
+     "name": "phase_s",
+     "type": "float",
+     "description": "Seconds per phase. Default 0.4."
+    },
+    {
+     "name": "rest_tol_frac",
+     "type": "float",
+     "description": "Allowed rest offset as a fraction of the stroke. Default 0.15."
+    },
+    {
+     "name": "full_frac",
+     "type": "float",
+     "description": "Fraction of the stroke the full press must reach. Default 0.9."
+    },
+    {
+     "name": "stiffness_tol_pct",
+     "type": "float",
+     "description": "Allowed error of the measured spring rate. Default 35."
+    },
+    {
+     "name": "out_json",
+     "type": "path | None",
+     "description": "Optional report file."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; joint; stroke_m; stiffness_N_per_m; preload_N; measured_stiffness_N_per_m; displacements per phase and cycle; press_force_N."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "pump_stroke_test_either_stop",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "pump",
+    "spray bottle",
+    "button",
+    "plunger",
+    "spring",
+    "slide joint",
+    "mechanism test"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.verifiers.pump_stroke_test_either_stop built.json",
+   "file": "verifiers/pump_stroke_test_either_stop.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/pump_stroke_test_either_stop.py"
+  },
+  {
    "name": "required_bodies_check",
    "title": "Required bodies check",
    "type": "verifier",
@@ -11750,12 +14645,86 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_qc.py"
   },
   {
+   "name": "scene_recon_manifest_check",
+   "title": "Scene reconstruction manifest check",
+   "type": "verifier",
+   "category": "Scene Compile Checks",
+   "summary": "Checks a Stage 2 scene_recon.json against the Stage 1 scene_semantic.json: every object has an entry with the same type, a reconstruction skill that exists in the library, an asset file, a root body present in the compiled scene, a fitted pose, a mask with its silhouette IoU above a floor, a verification plan and passing verifier reports covering every Stage 1 property (a mechanism test for articulated objects), and Isaac Sim files for deformable objects; the scene, camera and comparison image exist.",
+   "description": "Form and bookkeeping of the Stage 2 deliverable so that Stage 3 can rely on it. Reads both JSON files and the library index. For each Stage 1 object (static ones may be omitted when `allow_missing_static`): an entry keyed by the same id; `type` equal to Stage 1's; `skill` naming a library skill of category Object Reconstruction (or `skill_origin: created` with a tool that now exists); `asset_xml` existing; `root_body` found in the compiled scene (deformables: the Isaac report instead); `pose` with x, y, yaw_deg; `mask` existing and `iou` >= min_iou; `verifiers`: a dict of report dicts each with ok true, including at least one Reconstruction Mechanism Test for articulated objects and articulation_check or joint evidence; deformable objects: `isaac` with scene_usda, sim_png and a drift below max_drift_m. Top level: scene_xml compiles, camera_json loads, frame0_compare_png exists, and the simulator field says mujoco or mujoco+isaac consistently with the object types. Every finding names the object and the key to fix.",
+   "inputs": [
+    {
+     "name": "path",
+     "type": "path",
+     "description": "scene_recon.json."
+    },
+    {
+     "name": "scene_semantic_json",
+     "type": "path | None",
+     "description": "Stage 1 output; default: the manifest's scene_semantic field."
+    },
+    {
+     "name": "library_index",
+     "type": "path | None",
+     "description": "tool_library/index.json; default: the repository's."
+    },
+    {
+     "name": "min_iou",
+     "type": "float",
+     "description": "Per-object silhouette IoU floor. Default 0.4."
+    },
+    {
+     "name": "max_drift_m",
+     "type": "float",
+     "description": "Largest mean settling drift accepted for a deformable. Default 0.02."
+    },
+    {
+     "name": "allow_missing_static",
+     "type": "bool",
+     "description": "Stage 1 objects with role static may be absent. Default True."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok; issues; per_object: {id: {found, iou, verifiers_ok, ...}}; counts."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "scene_recon_manifest_check",
+   "requirements": [
+    "mujoco>=3.1"
+   ],
+   "tags": [
+    "stage 2",
+    "manifest",
+    "reconstruction",
+    "bookkeeping"
+   ],
+   "used_in": [
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Place Toy in Drawer",
+    "Giftbox Packing",
+    "Knot the Rope",
+    "Battery Insertion",
+    "Drawing and Wiping",
+    "Computer Installation",
+    "Open the Bottle",
+    "Scissor Cutting",
+    "Biology Experiment"
+   ],
+   "cli": "python -m tool_library.verifiers.scene_recon_manifest_check runs/my_task/stage2/scene_recon.json",
+   "file": "verifiers/scene_recon_manifest_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/scene_recon_manifest_check.py"
+  },
+  {
    "name": "scene_semantic_consistency_check",
    "title": "Scene semantic consistency check",
    "type": "verifier",
    "category": "Scene Assertions",
    "summary": "Cross-field checks on a Stage 1 scene_semantic.json: unique ids, subgoal references that resolve, consecutive ordered subgoals with time windows inside the clip, acting hands that match the hand roles and the hands list, type-specific blocks present, evidence that cites times, and prompt words covered by the objects.",
-   "description": "Reads the JSON and checks what a schema cannot: every object id is unique and every subgoal object_ref (id or id:part) resolves to an object (and a declared part when parts are listed); subgoal indices run 1..N in order; time windows are ordered, start no later than the next subgoal's start, and lie inside the clip when its duration is known; the acting hand of each subgoal is in hands.used and its hand_roles text is not a resting phrase; every hand in hands.used acts in at least one subgoal; articulated objects carry an articulation block whose moving and fixed parts are named parts, deformable objects a deformation block; every object is referenced by some subgoal unless its role is static; every evidence string cites a time or frame; and each content word of the prompt (4+ letters, not a stop word) shares a stem with some word in the objects' names, parts, appearance or properties or in the task summary. Each finding names the JSON path and what to change.",
+   "description": "Reads the JSON and checks what a schema cannot: every object id is unique and every subgoal object_ref (id or id:part) resolves to an object (and a declared part when parts are listed); subgoal indices run 1..N in order; time windows are ordered, start no later than the next subgoal's start, and lie inside the clip when its duration is known; the acting hand of each subgoal is in hands.used and its hand_roles text is not a resting phrase; every hand in hands.used acts in at least one subgoal; articulated objects carry an articulation block whose moving and fixed parts are named parts, deformable objects a deformation block; every object is referenced by some subgoal unless its role is static; every evidence string cites a time or frame; and each content word of the prompt (4+ letters, not a stop word) shares a stem with some word in the objects' names, parts, appearance or properties, the task summary, or the environment description. Each finding names the JSON path and what to change.",
    "inputs": [
     {
      "name": "path",
@@ -12029,7 +14998,7 @@
    "type": "verifier",
    "category": "Scene Assertions",
    "summary": "Renders each object's silhouette from the video camera and compares it with the object's video mask; low IoU on one object means a wrong pose, on every object a wrong camera.",
-   "description": "The image-space proof that a reconstruction is registered to its footage. The scene is rendered with MuJoCo's segmentation renderer from the named camera at the resolution of the masks, each object's body (or the union of the bodies that make up a constructed object, matched by name prefix) becomes a silhouette, and its intersection over union with the given video mask is computed. An object below `min_iou` (0.25) fails; below `warn_iou` (0.45) is reported. When two or more objects are checked and all of them fail at once, the verifier reports `camera_suspect`: the camera they are all seen through is wrong, and re-fitting poses cannot help. The render and the masks must be the same aspect ratio, so the render is sized to the mask.",
+   "description": "The image-space proof that a reconstruction is registered to its footage. The scene is rendered with MuJoCo's segmentation renderer from the named camera at the resolution of the masks, each object's body (or the union of the bodies that make up a constructed object: the named body with its whole subtree, or every body matched by name prefix) becomes a silhouette, and its intersection over union with the given video mask is computed. An object below `min_iou` (0.25) fails; below `warn_iou` (0.45) is reported. When two or more objects are checked and all of them fail at once, the verifier reports `camera_suspect`: the camera they are all seen through is wrong, and re-fitting poses cannot help. The render and the masks must be the same aspect ratio, so the render is sized to the mask.",
    "inputs": [
     {
      "name": "scene",
@@ -12101,6 +15070,117 @@
    "entrypoint": "silhouette_iou_check",
    "file": "verifiers/silhouette_iou_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/silhouette_iou_check.py"
+  },
+  {
+   "name": "soft_squeeze_test",
+   "title": "Soft squeeze test",
+   "type": "verifier",
+   "category": "Reconstruction Mechanism Tests",
+   "summary": "Presses a soft free body onto a floor with a ramp of forces and checks that it compresses by a grasp-sized amount at a reference force, monotonically, and springs back when released.",
+   "description": "Loads the asset MJCF, adds a floor plane (with the given floor solref, default MuJoCo's 0.02 1) when none is present, settles the object for settle_s, records its rest height, then applies each downward force of `forces_N` to the body's centre of mass for hold_s and records the sink (rest z minus loaded z of the body origin, in mm). Passes when the state stays finite, the sink grows with force (within 0.3 mm), the sink at ref_force_N is within [min_mm, max_mm], the object does not tunnel below the floor by more than max_mm at the largest force, and after release it returns to within recover_mm of the rest height. The measurement is the compliance a pinch would feel, combined with the floor's own contact parameters (MuJoCo mixes the two geoms' solref). It does not simulate fabric deformation; it judges contact compliance.",
+   "inputs": [
+    {
+     "name": "built",
+     "type": "str | dict",
+     "description": "Asset MJCF path, or a constructor result with 'xml'."
+    },
+    {
+     "name": "body",
+     "type": "str | None",
+     "description": "The free body to press; default the result's 'body' or the first free body."
+    },
+    {
+     "name": "forces_N",
+     "type": "list[float]",
+     "description": "Downward forces, increasing. Default [0.5, 1, 2, 4]."
+    },
+    {
+     "name": "ref_force_N",
+     "type": "float",
+     "description": "Grasp-sized reference force; must be one of forces_N. Default 2."
+    },
+    {
+     "name": "min_mm",
+     "type": "float",
+     "description": "Least sink at the reference force. Default 2."
+    },
+    {
+     "name": "max_mm",
+     "type": "float",
+     "description": "Largest acceptable sink at any force. Default 25."
+    },
+    {
+     "name": "recover_mm",
+     "type": "float",
+     "description": "Allowed residual sink after release. Default 1."
+    },
+    {
+     "name": "settle_s",
+     "type": "float",
+     "description": "Settling time. Default 1.0."
+    },
+    {
+     "name": "hold_s",
+     "type": "float",
+     "description": "Time at each force. Default 0.6."
+    },
+    {
+     "name": "out_json",
+     "type": "str | None",
+     "description": "Optional report path."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "ok",
+     "type": "bool",
+     "description": "All checks passed."
+    },
+    {
+     "name": "issues",
+     "type": "list[str]",
+     "description": "What failed and which parameter to change."
+    },
+    {
+     "name": "compression_mm",
+     "type": "dict",
+     "description": "Sink in mm per force."
+    },
+    {
+     "name": "rest_z_m",
+     "type": "float",
+     "description": "Settled body origin height."
+    },
+    {
+     "name": "recovered_mm",
+     "type": "float",
+     "description": "Residual sink after release."
+    },
+    {
+     "name": "verdict",
+     "type": "str",
+     "description": "One sentence."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "soft_squeeze_test",
+   "requirements": [
+    "numpy",
+    "mujoco>=3.2"
+   ],
+   "tags": [
+    "soft",
+    "compliance",
+    "squeeze",
+    "plush",
+    "sponge",
+    "grasp",
+    "deformable"
+   ],
+   "used_in": [],
+   "cli": "python -m tool_library.verifiers.soft_squeeze_test asset.xml [body]",
+   "file": "verifiers/soft_squeeze_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/soft_squeeze_test.py"
   },
   {
    "name": "spring_stiffness_test",
