@@ -1,7 +1,7 @@
 {
  "counts": {
-  "skills": 91,
-  "verifiers": 65
+  "skills": 101,
+  "verifiers": 73
  },
  "categories": {
   "skill": [
@@ -7481,6 +7481,104 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/estimate_gravity.py"
   },
   {
+   "name": "execute_subgoal_plan",
+   "title": "Execute subgoal plan",
+   "type": "skill",
+   "category": "Trajectory & Execution",
+   "summary": "Run a list of subgoals end to end: plan each one's keyframes from the executed state of the previous one, roll it out in contact physics, check its expectations, and stop at the first subgoal that fails; writes the concatenated episode with phases, per-subgoal outcomes and (optionally) the arms filled in.",
+   "description": "The Stage 3 driver. For subgoal k it calls plan_subgoal_keyframes from the physics state at the end of subgoal k-1 (hand commands carried over so a holding hand keeps pressing), rollout_keyframes_physics on the keyframes, and the outcome evaluation on the executed frames (rise, in hand, no slip, at target, released, at rest, supported, joint reached, turned, tilted, untouched objects, penetration, servo tracking). A failing subgoal stops the run with its measurements so the pose or the parameters can be changed and the run resumed from that subgoal (`resume=True` keeps the finished segments on disk). The episode is written as trajectory_hands.npz (arms at home) and, with fill_arms, trajectory.npz with the arms fitted behind the hands, plus phases.json (label -> hand, objects, anchor, subgoal), outcomes.json, state.json, scene_physics.xml.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF (Stage 2 scene.xml)."
+    },
+    {
+     "name": "plan",
+     "type": "dict | str | list",
+     "description": "{subgoals: [...], scene_recon_json?: path (screw-cap release rules are read from it), rules?: [...]} or a JSON path or the list; each subgoal as plan_subgoal_keyframes takes it."
+    },
+    {
+     "name": "out_dir",
+     "type": "str",
+     "description": "Output folder."
+    },
+    {
+     "name": "fps",
+     "type": "float",
+     "description": "Default 30."
+    },
+    {
+     "name": "resume",
+     "type": "bool",
+     "description": "Keep finished segments in out_dir and start from the first unfinished or failed subgoal. Default false."
+    },
+    {
+     "name": "from_subgoal",
+     "type": "int | None",
+     "description": "With resume: restart from this subgoal index even if it passed."
+    },
+    {
+     "name": "stop_on_fail",
+     "type": "bool",
+     "description": "Default true."
+    },
+    {
+     "name": "fill_arms",
+     "type": "bool",
+     "description": "Fit the arms behind the hands after the run (default true)."
+    },
+    {
+     "name": "wrist_kp",
+     "type": "float",
+     "description": "Wrist servo stiffness. Default 10000."
+    },
+    {
+     "name": "max_rate_deg_s",
+     "type": "float",
+     "description": "Joint-rate ceiling for the hands' reference. Default 90."
+    },
+    {
+     "name": "settle_s",
+     "type": "float",
+     "description": "Seconds of physics before the first subgoal (objects settle). Default 0.3."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "summary",
+     "type": "dict",
+     "description": "ok, n_frames, duration_s, subgoals: [{index, motion, ok, failed, measured, frames}], first_failure, files {trajectory, trajectory_hands, phases, outcomes, state, scene_physics}, arm_fit."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "driver",
+    "subgoals",
+    "episode"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "execute_subgoal_plan",
+   "file": "skills/execute_subgoal_plan.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/execute_subgoal_plan.py"
+  },
+  {
    "name": "export_blender_bundle",
    "title": "Export Blender bundle",
    "type": "skill",
@@ -7826,6 +7924,68 @@
    "cli": "python -m tool_library.skills.extract_hand_meshes frames/ hands/",
    "file": "skills/extract_hand_meshes.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/extract_hand_meshes.py"
+  },
+  {
+   "name": "fill_arm_joints",
+   "title": "Fill arm joints",
+   "type": "skill",
+   "category": "Trajectory & Execution",
+   "summary": "Fit each arm's joints frame by frame so its flange follows the hand it is bolted to (the hand's pose times the mount rotation measured at the home pose), with warm starts and branch resets, and write the episode with the arm columns filled.",
+   "description": "The hands are driven by their virtual wrist servos during execution and the arm-hand welds are off; the arm columns of the executed trajectory still hold the home joints. This skill discovers each side's arm chain (the gripper body welded to the hand's end-effector body), reads the fixed flange-to-hand rotation and offset from the scene's home keyframe, and fits the chain to every frame with the continuous arm fitter (trust region, limit-aware, a multi-start reset when the warm chain is badly off, blended so the command stays smooth). Reports per side the position and tilt residuals, branch resets and the smallest joint-limit margin; arm_reach_check turns the residuals into a pass/fail.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "trajectory",
+     "type": "str",
+     "description": "Episode npz (qpos, labels, fps) with the hands' motion."
+    },
+    {
+     "name": "out_npz",
+     "type": "str",
+     "description": "Where to write the filled episode."
+    },
+    {
+     "name": "sides",
+     "type": "list[str] | None",
+     "description": "Arms to fit (default both)."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "per side: pos_err_mm {max, mean}, tilt_err_deg, roll_err_deg, branch_resets, worst_frame, limit_margin_deg; out_npz."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "arm",
+    "ik",
+    "episode"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "fill_arm_joints",
+   "file": "skills/fill_arm_joints.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/fill_arm_joints.py"
   },
   {
    "name": "fit_camera_to_table_plane",
@@ -8323,6 +8483,11 @@
      "description": "run grasp_lift_test on the top `verify_top` candidates (default False)"
     },
     {
+     "name": "open_frac",
+     "type": "float",
+     "description": "Finger flexion fraction of the OPEN hand during seating and approach (default 0.0, fingers straight, so the palm can come up to a fat object and the fingers wrap it; 0.15 keeps them slightly curled)."
+    },
+    {
      "name": "verify_top",
      "type": "int",
      "description": "how many candidates to verify (default 4)"
@@ -8457,6 +8622,291 @@
    ],
    "file": "skills/grasp_prior_bodex.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/grasp_prior_bodex.py"
+  },
+  {
+   "name": "grasp_prior_dexgraspnet",
+   "title": "Grasp prior from DexGraspNet",
+   "type": "skill",
+   "category": "Grasp & Poses",
+   "summary": "Run DexGraspNet's annealed force-closure grasp synthesis (its URDF hand model with our dexterous hand) on the mesh of the object or part to grasp, and translate the best grasps into this library's pose convention (wrist pos/euler in the world, finger targets by joint name) as candidates for the stress tests.",
+   "description": "DexGraspNet (Wang et al.) optimizes hand poses with a differentiable energy: force closure over sampled contact points, contact distance, hand-object and self penetration, joint limits, by simulated annealing over a batch of random initializations around the object. This skill exports the grasp body's collision geometry (its subtree) to an OBJ, writes it as a DexGraspNet object (normalized to its bounding box with the metric scale recorded), runs the synthesis in DexGraspNet's own Python environment through a generated driver (the hand URDF, its contact and penetration point files, batch size, iterations), filters the results by the energy thresholds, and converts each grasp: the URDF root link pose in the metric object frame becomes the wrist pose in the world through the object's current pose, the joint values are mapped by their shared names onto the MJCF hand (with a fingertip-position comparison against MuJoCo's forward kinematics reported, so a mirrored joint is seen), and `finger_targets_squeezed` is the same closure driven 2 mm deeper by the fingertip IK. Candidates come sorted by energy. Use them as a prior: run grasp_lift_test / grasp_hold_test / grasp_turn_test on them in the hand scene before any is executed. Needs a GPU and a DexGraspNet checkout prepared for the hand (DexGraspNet/grasp_generation with utils/hand_model_urdf.py and mjcf/<hand>_contact_points.json).",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "dict",
+     "description": "Hand scene dict (hand_scene_from_recon); the grasp_body's subtree is the object."
+    },
+    {
+     "name": "dexgraspnet_dir",
+     "type": "str",
+     "description": "DexGraspNet checkout (contains grasp_generation/)."
+    },
+    {
+     "name": "dexgraspnet_python",
+     "type": "str",
+     "description": "Python of the DexGraspNet environment (torch, pytorch3d, TorchSDF, pytorch_kinematics)."
+    },
+    {
+     "name": "hand_urdf",
+     "type": "str",
+     "description": "URDF of the hand for pytorch_kinematics (its joint names must match the MJCF hand's, e.g. right_thumb_CMC_FE)."
+    },
+    {
+     "name": "contact_points_json",
+     "type": "str | None",
+     "description": "DexGraspNet contact candidate file for the hand (default grasp_generation/mjcf/sharpa_contact_points.json)."
+    },
+    {
+     "name": "penetration_points_json",
+     "type": "str | None",
+     "description": "Penetration keypoint file (default grasp_generation/mjcf/sharpa_penetration_points.json)."
+    },
+    {
+     "name": "batch_size",
+     "type": "int",
+     "description": "Grasps optimized in parallel. Default 32."
+    },
+    {
+     "name": "n_iter",
+     "type": "int",
+     "description": "Annealing iterations. Default 3000 (about 5 minutes on one GPU); 6000 for energies that pass DexGraspNet's own thresholds."
+    },
+    {
+     "name": "top_k",
+     "type": "int",
+     "description": "Candidates returned. Default 8."
+    },
+    {
+     "name": "n_contact",
+     "type": "int",
+     "description": "Contact points in the force-closure term. Default 4."
+    },
+    {
+     "name": "object_mesh",
+     "type": "str | None",
+     "description": "Use this OBJ (in the grasp body's frame) instead of exporting the collision geometry."
+    },
+    {
+     "name": "out_dir",
+     "type": "str | None",
+     "description": "Working folder (default next to the scene's bench scene)."
+    },
+    {
+     "name": "timeout_s",
+     "type": "int",
+     "description": "Default 1800."
+    },
+    {
+     "name": "seed",
+     "type": "int",
+     "description": "Default 1."
+    },
+    {
+     "name": "coacd_threshold",
+     "type": "float",
+     "description": "CoACD concavity threshold for the convex decomposition of the object. Default 0.05."
+    },
+    {
+     "name": "min_wrist_z",
+     "type": "float",
+     "description": "Candidates whose wrist is below this height are dropped (DexGraspNet has no table). Default 0.01."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "result",
+     "type": "dict",
+     "description": "candidates: [pose dicts with pos, euler, finger_targets, finger_targets_squeezed, grip_fingers, approach, energy terms, fk_mismatch_mm], n_passing, out_dir, log."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "trimesh",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "grasp",
+    "dexgraspnet",
+    "force closure",
+    "prior",
+    "gpu"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping",
+    "Giftbox Packing"
+   ],
+   "status": "tested",
+   "entrypoint": "grasp_prior_dexgraspnet",
+   "file": "skills/grasp_prior_dexgraspnet.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/grasp_prior_dexgraspnet.py"
+  },
+  {
+   "name": "grasp_prior_from_video",
+   "title": "Grasp prior from video",
+   "type": "skill",
+   "category": "Grasp & Poses",
+   "summary": "Read the human's grasp off the video at the moment of contact: the approach direction on the table (from the hand mask toward the object mask, back-projected through the calibrated camera), whether the hand came over the top or from the side, the hand's lateral offset, and a ranked list of approach directions to give the grasp skills or to filter their candidates with.",
+   "description": "A human prior for pose selection. Given the object's mask (its footprint on the table at frame 0 or at the contact frame) and the acting hand's mask at the frame where the hand closes on the object (both at the video resolution; segment_with_text_prompts produces them), the skill back-projects both masks onto the table plane through camera.json, takes the object's footprint centroid and the hand's footprint centroid (the hand mask's lowest rows, where the fingers are, projected at the object's height), and reports the unit approach vector from the hand toward the object in the rig frame, the hand-object distance, the fraction of the hand mask that lies inside the object's silhouette (a large fraction means the hand came over the top), and the hand's angular position around the object. From these it ranks the eight horizontal approach directions plus 'top' and returns them as `approach_dirs` (the format pose_from_points / handle_pinch_pose take) and as a `family` hint (side wrap, top, pinch) for generate_rigid_grasps candidates: keep the candidates whose `approach` points within `tolerance_deg` of the human's. The prior is coarse (a hand mask on a table plane), which is what it is for: picking among verified candidates, never replacing the stress tests.",
+   "inputs": [
+    {
+     "name": "camera",
+     "type": "str | dict",
+     "description": "camera.json (rigcam) of the video camera."
+    },
+    {
+     "name": "object_mask",
+     "type": "str",
+     "description": "Binary PNG of the object at the video resolution."
+    },
+    {
+     "name": "hand_mask",
+     "type": "str",
+     "description": "Binary PNG of the acting hand at the contact frame (the frame where fingers close on the object)."
+    },
+    {
+     "name": "object_height_m",
+     "type": "float",
+     "description": "Height at which the hand's footprint is projected (the grasp height on the object). Default 0.05."
+    },
+    {
+     "name": "tolerance_deg",
+     "type": "float",
+     "description": "Angular tolerance for ranking approach directions. Default 45."
+    },
+    {
+     "name": "top_fraction",
+     "type": "float",
+     "description": "Hand-inside-object silhouette fraction above which the grasp is read as from the top. Default 0.5."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "prior",
+     "type": "dict",
+     "description": "approach_xy (unit vector hand -> object), approach_angle_deg, distance_m, hand_over_object_fraction, from_top (bool), family hint, approach_dirs (ranked unit vectors incl. [0,0,1] when from the top), hand_centroid_xy, object_centroid_xy."
+    }
+   ],
+   "requirements": [
+    "numpy",
+    "opencv-python"
+   ],
+   "simulators": [],
+   "tags": [
+    "stage3",
+    "human prior",
+    "grasp",
+    "approach",
+    "video"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Place Cup in Bowl",
+    "Multi-Cup Grasping"
+   ],
+   "status": "tested",
+   "entrypoint": "grasp_prior_from_video",
+   "file": "skills/grasp_prior_from_video.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/grasp_prior_from_video.py"
+  },
+  {
+   "name": "hand_scene_from_recon",
+   "title": "Hand scene from reconstruction",
+   "type": "skill",
+   "category": "Grasp & Poses",
+   "summary": "Build the floating-hand scene dict the grasp skills and stress tests take (hand_xml, objects, grasp_body, joint_init) from a Stage 2 scene_recon.json, with every object at its current bench pose.",
+   "description": "Grasp poses are solved on a scene with one floating hand and the objects on a floor at z=0; the bench's world frame is that same frame (table top at z=0, hand wrist joints equal to the world pose), so a pose solved here is used on the bench unchanged. The skill reads the manifest's objects (asset XML, root body), takes each root's pose from the bench scene's keyframe or from a given state (a trajectory frame, so a later subgoal is planned with the objects where the previous one left them), carries the objects' internal joint values over as joint_init, puts the target object last and names the grasped part as grasp_body (a cap, a drawer front, a lid), and picks the hand MJCF of the requested side from the setup folder. Returns the scene dict, also written to out_json for the next tool calls.",
+   "inputs": [
+    {
+     "name": "scene_recon_json",
+     "type": "str",
+     "description": "Stage 2 scene_recon.json (paths inside are relative to its folder)."
+    },
+    {
+     "name": "side",
+     "type": "str",
+     "description": "'left' or 'right'."
+    },
+    {
+     "name": "target",
+     "type": "str",
+     "description": "Object id from the manifest, or a body name in the bench scene (a part), that the hand will act on."
+    },
+    {
+     "name": "grasp_body",
+     "type": "str | None",
+     "description": "Body of the part to grasp when it is not the object's root (default: the target's root, or the target itself when it names a part)."
+    },
+    {
+     "name": "state",
+     "type": "str | list | None",
+     "description": "A trajectory.npz (last frame, or frame given by `frame`) or a qpos list giving the objects' current poses; default the scene's keyframe 0."
+    },
+    {
+     "name": "frame",
+     "type": "int",
+     "description": "Frame of the state npz to use. Default -1 (last)."
+    },
+    {
+     "name": "hand_xml",
+     "type": "str | None",
+     "description": "Hand MJCF; default <setup>/robot/sharpa_<side>.xml."
+    },
+    {
+     "name": "setup_dir",
+     "type": "str | None",
+     "description": "Setup folder (default the repository's setup/)."
+    },
+    {
+     "name": "include",
+     "type": "list[str] | None",
+     "description": "Object ids to include as obstacles (default all)."
+    },
+    {
+     "name": "out_json",
+     "type": "str | None",
+     "description": "Write the scene dict here."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "scene",
+     "type": "dict",
+     "description": "{hand_xml, side, objects:[{name, xml, pos, quat}], floor, grasp_body, grasp_body_pose (the part's pose the poses are solved against; the planner re-anchors a pose to where the part is at execution), joint_init, bench_scene, target}; pass it to generate_rigid_grasps, pose_from_points, handle_pinch_pose, push_pose_from_point, the grasp tests."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "grasp",
+    "scene",
+    "hand"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl"
+   ],
+   "status": "tested",
+   "entrypoint": "hand_scene_from_recon",
+   "file": "skills/hand_scene_from_recon.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/hand_scene_from_recon.py"
   },
   {
    "name": "handle_pinch_pose",
@@ -9571,6 +10021,223 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/optimize_reward_cem.py"
   },
   {
+   "name": "plan_subgoal_keyframes",
+   "title": "Plan subgoal keyframes",
+   "type": "skill",
+   "category": "Trajectory & Execution",
+   "summary": "Turn one Stage 1 subgoal (motion, hand, object, a verified hand pose, targets) into keyframes on the bench scene: reach, descend, close, lift, carry, set down, let go, joint sweeps, screw bites, pours; with the phases they form and what the simulation must show afterwards (`expect`).",
+   "description": "The planner starts from a state of the bench scene (its keyframe, or a frame of an executed trajectory so a subgoal continues from where the previous one really ended) and writes full-qpos keyframes with hold and transit durations. Motions follow Stage 1's vocabulary: grasp_lift (open hand to the pre-grasp along the pose's approach, down to the pose, close, lift), hold (the same without the lift), carry / place / insert (the carried object is moved rigidly with the wrist to target_pos, or onto / over another body; place adds a set-down, a let-go and a retreat), release, open_joint / close_joint / pull / push / press with a joint (the hand stays rigid on the moving part while the joint sweeps to its target), push / pull / press without a joint (a straight stroke from a pose along a direction), unscrew / screw (bites of bite_deg about the yaw joint with the lift joint following the pitch, opening and turning back between bites), pour / tilt (rotation about an axis through a pivot, by default the object's top over the target), regrasp, home, wait. A hand pose is a dict or a JSON path from the grasp skills; it may carry `finger_targets_open` (its own open shape, used instead of the 55% opening), `open_frac`, `press_depth_rad` and `approach_waypoints` (world offsets from the pose visited between the pre-grasp and the pose, for a hook that goes over a bar and down behind it); the grip memory (closed, pressed and opened finger targets, what each hand holds) is carried in `state` between calls. The keyframes go to chain_subgoals / rollout_keyframes_physics; `expect` goes to subgoal_outcome_check. Labels are '<side>: <phase>' as Stage 4 wants them.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF (Stage 2 scene.xml)."
+    },
+    {
+     "name": "subgoal",
+     "type": "dict",
+     "description": "{index, motion, side, object (body name), pose (dict|json path), lift_m, approach_m, target_pos|on|over, offset, height_m, via_height, joint, target, yaw_joint, lift_joint, turns, pitch_m, bite_deg, direction, distance_m, angle_deg, axis, pivot, release, duration_s, expect (overrides)}."
+    },
+    {
+     "name": "qpos0",
+     "type": "str | list | None",
+     "description": "Start state: a trajectory.npz (frame `frame`), a qpos list, or None for the scene keyframe."
+    },
+    {
+     "name": "frame",
+     "type": "int",
+     "description": "Frame of qpos0 when it is an npz. Default -1."
+    },
+    {
+     "name": "state",
+     "type": "dict | str | None",
+     "description": "Grip memory from a previous call (dict or state.json): {held: {side: body}, grip: {side: {closed, press, opened}}}."
+    },
+    {
+     "name": "command_qpos",
+     "type": "str | list | None",
+     "description": "The last commanded hand qpos (reference frame) so a holding hand keeps its press; default qpos0."
+    },
+    {
+     "name": "fps",
+     "type": "float",
+     "description": "Default 30."
+    },
+    {
+     "name": "out_json",
+     "type": "str | None",
+     "description": "Write {keyframes, phases, expect, state} here."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "plan",
+     "type": "dict",
+     "description": "keyframes [{qpos, transit, hold, label}], phases [{label, hand, objects, anchor}], expect, state, n_keyframes, duration_s, arm_reach {ok, worst_pos_err_mm, worst_rot_err_deg, unreachable [...]}: whether the station's arm can follow the hand through the plan (checked before anything is executed)."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "planning",
+    "keyframes",
+    "subgoal"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "plan_subgoal_keyframes",
+   "file": "skills/plan_subgoal_keyframes.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/plan_subgoal_keyframes.py"
+  },
+  {
+   "name": "plate_edge_pinch_pose",
+   "title": "Plate edge pinch pose",
+   "type": "skill",
+   "category": "Grasp & Poses",
+   "summary": "Solve a thumb-versus-fingers pinch across the edge of a thin box geom (a lid, panel, board or cover) with the thumb pad on one face, the finger pads on the other and the palm and knuckles kept outside the edge.",
+   "description": "Reads the plate from a box geom in the hand scene: its thin axis is the face normal, `edge` names the local in-plane axis and sign of the edge to pinch, `s` the point along that edge (0..1) and `inset_m` how far in from the edge the pads sit. The thumb target lies on the `thumb_face` side ('up' = the face whose normal points up in the world, 'down' the other), the other grip fingers on the opposite face, spread along the edge by `finger_spread_m`; every target is a pad radius (+1 mm) off its face. Fingertip IK (the library's damped least squares with the collision-escape null-space task) is run from every wrist seed backed off along the outward edge normal (tilted up by `seed_up`), one seed at a time, and a solution is accepted only when its worst pad residual is under `max_residual_mm` and every hand link except the middle and distal phalanges stays at least `min_out_m` outside the edge, so the palm never lies over the plate, and the hand opened to `open_frac` at the pose (as planners open it before closing) keeps `open_floor_clear_m` off the floor, so a plate lying low over a table can still be reached. With `pivot` (a hinge line) the palm closest to the line wins, so turning the plate with the hand is mostly a rotation of the hand. With `finger_axis_max_deg` the fingers must point into the plate within that angle. Among accepted solutions the smallest hand-object overlap wins, then the largest outside margin. The pose carries `approach` = the outward edge normal tilted up, so planners and stress tests bring the open hand in from the side of the edge rather than from above. Assumes the plate is a box geom whose thinnest half-size is its thickness.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "dict",
+     "description": "Hand scene {hand_xml, side, objects, floor, ...} (hand_scene_from_recon output)."
+    },
+    {
+     "name": "geom",
+     "type": "str",
+     "description": "Name (or unique name suffix) of the plate's box geom in the hand scene."
+    },
+    {
+     "name": "edge",
+     "type": "str",
+     "description": "Edge to pinch as a signed local in-plane axis: '+x', '-x', '+y', '-y' (or '+z'/'-z' when z is in-plane)."
+    },
+    {
+     "name": "s",
+     "type": "float",
+     "description": "Position along the edge, 0..1 along the remaining in-plane local axis. Default 0.5."
+    },
+    {
+     "name": "inset_m",
+     "type": "float",
+     "description": "Distance of the pads in from the edge. Default 0.014."
+    },
+    {
+     "name": "thumb_face",
+     "type": "str",
+     "description": "'up' or 'down': world-up face or the other one for the thumb. Default 'up'."
+    },
+    {
+     "name": "fingers",
+     "type": "list",
+     "description": "Grip fingers, thumb first. Default ['thumb', 'index', 'middle']."
+    },
+    {
+     "name": "finger_spread_m",
+     "type": "float",
+     "description": "Spacing of the opposing fingers along the edge. Default 0.018."
+    },
+    {
+     "name": "min_out_m",
+     "type": "float",
+     "description": "Required clearance of palm and proximal links outside the edge. Default 0.02."
+    },
+    {
+     "name": "max_residual_mm",
+     "type": "float",
+     "description": "Worst accepted pad residual. Default 3."
+    },
+    {
+     "name": "seed_up",
+     "type": "float",
+     "description": "Upward tilt of the seed and approach direction (added to the unit edge normal). Default 0.3."
+    },
+    {
+     "name": "yaw_step_deg / pitches_deg / back_m / iters",
+     "type": "numbers",
+     "description": "Seed sweep density, seed back-off and IK iterations per seed (45, [-60,-30,0,30,60], 0.12, 200)."
+    },
+    {
+     "name": "finger_axis_max_deg",
+     "type": "float | None",
+     "description": "Largest angle between the hand's finger axis (palm to middle knuckle) and the inward edge normal; e.g. 35 keeps the fingers pointing into the plate so the hand pivots with a hinged plate instead of swinging over it. Default None (any)."
+    },
+    {
+     "name": "finger_dir",
+     "type": "xyz | None",
+     "description": "World direction the finger axis is compared with under finger_axis_max_deg (default: into the plate, minus the edge normal); use it to match the direction an arm can present the hand from."
+    },
+    {
+     "name": "pivot",
+     "type": "dict | None",
+     "description": "{point, axis}: the hinge line the plate turns about (world). When given, solutions whose palm lies closest to that line win (after overlap), so the hand mostly rotates instead of swinging through an arc when the plate turns. Default None."
+    },
+    {
+     "name": "max_pivot_dist_m",
+     "type": "float | None",
+     "description": "With pivot: reject solutions whose palm is farther than this from the hinge line. Default None."
+    },
+    {
+     "name": "open_frac",
+     "type": "float",
+     "description": "Opening fraction the planners use before closing (H.open_targets). Default 0.55."
+    },
+    {
+     "name": "open_floor_clear_m",
+     "type": "float",
+     "description": "Clearance every hand geom of the OPENED hand may reach into the floor at the pose: the deepest hand-floor contact distance must be at least this (negative = penetration). Default -0.001."
+    },
+    {
+     "name": "out_json",
+     "type": "str | None",
+     "description": "Write the pose here."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "pose",
+     "type": "dict",
+     "description": "{side, pos, euler, finger_targets, finger_targets_squeezed, grip_fingers, approach, press_depth_rad, residual_mm, worst_residual_mm, overlap_mm, outside_m, targets, edge_point, n_seeds, n_accepted}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "grasp",
+    "pinch",
+    "plate",
+    "lid",
+    "edge",
+    "panel"
+   ],
+   "used_in": [
+    "Giftbox Packing"
+   ],
+   "status": "tested",
+   "entrypoint": "plate_edge_pinch_pose",
+   "file": "skills/plate_edge_pinch_pose.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/plate_edge_pinch_pose.py"
+  },
+  {
    "name": "port_urdf_asset",
    "title": "Port URDF asset",
    "type": "skill",
@@ -9728,8 +10395,8 @@
     },
     {
      "name": "standoff_m",
-     "type": "float",
-     "description": "fingertip-site standoff from the surface so the pad, not the site, rests on it (default 0.015)"
+     "type": "float | None",
+     "description": "fingertip-site standoff from the surface so the pad, not the site, rests on it (default: the pad radius plus 1 mm, read from the hand)"
     },
     {
      "name": "approach_dirs",
@@ -9795,6 +10462,89 @@
    ],
    "file": "skills/pose_from_points.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/pose_from_points.py"
+  },
+  {
+   "name": "preview_keyframes",
+   "title": "Preview keyframes",
+   "type": "skill",
+   "category": "Scene Runtime & Rendering",
+   "summary": "Render a subgoal's planned keyframes (no physics) as one labelled sheet from a chosen camera and list where the plan itself drives a hand through the other hand or through an object it is not handling, in seconds.",
+   "description": "A kinematic preflight. Takes the keyframes of plan_subgoal_keyframes (or its json), sets the scene to each keyframe's qpos, renders it from a named scene camera or a free camera looking at the handled object, tiles the frames with their phase labels, and runs the plan collision sweep on the interpolated reference (hand-hand and hand-vs-bystander interpenetration deeper than 4 mm, with frame and geom names). Use it to check an approach, a swing or a carry visually before spending a physics rollout, and to see why a rollout reported plan_collision.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "keyframes",
+     "type": "list | str",
+     "description": "Keyframes or the plan json written by plan_subgoal_keyframes."
+    },
+    {
+     "name": "out_png",
+     "type": "str",
+     "description": "Sheet image to write."
+    },
+    {
+     "name": "camera",
+     "type": "str | None",
+     "description": "Scene camera name (video_cam, ego, wrist_right ...); default a free camera looking at the handled object from the front-right."
+    },
+    {
+     "name": "lookat_body",
+     "type": "str | None",
+     "description": "Body the free camera looks at (default the first object in the plan's phases)."
+    },
+    {
+     "name": "allowed_bodies",
+     "type": "list[str] | None",
+     "description": "Bodies the hands may touch (the handled part, held objects) for the collision sweep."
+    },
+    {
+     "name": "max_frames",
+     "type": "int",
+     "description": "At most this many keyframes on the sheet (evenly spaced). Default 12."
+    },
+    {
+     "name": "width",
+     "type": "int",
+     "description": "Tile width. Default 320."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "result",
+     "type": "dict",
+     "description": "out_png, n_keyframes, labels shown, plan_collisions [{frame, depth_mm, geoms, kind}]."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "pillow"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "preview",
+    "render",
+    "plan",
+    "collision"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl"
+   ],
+   "status": "tested",
+   "entrypoint": "preview_keyframes",
+   "file": "skills/preview_keyframes.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/preview_keyframes.py"
   },
   {
    "name": "probe_scene",
@@ -10869,6 +11619,139 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/retarget_hand_motion.py"
   },
   {
+   "name": "rollout_keyframes_physics",
+   "title": "Roll out keyframes in physics",
+   "type": "skill",
+   "category": "Trajectory & Execution",
+   "summary": "Interpolate keyframes into a reference (chain_subgoals) and drive the hands' wrist and finger position servos along it in the scene's contact physics; the objects move only because a finger pushed them. Records the executed qpos per frame with penetration and tracking diagnostics.",
+   "description": "The physics counterpart of chain_subgoals. The scene is compiled with explicit contact pairs between every hand collision geom and every object geom (and between the two hands). From the start state, every frame's reference hand joints become the servo commands (wrist servos stiffened as in the grasp tests), the simulation steps at its own timestep, and the state at each frame is kept; the object columns of the reference are ignored. The arm-hand welds are switched off and the arm joints held at their start values (fill_arm_joints puts the arms behind the hands afterwards). Per frame it records the wrist tracking error against the reference, the deepest hand-object/table interpenetration, the deepest object-object interpenetration and the hand-object contact set. A reference may be given instead of keyframes (a trajectory.npz from chain_subgoals).",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "keyframes",
+     "type": "list | str | None",
+     "description": "Keyframes (or plan json from plan_subgoal_keyframes). Either this or reference."
+    },
+    {
+     "name": "reference",
+     "type": "str | None",
+     "description": "A kinematic trajectory.npz to track instead of keyframes."
+    },
+    {
+     "name": "qpos_start",
+     "type": "str | list | None",
+     "description": "Physics start state (npz last frame or list); default the first keyframe / reference frame."
+    },
+    {
+     "name": "fps",
+     "type": "float",
+     "description": "Default 30."
+    },
+    {
+     "name": "max_rate_deg_s",
+     "type": "float",
+     "description": "Joint-rate ceiling for stretching transits. Default 90."
+    },
+    {
+     "name": "max_rate_m_s",
+     "type": "float",
+     "description": "Slide-rate ceiling (the wrist). Default 0.4."
+    },
+    {
+     "name": "wrist_kp",
+     "type": "float",
+     "description": "Wrist servo stiffness. Default 10000."
+    },
+    {
+     "name": "arm",
+     "type": "str",
+     "description": "'home' (welds off, arm joints held; default) or 'weld' (arm dragged by the position weld)."
+    },
+    {
+     "name": "out_npz",
+     "type": "str | None",
+     "description": "Write the executed episode (qpos, labels, fps, reference, subgoal) here."
+    },
+    {
+     "name": "subgoal_index",
+     "type": "int | None",
+     "description": "Written per frame into the npz for bookkeeping."
+    },
+    {
+     "name": "max_frames",
+     "type": "int",
+     "description": "Refuse references longer than this (a stretched leg from a bad start state). Default 3000."
+    },
+    {
+     "name": "allowed_bodies",
+     "type": "list[str] | None",
+     "description": "Bodies the hands may touch in the plan (the handled part, held objects); contact with any other object or the other hand deeper than 4 mm in the kinematic plan is reported as plan_collisions."
+    },
+    {
+     "name": "finger_force_nm",
+     "type": "float | None",
+     "description": "Finger servo torque cap for this rollout (default the library's 0.8)."
+    },
+    {
+     "name": "wrist_force_n",
+     "type": "float | list | None",
+     "description": "Wrist force cap, scalar or [fx, fy, fz] (default 40 N; a light lateral cap such as [10, 10, 40] for fine work like unscrewing)."
+    },
+    {
+     "name": "wrist_torque_nm",
+     "type": "float | None",
+     "description": "Wrist torque cap (default 3 N m)."
+    },
+    {
+     "name": "eq_inactive",
+     "type": "list[str] | None",
+     "description": "Equality constraints already released by earlier segments (kept off)."
+    },
+    {
+     "name": "rules",
+     "type": "list[dict] | None",
+     "description": "Mechanism rules applied during the rollout: [{engaged: equality name, lift_joint: joint, travel_m: thread length, frac: 0.96}] releases a screw cap's engagement weld once its lift joint has travelled the thread."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "result",
+     "type": "dict",
+     "description": "n_frames, duration_s, final_qpos, max_hand_pen_mm, max_object_pen_mm, max_track_pos_mm, max_track_rot_deg, stretched legs, contacts_end, out_npz, scene_physics_xml."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "physics",
+    "execution",
+    "servo"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "rollout_keyframes_physics",
+   "file": "skills/rollout_keyframes_physics.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/rollout_keyframes_physics.py"
+  },
+  {
    "name": "rope_pinch_pose",
    "title": "Pinch pose on a rope segment",
    "type": "skill",
@@ -11259,6 +12142,93 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/track_objects.py"
   },
   {
+   "name": "write_stage4_config",
+   "title": "Write Stage 4 config",
+   "type": "skill",
+   "category": "Trajectory & Execution",
+   "summary": "Assemble the folder Stage 4 consumes: scene.xml with its assets, trajectory.npz, the human video, the sim video, and stage4.json with end effectors, the per-phase anchors derived from the episode's phases, the objects to randomize with their carriers and release phases, the video camera, wrist views, table, inpaint prompts and robot materials.",
+   "description": "Stage 4 re-anchors every hand frame to an object or the world and lets carried objects ride the hand; it needs to know which phase is anchored to what. This skill walks the Stage 3 phases per side in order and emits the segment list with the rule Stage 4 enforces (an anchor changes only through a blend over the phase in which it changes): reaching blends world -> object, grasp/lift/hold phases stay on the object, a carry blends from the carried object to its destination, a return home blends back to world. Randomized objects are the free-root objects of the Stage 2 manifest with default ranges (dx, dy 3 cm, dyaw 15 degrees), the carrier is the hand whose lift/carry phases are anchored to the object, release is the object's let-go phase, and an object sharing its asset with another (a cap on its bottle) is attached_to it. The video camera comes from Stage 2's camera.json, the wrist views from the scene's cameras under the hand bodies, the table from the scene's table geom, erase prompts from Stage 1's object names. Robot materials use the sharpa / yam presets. Copies scene.xml and the assets it references into the task folder with relative paths.",
+   "inputs": [
+    {
+     "name": "scene_recon_json",
+     "type": "str",
+     "description": "Stage 2 manifest (scene, camera, objects)."
+    },
+    {
+     "name": "episode_dir",
+     "type": "str",
+     "description": "execute_subgoal_plan output folder (trajectory.npz, phases.json)."
+    },
+    {
+     "name": "out_dir",
+     "type": "str",
+     "description": "Task folder to write (stage4.json, scene.xml, assets/, trajectory.npz, human_video.mp4, sim_video.mp4)."
+    },
+    {
+     "name": "human_video",
+     "type": "str",
+     "description": "The human demonstration video."
+    },
+    {
+     "name": "sim_video",
+     "type": "str | None",
+     "description": "Stage 3 simulation video (optional, for the comparison video)."
+    },
+    {
+     "name": "scene_semantic_json",
+     "type": "str | None",
+     "description": "Stage 1 manifest for the erase prompts (default: next to the Stage 2 manifest)."
+    },
+    {
+     "name": "num_samples",
+     "type": "int",
+     "description": "Randomized episodes to keep. Default 3."
+    },
+    {
+     "name": "ranges",
+     "type": "dict | None",
+     "description": "Per object {dx, dy, dyaw_deg} overrides; objects set to null are not randomized."
+    },
+    {
+     "name": "name",
+     "type": "str | None",
+     "description": "Task name (default the run name)."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "result",
+     "type": "dict",
+     "description": "config path, the segments per side, the objects block, copied files, and warnings (phases that could not be anchored)."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "stage4",
+    "config",
+    "handoff"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "write_stage4_config",
+   "file": "skills/write_stage4_config.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/skills/write_stage4_config.py"
+  },
+  {
    "name": "above_check",
    "title": "Above check",
    "type": "verifier",
@@ -11389,6 +12359,85 @@
    "entrypoint": "arm_jerk_check",
    "file": "verifiers/arm_jerk_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/arm_jerk_check.py"
+  },
+  {
+   "name": "arm_reach_check",
+   "title": "Arm reach check",
+   "type": "verifier",
+   "category": "Episode Audits",
+   "summary": "For each arm, the residual between its flange and the hand it is bolted to on every frame (position and the fixed mount rotation measured at the home pose), the frames where the arm could not follow, and how close its joints run to their limits.",
+   "description": "The hands are driven by virtual wrist servos; whether a real arm can place its flange there is a separate question that fill_arm_joints answers by inverse kinematics and this verifier audits. It reads the arm chain behind each end effector, the flange-to-hand transform at the scene's home keyframe, and on every frame of the episode measures the flange position error and tilt against the hand, and the smallest margin of every arm joint to its range. It fails when the position error exceeds `pos_tol_m` or the tilt exceeds `tilt_tol_deg` on any frame, and reports the worst frame with its label so the pose or the motion can be moved into reach. A frame-constant residual means the home pose itself does not close the weld.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "trajectory",
+     "type": "str | None",
+     "description": "Episode npz with the arm joints filled (omit when checking poses)."
+    },
+    {
+     "name": "poses",
+     "type": "list[dict] | None",
+     "description": "Candidate wrist poses ({pos, euler}) to test for reach instead of an episode; returns which the arm of `side` can reach."
+    },
+    {
+     "name": "side",
+     "type": "str | None",
+     "description": "'left' or 'right' for the poses mode."
+    },
+    {
+     "name": "pos_tol_m",
+     "type": "float",
+     "description": "Default 0.02."
+    },
+    {
+     "name": "tilt_tol_deg",
+     "type": "float",
+     "description": "Default 20."
+    },
+    {
+     "name": "limit_margin_deg",
+     "type": "float",
+     "description": "Warn when a joint runs closer than this to its stop. Default 2."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, failed, per side {pos_err_mm {max, mean, worst_frame, label}, tilt_err_deg {...}, frames_over, limit_margin_deg, joints_at_limit}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "audit",
+    "arm",
+    "reach",
+    "ik"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "arm_reach_check",
+   "file": "verifiers/arm_reach_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/arm_reach_check.py"
   },
   {
    "name": "articulated_joint_travel_test",
@@ -11967,6 +13016,84 @@
    "entrypoint": "contact_force_check",
    "file": "verifiers/contact_force_check.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/contact_force_check.py"
+  },
+  {
+   "name": "episode_physics_check",
+   "title": "Episode physics check",
+   "type": "verifier",
+   "category": "Episode Audits",
+   "summary": "Realism audit of an executed episode: finite state, no object faster than a hand can move things, no object jumping between frames, no interpenetration beyond a few millimetres between hands and objects or between objects, nothing left floating at the end, and the hands' servos never forced far off their commands.",
+   "description": "Replays the episode frame by frame (kinematics + collision detection on the physics scene with the hand-object contact pairs) and measures: per free object its peak speed and the largest single-frame displacement; the deepest hand-object/hand-table and object-object interpenetration on every frame; at the last frame every free object's support (contact with something below it, or its lowest point at the table within tolerance); and, when the episode carries the rollout diagnostics, the worst wrist tracking error and the frames where it exceeded the limit. Thresholds are generous for real manipulation and tight for artefacts: an object moving at 4 m/s, a 3 cm jump in one frame or a pad 1 cm inside a surface only happen when the simulation was forced. The report lists the offending frames and bodies.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "trajectory",
+     "type": "str",
+     "description": "Episode npz (qpos, labels, fps, optional diagnostics)."
+    },
+    {
+     "name": "max_speed_mps",
+     "type": "float",
+     "description": "Default 4.0."
+    },
+    {
+     "name": "max_jump_m",
+     "type": "float",
+     "description": "Largest allowed per-frame displacement of an object. Default 0.03."
+    },
+    {
+     "name": "max_pen_m",
+     "type": "float",
+     "description": "Allowed interpenetration. Default 0.008."
+    },
+    {
+     "name": "max_track_m",
+     "type": "float",
+     "description": "Allowed wrist tracking error. Default 0.03."
+    },
+    {
+     "name": "stride",
+     "type": "int",
+     "description": "Frame stride for the collision replay. Default 2."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, failed, objects {name: {peak_speed, max_jump, jump_frame}}, penetration {hand_object_mm, object_object_mm, worst_frame, worst_pair}, floating_at_end, tracking {max_mm, frames_over}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "audit",
+    "physics",
+    "realism",
+    "penetration"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "episode_physics_check",
+   "file": "verifiers/episode_physics_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/episode_physics_check.py"
   },
   {
    "name": "final_pose_check",
@@ -12613,6 +13740,93 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_shake_test.py"
   },
   {
+   "name": "grasp_slide_pull_test",
+   "title": "Grasp slide-pull test",
+   "type": "verifier",
+   "category": "Grasp Stress Tests",
+   "summary": "Close the posed hand on a part that slides on a prismatic joint (drawer, tray, slider), translate the wrist along the joint axis by a set distance in physics, and pass when the part followed the hand, the pads stayed on it and no sibling joint of the same object was dragged along.",
+   "description": "The slide counterpart of grasp_turn_test. The hand scene is the floating-hand scene of hand_scene_from_recon (the last object holds the joint). The object's root is held still (as a brace or the bench would hold it); the open hand descends along the pose's approach axis onto the pose, closes to the pose's finger targets, presses to its squeezed targets, then the wrist is translated in steps along the joint axis in world frame (sign from `direction`: +1 moves the joint toward its upper limit) by `travel_m` with the fingers fixed. The verdict compares the joint's travel with the wrist's: PULLED when the fraction reaches `min_fraction` and at least one hand geom still touches the part at the end; SLIPPED / LOST / STALLED otherwise. Every other slide or hinge joint of the same object is watched: if one moves more than `sibling_tol` (m or rad) the hand caught the wrong part (a neighbouring drawer's handle) and the test fails with its name. Peak wrist force is reported against the hand's force cap.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "dict",
+     "description": "Floating-hand scene {hand_xml, side, objects, floor, joint_init, grasp_body}; the last object holds the joint."
+    },
+    {
+     "name": "pose",
+     "type": "dict",
+     "description": "Hand pose {pos, euler, finger_targets, finger_targets_squeezed?, grip_fingers?, approach?}."
+    },
+    {
+     "name": "joint",
+     "type": "str",
+     "description": "Name of the slide joint to pull in the compiled hand scene (the bench name usually works; a suffix match is tried)."
+    },
+    {
+     "name": "travel_m",
+     "type": "float",
+     "description": "Distance the wrist moves along the joint axis. Default 0.08."
+    },
+    {
+     "name": "direction",
+     "type": "int",
+     "description": "+1 toward the joint's upper limit (open), -1 toward the lower. Default +1."
+    },
+    {
+     "name": "seconds",
+     "type": "float",
+     "description": "Duration of the stroke. Default 1.5."
+    },
+    {
+     "name": "min_fraction",
+     "type": "float",
+     "description": "Joint travel / wrist travel needed to pass. Default 0.8."
+    },
+    {
+     "name": "sibling_tol",
+     "type": "float",
+     "description": "Largest allowed motion of any other joint of the same object. Default 0.01."
+    },
+    {
+     "name": "hold_root",
+     "type": "bool",
+     "description": "Hold the object's free root still during the test. Default true."
+    },
+    {
+     "name": "approach_m",
+     "type": "float",
+     "description": "Pre-grasp distance along the approach axis. Default 0.06."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, issues, verdict, measured {travel_m, joint_moved_m, fraction, joint_start, joint_end, pads_start, pads_end, lost_at_m, siblings_moved {joint: value}, peak_wrist_force_n}."
+    }
+   ],
+   "status": "tested",
+   "entrypoint": "grasp_slide_pull_test",
+   "requirements": [
+    "mujoco>=3.1",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "grasp",
+    "drawer",
+    "slide",
+    "prismatic",
+    "pull",
+    "stress-test"
+   ],
+   "used_in": [],
+   "file": "verifiers/grasp_slide_pull_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_slide_pull_test.py"
+  },
+  {
    "name": "grasp_straddle_test",
    "title": "Pinch straddle test",
    "type": "verifier",
@@ -12844,6 +14058,101 @@
    ],
    "file": "verifiers/grasp_through_hole_test.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_through_hole_test.py"
+  },
+  {
+   "name": "grasp_turn_test",
+   "title": "Grasp turn test",
+   "type": "verifier",
+   "category": "Grasp Stress Tests",
+   "summary": "Close the posed hand on a part that moves on a joint (a cap, a knob, a lid on a hinge; a drawer on a slide), drive the wrist along the joint's motion (an arc about a hinge, a translation along a slide) by a set amount in physics, and pass when the part followed the hand without the hand losing it.",
+   "description": "The stress test for a grasp whose job is torque. The hand scene is built with the object's root held fixed (a bottle steadied by the other hand, a cabinet on the floor) and the fingers are driven to the pose's closed and then pressed targets; the wrist is then servoed through an arc about the joint's axis (its world axis through the part's origin, read from the model) in small steps, keeping the fingers' commands fixed and letting the hand rise with any thread coupling. It measures the joint angle reached against the angle the hand swept, the slip (sweep minus turn), the peak wrist force the arc needed, the pad contacts at the end, and whether any finger lost the part. Passes when the part turned at least `min_fraction` of the sweep and the hand still holds it at the end. Fails name the reason: SLIPPED (pads skate on the part), LOST (the hand came off), STALLED (the joint did not move at all: wrong axis, joint blocked, or the pose presses the part sideways). Runs on the same scene dict the grasp skills take, with `joint` naming the hinge and optional `lift_joint` for a thread.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "dict",
+     "description": "{hand_xml, side, objects, grasp_body, joint_init, ...} as hand_scene_from_recon writes it."
+    },
+    {
+     "name": "pose",
+     "type": "dict",
+     "description": "pos, euler, finger_targets[, finger_targets_squeezed, grip_fingers] from a grasp skill."
+    },
+    {
+     "name": "joint",
+     "type": "str",
+     "description": "The hinge the part turns on, or the slide it travels on (in the hand scene's names, e.g. bottle_bottle_yaw)."
+    },
+    {
+     "name": "sweep_deg",
+     "type": "float",
+     "description": "Angle the hand swings about a hinge axis. Default 90."
+    },
+    {
+     "name": "sweep_m",
+     "type": "float",
+     "description": "Distance the hand travels along a slide axis. Default 0.08."
+    },
+    {
+     "name": "direction",
+     "type": "int",
+     "description": "+1 or -1 about the joint axis. Default +1."
+    },
+    {
+     "name": "seconds",
+     "type": "float",
+     "description": "Duration of the sweep. Default 2.0."
+    },
+    {
+     "name": "min_fraction",
+     "type": "float",
+     "description": "Required turn / sweep. Default 0.8."
+    },
+    {
+     "name": "hold_root",
+     "type": "bool",
+     "description": "Weld the object's root to the world during the test (default true)."
+    },
+    {
+     "name": "wrist_kp",
+     "type": "float",
+     "description": "Wrist servo stiffness. Default 10000."
+    },
+    {
+     "name": "out_json",
+     "type": "str | None",
+     "description": "Write the report here."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, verdict, measured {sweep_deg, turned_deg, fraction, slip_deg, lost_at_deg, pads_end, peak_wrist_force_n, peak_wrist_torque_nm, lift_mm}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "grasp",
+    "stress",
+    "torque",
+    "cap",
+    "knob",
+    "unscrew"
+   ],
+   "used_in": [
+    "Open the Bottle"
+   ],
+   "status": "tested",
+   "entrypoint": "grasp_turn_test",
+   "file": "verifiers/grasp_turn_test.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/grasp_turn_test.py"
   },
   {
    "name": "height_check",
@@ -14645,6 +15954,69 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/required_bodies_check.py"
   },
   {
+   "name": "robot_self_collision_check",
+   "title": "Robot self-collision check",
+   "type": "verifier",
+   "category": "Episode Audits",
+   "summary": "Replay the episode with every robot geom made collidable and report frames where the two hands, a hand and an arm, two arm links that are not neighbours, or an arm link and the table or an object interpenetrate.",
+   "description": "The hands ship with contacts off and the arms carry no collision geoms at all, so physics never objects when the plan drives the left thumb through the right palm or an elbow through the table. This verifier compiles a copy of the scene in which every visual robot geom collides with everything (and the objects' collision geoms with the arms), replays the trajectory kinematically and runs collision detection on each frame. Contacts between a body and its parent or grandparent, and between the links of one finger, are ignored (they touch by construction). It fails on any interpenetration deeper than `tol_m` and lists the worst offending pair per category with its frame and label: hand-hand, hand-arm, arm-arm, arm-table, arm-object, hand-table.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF."
+    },
+    {
+     "name": "trajectory",
+     "type": "str | list",
+     "description": "Episode npz (qpos, labels) or a qpos array."
+    },
+    {
+     "name": "tol_m",
+     "type": "float",
+     "description": "Allowed interpenetration. Default 0.003."
+    },
+    {
+     "name": "stride",
+     "type": "int",
+     "description": "Frame stride. Default 2."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, failed [categories], worst {category: {frame, label, depth_mm, geoms}}, n_frames_checked."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "audit",
+    "collision",
+    "self-collision",
+    "arm"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "robot_self_collision_check",
+   "file": "verifiers/robot_self_collision_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/robot_self_collision_check.py"
+  },
+  {
    "name": "scene_qc",
    "title": "Scene QC",
    "type": "verifier",
@@ -15331,6 +16703,126 @@
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/spring_stiffness_test.py"
   },
   {
+   "name": "stage4_handoff_check",
+   "title": "Stage 4 handoff check",
+   "type": "verifier",
+   "category": "Task & Rollout Gates",
+   "summary": "Validate a Stage 3 task folder the way Stage 4 will read it: files present, the scene compiles with the trajectory's qpos width, every segment phase matches frames, anchors change only through blends, carriers and releases resolve, cameras and table are set, and the video camera matches Stage 2's camera.json.",
+   "description": "Loads stage4.json with Stage 4's own config loader and builds its Episode object (the step that re-anchors frames), so the same assertions Stage 4 makes at the start of `randomize` run here with their messages. On top it checks that the trajectory's labels follow the 'side: phase' convention, that no label of a moving hand is left anchored to the world while that hand holds an object, that every randomized object is a free body or a static world body, that the human video exists and its length is plausible against the trajectory, and that the ego camera in the config equals Stage 2's camera.json. Returns ok with the list of issues.",
+   "inputs": [
+    {
+     "name": "task_dir",
+     "type": "str",
+     "description": "Folder with stage4.json (from write_stage4_config)."
+    },
+    {
+     "name": "camera_json",
+     "type": "str | None",
+     "description": "Stage 2 camera.json to compare the ego camera with."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, issues [...], summary {frames, fps, sides, objects, segments, labels}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "stage4",
+    "handoff",
+    "config"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "stage4_handoff_check",
+   "file": "verifiers/stage4_handoff_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/stage4_handoff_check.py"
+  },
+  {
+   "name": "subgoal_outcome_check",
+   "title": "Subgoal outcome check",
+   "type": "verifier",
+   "category": "Task & Rollout Gates",
+   "summary": "Measure a subgoal's outcome on the executed (physics) trajectory against its expectations: rise, in hand, no slip, at target, released, at rest, supported, upright, joint reached, turned, tilted, displaced, untouched bystanders, penetration and servo tracking.",
+   "description": "The simulation-verifiable subgoal of the paper. Expectations come from plan_subgoal_keyframes (`expect`) or are written by hand: object (body), hand (side), rise_m, in_hand (+min_links), no_slip (+slip_from frame), target_pos (+target_axes, pos_tol_m), released, at_rest, supported (+on), upright, tilt_deg, stays_put, joint (+joint_target | turned_rad | joint_min_travel), displacement {dir, min_m}, untouched [bodies]. Every expectation is measured by forward kinematics and contacts on the frames of the subgoal (all frames, a frame range, or the frames whose `subgoal` index matches), and the rollout diagnostics stored in the episode (hand penetration, object penetration, wrist tracking) are judged when present. The report names each failed expectation with the number behind it.",
+   "inputs": [
+    {
+     "name": "scene",
+     "type": "str",
+     "description": "Bench scene MJCF (the physics scene the episode was executed in, or the Stage 2 scene)."
+    },
+    {
+     "name": "trajectory",
+     "type": "str",
+     "description": "Episode npz from rollout_keyframes_physics / execute_subgoal_plan."
+    },
+    {
+     "name": "expect",
+     "type": "dict",
+     "description": "Expectations (see description)."
+    },
+    {
+     "name": "subgoal",
+     "type": "int | None",
+     "description": "Evaluate the frames whose subgoal index equals this (needs the npz `subgoal` array)."
+    },
+    {
+     "name": "frames",
+     "type": "list[int] | None",
+     "description": "[start, end] frame range instead."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, failed [names], checks {name: bool}, measured {...}, frames."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy",
+    "scipy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "subgoal",
+    "outcome",
+    "gate"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "subgoal_outcome_check",
+   "file": "verifiers/subgoal_outcome_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/subgoal_outcome_check.py"
+  },
+  {
    "name": "support_check",
    "title": "Support check",
    "type": "verifier",
@@ -15638,6 +17130,62 @@
    "cli": "python -m tool_library.verifiers.trajectory_audit scene.xml trajectory.npz --ee right=<hand body> left=<hand body>",
    "file": "verifiers/trajectory_audit.py",
    "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/trajectory_audit.py"
+  },
+  {
+   "name": "trajectory_manifest_check",
+   "title": "Trajectory manifest check",
+   "type": "verifier",
+   "category": "Task & Rollout Gates",
+   "summary": "Check a Stage 3 trajectory_manifest.json: every Stage 1 subgoal is executed (or merged/skipped with a reason), each subgoal names its hand pose source and the stress tests that passed on it, every executed subgoal's outcome passed, the episode files exist and agree, and the Stage 4 task folder is referenced.",
+   "description": "The floor for finishing Stage 3. Reads the manifest and the Stage 1 scene_semantic.json it points to, and verifies: `subgoals` covers every Stage 1 index (an entry may list several Stage 1 indices it merges, or carry `skipped` with a reason); each entry has motion, side, object (body in the scene), and for grasping motions a `pose` with `source` (the skill that produced it) and, for grasping motions (grasp_lift, hold, unscrew, screw, open_joint, close_joint, pull, regrasp), `stress_tests` naming at least one library verifier with ok true (a push or press is proved by its outcome alone); each has `outcome.ok` true; `episode.trajectory` exists, has the scene's nq columns and 'side: phase' labels; `episode.sim_video` exists; `stage4.task_dir` holds stage4.json; the checks block carries the episode verifiers (episode_physics_check, robot_self_collision_check, arm_reach_check, stage4_handoff_check) with ok true. Returns ok and the list of issues.",
+   "inputs": [
+    {
+     "name": "path",
+     "type": "str",
+     "description": "trajectory_manifest.json."
+    },
+    {
+     "name": "scene_semantic_json",
+     "type": "str | None",
+     "description": "Stage 1 manifest (default from the manifest)."
+    },
+    {
+     "name": "library_index",
+     "type": "str | None",
+     "description": "index.json to validate verifier names against."
+    }
+   ],
+   "outputs": [
+    {
+     "name": "report",
+     "type": "dict",
+     "description": "ok, issues, counts {subgoals, executed, skipped, stress_tests}."
+    }
+   ],
+   "requirements": [
+    "mujoco>=3.2",
+    "numpy"
+   ],
+   "simulators": [
+    "MuJoCo"
+   ],
+   "tags": [
+    "stage3",
+    "manifest",
+    "bookkeeping"
+   ],
+   "used_in": [
+    "Open the Bottle",
+    "Giftbox Packing",
+    "Place Toy in Drawer",
+    "Battery Insertion",
+    "Place Cup in Bowl",
+    "Computer Installation"
+   ],
+   "status": "tested",
+   "entrypoint": "trajectory_manifest_check",
+   "file": "verifiers/trajectory_manifest_check.py",
+   "url": "https://github.com/dexagent1/DexAgent/blob/main/tool_library/verifiers/trajectory_manifest_check.py"
   },
   {
    "name": "tube_seat_test",
